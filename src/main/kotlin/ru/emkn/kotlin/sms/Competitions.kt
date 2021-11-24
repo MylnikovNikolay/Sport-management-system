@@ -1,18 +1,16 @@
 package ru.emkn.kotlin.sms
 
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
 
-class Competitions {
-    val name: String
-    val date: String
+
+class Competitions(val name: String, val date: String) {
     val members: List<CompetitionsMember>
     val groups: List<Group>
     val teams: List<Team>
     val distances: List<Distance>
 
-    constructor(name: String, date: String){
-        this.name = name
-        this.date = date
+    init {
         this.members = mutableListOf()
         this.groups = mutableListOf()
         this.teams = mutableListOf()
@@ -76,9 +74,38 @@ class ControlPoint(val name: String, val distance: Distance) {
     //Регистрирует номер прошедшего этот пункт участника и время
     val info: MutableMap<Int,Time> = mutableMapOf()
 
+
+    //Конструктор строит сразу по протоколу
+    constructor(inputDistance: Distance, inputProtocol: String):
+            this(nameFromProtocol(inputProtocol), inputDistance){
+                dataFromProtocol(inputProtocol)
+            }
+
+    companion object {
+        //Вычленяет name из протокола
+        fun nameFromProtocol(protocol: String): String {
+            val rows: List<List<String>> = csvReader().readAll(protocol)
+            assert(rows.isNotEmpty() && rows[0].isNotEmpty()) {
+                "Неверный формат CSV-файла для протокола КП: отсутствует имя"
+            }
+            return rows[0][0]
+        }
+    }
+
+
     //Заполняет info из протокола
     fun dataFromProtocol(protocol: String){
-        TODO()
+        val rows: List<List<String>> = csvReader().readAll(protocol)
+        assert(rows.isNotEmpty() && rows[0].isNotEmpty()) {
+            "Неверный формат CSV-файла для протокола КП: отсутствует имя"
+        }
+        assert(rows[0][0] == name) {
+            "Имя КП не соответствует КП"
+        }
+
+        rows.drop(1).forEach {
+            info[it[0].toInt()] = it[1]
+        }
     }
 
 }
