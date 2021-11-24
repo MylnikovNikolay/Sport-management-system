@@ -1,16 +1,33 @@
 package ru.emkn.kotlin.sms
 
-/*
+
+
 class Competitions {
     val name: String
     val date: String
+    val members: List<CompetitionsMember>
     val groups: List<Group>
     val teams: List<Team>
     val distances: List<Distance>
 
+    constructor(name: String, date: String){
+        this.name = name
+        this.date = date
+        this.members = mutableListOf()
+        this.groups = mutableListOf()
+        this.teams = mutableListOf()
+        this.distances = mutableListOf()
+    }
+    companion object{
+        fun fromProtocols(startProtocols: List<String>, CP_protocols: List<String>): Competitions{
+            TODO()
+        }
+    }
+    /*
     constructor(path: String){
         TODO()
     }
+    */
 
     //Прием заявления от команды, добавление всех участников
     fun takeTeamApplication(application: String){
@@ -22,10 +39,49 @@ class Competitions {
         TODO()
     }
 }
-*/
 
-data class ControlPoint(val name: String)
-data class Distance(
-    val controlPoints: List<ControlPoint>
-)
+
+/*
+Спортсмен как участник соревнований.
+ */
+data class CompetitionsMember(
+    val sportsman: Sportsman,
+    val team: Team,
+    val group: Group,
+    var number: Int? = null,
+    var startInfo: StartInfo? = null,
+    var resultInfo: ResultInfo? = null,
+){
+    //Составляет протокол прохождения дистанции
+    fun getResultProtocol(): String{
+        TODO()
+    }
+}
+
+
+class ControlPoint{
+    val name: String
+    val distance: Distance
+
+    //Регистрирует номер прошедшего этот пункт участника и время
+    val info: MutableMap<Int,Time> = mutableMapOf()
+
+    constructor(name: String, distance: Distance){
+        this.name = name
+        this.distance = distance
+    }
+
+    //Заполняет info из протокола
+    fun dataFromProtocol(protocol: String){
+        TODO()
+    }
+
+}
+class Distance{
+    val name: String
+    val controlPoints: List<ControlPoint> = mutableListOf()
+    constructor(name: String){
+        this.name = name
+    }
+}
 

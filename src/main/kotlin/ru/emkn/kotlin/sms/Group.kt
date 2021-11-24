@@ -1,20 +1,7 @@
 package ru.emkn.kotlin.sms
 
 
-/*
-Спортсмен как участник одной из групп
- */
-data class GroupMember(
-    val sportsman: Sportsman,
-    var number: Int? = null,
-    var startInfo: StartInfo? = null,
-    var resultInfo: ResultInfo? = null,
-){
-    //Составляет протокол прохождения дистанции
-    fun getResultProtocol(): String{
-        TODO()
-    }
-}
+
 
 typealias Time = String
 
@@ -25,16 +12,16 @@ typealias StartInfo = Time
 
 /*
 Результаты забега: список отметок времени,
-когда спортсмен пересекал контрольные точки
+когда спортсмен пересекал контрольные точки.
  */
-typealias ResultInfo = List<Time>
+typealias ResultInfo = Map<ControlPoint,Time>
 
 /*
 Группа: определяется дистанцией и участниками, хранит
 всю информацию о соревновании
  */
 class Group(val name: String, val distance: Distance) {
-    val members: MutableList<GroupMember> = mutableListOf()
+    val members: MutableList<CompetitionsMember> = mutableListOf()
 
     /*
     //По протоколам создает группу, чтобы генерировать групповой протокол
@@ -43,8 +30,8 @@ class Group(val name: String, val distance: Distance) {
     }
     */
 
-    //Делает жеребьевку
-    fun calcStarts(){
+    //Делает жеребьевку в группе
+    fun calcStarts(startTime: Time = "12:00:00"){
         TODO()
     }
 
