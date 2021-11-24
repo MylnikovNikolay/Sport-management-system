@@ -50,7 +50,7 @@ data class CompetitionsMember(
     val group: Group,
     var number: Int? = null,
     var startInfo: StartInfo? = null,
-    val resultInfo: ResultInfo = mutableMapOf(),
+    val resultInfo: ResultInfo? = null,
 ){
     val distance: Distance
         get() = group.distance
@@ -71,17 +71,10 @@ data class CompetitionsMember(
 }
 
 
-class ControlPoint{
-    val name: String
-    val distance: Distance
+class ControlPoint(val name: String, val distance: Distance) {
 
     //Регистрирует номер прошедшего этот пункт участника и время
     val info: MutableMap<Int,Time> = mutableMapOf()
-
-    constructor(name: String, distance: Distance){
-        this.name = name
-        this.distance = distance
-    }
 
     //Заполняет info из протокола
     fun dataFromProtocol(protocol: String){

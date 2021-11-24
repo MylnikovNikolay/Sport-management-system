@@ -2,20 +2,11 @@ package ru.emkn.kotlin.sms
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.File
+import java.util.*
 
 enum class Gender{ MALE, FEMALE, UNKNOWN}
 
-private fun toGender(str: String): Gender {
-    return when(str) {
-        "муж" -> Gender.MALE
-        "муж." -> Gender.MALE
-        "мужской" -> Gender.MALE
-        "жен" -> Gender.FEMALE
-        "жен." -> Gender.FEMALE
-        "женский" -> Gender.FEMALE
-        else -> Gender.UNKNOWN
-    }
-}
+
 
 data class Sportsman(
     val group: String,
@@ -30,20 +21,40 @@ data class Sportsman(
     constructor(sp: Sportsman): this(sp.group, sp.name, sp.surname,
         sp.birthYear, sp.level, sp.gender, sp.medExamination, sp.insurance)
     constructor(row: Map<String, String>): this(getSportsmanByRow(row))
+
+    companion object {
+        private fun getSportsmanByRow(row: Map<String, String>): Sportsman {
+            val name = row["Имя"]?.lowercase(Locale.getDefault())
+                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                ?: throw ImportantValueIsMissing("Имя")
+            val surname = row["Фамилия"] ?.lowercase(Locale.getDefault())
+                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                ?: throw ImportantValueIsMissing("Фамилия")
+            val group = row["Группа"] ?: throw ImportantValueIsMissing("Группа")
+            val birthYear = row["Г.р."] ?: throw ImportantValueIsMissing("Г.р.")
+            val level = row["Разр."] ?: throw ImportantValueIsMissing("Разр.")
+            val gender = toGender(row["Пол"] ?: "")
+            val medExamination = row["Медосмотр"] ?: ""
+            val insurance = row["Страховка"] ?: ""
+
+            return Sportsman(group, name, surname, birthYear.toInt(), level, gender, medExamination, insurance)
+        }
+
+        private fun toGender(str: String): Gender {
+            return when(str) {
+                "муж" -> Gender.MALE
+                "муж." -> Gender.MALE
+                "мужской" -> Gender.MALE
+                "жен" -> Gender.FEMALE
+                "жен." -> Gender.FEMALE
+                "женский" -> Gender.FEMALE
+                else -> Gender.UNKNOWN
+            }
+        }
+    }
 }
 
-private fun getSportsmanByRow(row: Map<String, String>): Sportsman {
-    val name = row["Имя"] ?: throw ImportantValueIsMissing("Имя")
-    val surname = row["Фамилия"] ?: throw ImportantValueIsMissing("Фамилия")
-    val group = row["Группа"] ?: throw ImportantValueIsMissing("Группа")
-    val birthYear = row["Г.р."] ?: throw ImportantValueIsMissing("Г.р.")
-    val level = row["Разр."] ?: throw ImportantValueIsMissing("Разр.")
-    val gender = toGender(row["Пол"] ?: "")
-    val medExamination = row["Медосмотр"] ?: ""
-    val insurance = row["Страховка"] ?: ""
 
-    return Sportsman(group, name, surname, birthYear.toInt(), level, gender, medExamination, insurance)
-}
 
 class Team(
     val name: String,
@@ -51,18 +62,21 @@ class Team(
 ) {
     constructor(team: Team): this(team.name, team.sportsmen)
     constructor(file: File): this(readTeamFromCSV(file))
-}
 
-private fun readTeamFromCSV(file: File): Team {
-    // Ожидается формат как в sample-data:
-    // первая строка это название команды, вторая это header, а дальше идут описания участников
-    val rows: List< List<String> > = csvReader().readAll(file)
-    require(rows.size >= 3) { "В команде нет участников или неверный формат ввода" }
+    companion object {
+        private fun readTeamFromCSV(file: File): Team {
+            // Ожидается формат как в sample-data:
+            // первая строка это название команды, вторая это header, а дальше идут описания участников
+            val rows: List< List<String> > = csvReader().readAll(file)
+            require(rows.size >= 3) { "В команде нет участников или неверный формат ввода" }
 
-    val name = rows[0][0]
-    val header = rows[1]
-    val sportsmen = rows.drop(2).map {row ->
-        Sportsman((header zip row).toMap())
+            val name = rows[0][0]
+            val header = rows[1]
+            val sportsmen = rows.drop(2).map {row ->
+                Sportsman((header zip row).toMap())
+            }
+            return Team(name, sportsmen)
+        }
     }
-    return Team(name, sportsmen)
 }
+
