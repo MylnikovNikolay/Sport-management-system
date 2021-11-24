@@ -16,17 +16,18 @@ data class GroupMember(
     }
 }
 
+typealias Time = String
+
 /*
 Информация о старте спортсмена - время старта
  */
-data class StartInfo(val time: String)
+typealias StartInfo = Time
 
 /*
 Результаты забега: список отметок времени,
 когда спортсмен пересекал контрольные точки
  */
-data class ResultInfo(val controlPointTimes: List<String>)
-
+typealias ResultInfo = List<Time>
 
 /*
 Группа: определяется дистанцией и участниками, хранит
