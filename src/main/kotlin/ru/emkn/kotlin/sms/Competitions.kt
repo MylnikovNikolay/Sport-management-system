@@ -50,11 +50,23 @@ data class CompetitionsMember(
     val group: Group,
     var number: Int? = null,
     var startInfo: StartInfo? = null,
-    var resultInfo: ResultInfo? = null,
+    val resultInfo: ResultInfo = mutableMapOf(),
 ){
+    val distance: Distance
+        get() = group.distance
+
     //Составляет протокол прохождения дистанции
     fun getResultProtocol(): String{
-        TODO()
+        val res = StringBuilder("$number")
+        if(resultInfo==null){
+            res.appendLine("There's no information!")
+            return res.toString()
+        }
+        distance.controlPoints.forEach { point ->
+            val time = resultInfo.get(point)
+            res.appendLine("${point.name}, ${time?:"wasn't passed"}")
+        }
+        return res.toString()
     }
 }
 
