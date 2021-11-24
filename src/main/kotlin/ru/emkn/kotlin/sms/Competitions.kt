@@ -1,5 +1,6 @@
 package ru.emkn.kotlin.sms
 
+/*
 class Competitions {
     val name: String
     val date: String
@@ -21,7 +22,7 @@ class Competitions {
         TODO()
     }
 }
-
+*/
 
 data class ControlPoint(val name: String)
 data class Distance(

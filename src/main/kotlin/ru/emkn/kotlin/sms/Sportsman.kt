@@ -29,10 +29,12 @@ private fun readTeamFromCSV(file: File): Team {
     // первая строка это название команды, а дальше идут описания участников
     val rows: List< List<String> > = csvReader().readAll(file)
     require(rows.size >= 2) { "В команде нет участников или неверный формат ввода" }
+
     val name = rows[0][0]
     val sportsmen = rows.drop(2).map {row ->
         require(row.size >= 4) { "Не хватает информации об участнике команды $name" }
         check(row[3].toIntOrNull() != null) { "В столбце 'год рождения' должно быть число" }
+
         Sportsman(group=row[0], surname=row[1], name=row[2], birthYear=row[3].toInt(), level=row[4])
     }
     return Team(name, sportsmen)
