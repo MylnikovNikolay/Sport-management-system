@@ -32,16 +32,9 @@ data class ResultInfo(val controlPointTimes: List<String>)
 Группа: определяется дистанцией и участниками, хранит
 всю информацию о соревновании
  */
-class Group{
-    val name: String
-    val members: MutableList<GroupMember>
-    val distance: Distance
+class Group(val name: String, val distance: Distance) {
+    val members: MutableList<GroupMember> = mutableListOf()
 
-    constructor(name: String, distance: Distance){
-        this.name=name
-        this.distance=distance
-        this.members= mutableListOf()
-    }
     /*
     //По протоколам создает группу, чтобы генерировать групповой протокол
     constructor(startProtocol: String, controlPointProtocols: List<String>){
