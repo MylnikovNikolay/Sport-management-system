@@ -22,7 +22,7 @@ typealias ResultInfo = Map<ControlPoint,Time>
 всю информацию о соревновании
  */
 class Group(val name: String, val distance: Distance) {
-    val members: MutableList<CompetitionsMember> = mutableListOf()
+    val members: MutableList<CompetitionsSportsman> = mutableListOf()
 
     /*
     //По протоколам создает группу, чтобы генерировать групповой протокол
