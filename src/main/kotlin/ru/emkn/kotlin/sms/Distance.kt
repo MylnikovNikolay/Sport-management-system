@@ -1,7 +1,6 @@
 package ru.emkn.kotlin.sms
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import java.io.File
 
 
 class ControlPoint(val name: String, val distance: Distance) {
@@ -18,15 +17,10 @@ class ControlPoint(val name: String, val distance: Distance) {
 
     //По файлу с протоколом
     constructor(pathname: String, inputDistance: Distance, fromFile: Boolean = true) :
-            this(inputDistance, inputProtocol = stringFromPathname(pathname))
+            this(inputDistance, inputProtocol = readCSV(pathname))
 
     companion object {
-        fun stringFromPathname(pathname: String): String {
-            assert(File(pathname).exists() && File(pathname).extension == "csv") {
-                "Файла не существует либо у него не csv-расширение"
-            }
-            return File(pathname).readText()
-        }
+
         //Вычленяет name из протокола
         fun nameFromProtocol(protocol: String): String {
             val rows: List<List<String>> = csvReader().readAll(protocol)

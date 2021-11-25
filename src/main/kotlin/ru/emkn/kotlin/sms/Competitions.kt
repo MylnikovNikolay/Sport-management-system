@@ -24,24 +24,30 @@ class Competitions(val name: String, val date: String) {
         TODO()
     }
     */
+    fun findGroupByName(name: String) = groups.find{ it.name == name }
 
     //Прием заявления от команды, добавление всех участников
-    fun takeTeamApplication(application: String){
-        TODO()
+    fun takeTeamApplication(protocol: String){
+        val rows: List<List<String>> = csvReader().readAll(protocol)
+        val team = CompetitionsTeam(rows[0][0])
+        for(i in 1 until rows.size){
+            val row = rows[i]
+            val group = findGroupByName(row[5])?:continue
+            val sportsman = Sportsman.getFromProtocolRow(row)
+            val compSportsman = CompetitionsSportsman(sportsman, team, group)
+            group.members.add(compSportsman)
+        }
     }
 
-    //Начало соревнований - во всех группах проводится жеребьевка
-    fun calcStarts(){
-        TODO()
-    }
+
 }
 
 /*
 Карточка группы на соревнованиях
  */
-data class CompetitionsTeam(
-    val members: List<CompetitionsSportsman>,
-)
+data class CompetitionsTeam(val name: String,) {
+    val members: MutableList<CompetitionsSportsman> = mutableListOf()
+}
 
 /*
 Карточка спортсмена на соревнованиях
@@ -54,6 +60,7 @@ data class CompetitionsSportsman(
     var startInfo: StartInfo? = null,
     val resultInfo: ResultInfo? = null,
 ){
+
     val distance: Distance = group.distance
 
     //Составляет протокол прохождения дистанции
@@ -76,5 +83,6 @@ data class CompetitionsSportsman(
             number.toString(), sp.surname, sp.name, sp.birthYear.toString(), sp.level
         )
     }
+
 }
 
