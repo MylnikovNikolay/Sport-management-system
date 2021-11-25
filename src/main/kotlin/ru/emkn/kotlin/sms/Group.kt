@@ -45,7 +45,22 @@ class Group(val name: String, val distance: Distance) {
 
         // Увеличивает время на seconds секунд
         fun inc(timeStr: String, seconds: Int): String {
-            TODO()
+            var hh = timeStr.substring(0..1).toInt()
+            var mm = timeStr.substring(3..4).toInt()
+            var ss = timeStr.substring(6..7).toInt()
+
+            ss += seconds
+            mm += ss / 60
+            ss %= 60
+
+            hh += mm / 60
+            mm %= 60
+            // я не рад тому, что я написал, но оно работает
+            fun toStr(x: Int): String {
+                return if(x < 10) "0$x" else "$x"
+            }
+
+            return "${toStr(hh)}:${toStr(mm)}:${toStr(ss)}"
         }
 
         csvWriter().open(file) {
