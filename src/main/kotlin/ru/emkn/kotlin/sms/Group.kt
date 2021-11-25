@@ -1,8 +1,5 @@
 package ru.emkn.kotlin.sms
 
-import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import java.io.File
-
 
 typealias Time = String
 
@@ -34,14 +31,8 @@ class Group(val name: String, val distance: Distance) {
     //Делает жеребьевку в группе
     fun calcStarts(startTime: Time = "12:00:00", folder: String = "data/starts/") {
         val filepath = folder + "start$name.csv"
-        val file = File(filepath)
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-
         var time = startTime
-        val startOrder = members.toMutableList()
-        startOrder.shuffle()
+        members.shuffle()
 
         // Увеличивает время на seconds секунд
         fun inc(timeStr: String, seconds: Int): String {
@@ -56,25 +47,24 @@ class Group(val name: String, val distance: Distance) {
             hh += mm / 60
             mm %= 60
             // я не рад тому, что я написал, но оно работает
+            //это тебе не короткий код в алгосах
             fun toStr(x: Int): String {
                 return if(x < 10) "0$x" else "$x"
             }
 
             return "${toStr(hh)}:${toStr(mm)}:${toStr(ss)}"
         }
-
-        csvWriter().open(file) {
-            writeRow(name)
-            startOrder.forEach {
-                writeRow(it.toRow(), time)
-            }
-            time = inc(time, 60)
-        }
+        members.forEach{ it.startInfo = inc(time,60)}
     }
 
     //Делает протокол старта группы
     fun getStartsProtocol(): String{
-        TODO()
+        val strBuilder = StringBuilder(name)
+        members.forEach{
+            val info = if(it.startInfo==null) "no information" else it.startInfo.toString()
+            strBuilder.appendLine("${it.toProtocolRow()},$info")
+        }
+        return strBuilder.toString()
     }
 
     //Делает протокол результатов группы

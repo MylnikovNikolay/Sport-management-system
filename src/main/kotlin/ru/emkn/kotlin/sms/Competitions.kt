@@ -39,8 +39,31 @@ class Competitions(val name: String, val date: String) {
         }
     }
 
+    /*
+    Начало соревнований - во всех группах проводится жеребьевка
+     */
+    fun calcStarts(){
+        giveNumbersToSportsmenByGroups()
+        val time = "12:00:00"
+        groups.forEach { it.calcStarts(time) }
+    }
+
+    /*
+    Все участники получают номера.
+    В каждой группе номера у участников близкие.
+     */
+    private fun giveNumbersToSportsmenByGroups(){
+        var number = 1
+        for(group in groups){
+            for(member in group.members){
+                member.number = number
+                number++
+            }
+        }
+    }
 
 }
+
 
 /*
 Карточка группы на соревнованиях
@@ -48,6 +71,7 @@ class Competitions(val name: String, val date: String) {
 data class CompetitionsTeam(val name: String,) {
     val members: MutableList<CompetitionsSportsman> = mutableListOf()
 }
+
 
 /*
 Карточка спортсмена на соревнованиях
@@ -77,7 +101,7 @@ data class CompetitionsSportsman(
         return res.toString()
     }
 
-    fun toRow(): List<String> {
+    fun toProtocolRow(): List<String> {
         val sp = sportsman
         return listOf(
             number.toString(), sp.surname, sp.name, sp.birthYear.toString(), sp.level

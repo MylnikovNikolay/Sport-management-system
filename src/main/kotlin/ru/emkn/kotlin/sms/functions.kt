@@ -1,5 +1,6 @@
 package ru.emkn.kotlin.sms
 
+import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import java.io.File
 
 fun readCSV(pathname: String): String {
@@ -7,4 +8,13 @@ fun readCSV(pathname: String): String {
         "Файла не существует либо у него не csv-расширение"
     }
     return File(pathname).readText()
+}
+
+
+fun writeToFile(filepath: String, str: String){
+    val file = File(filepath)
+    if (!file.exists()) {
+        file.createNewFile()
+    }
+    TODO()
 }
