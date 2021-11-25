@@ -61,10 +61,17 @@ data class CompetitionsMember(
             return res.toString()
         }
         distance.controlPoints.forEach { point ->
-            val time = resultInfo.get(point)
+            val time = resultInfo[point]
             res.appendLine("${point.name}, ${time?:"wasn't passed"}")
         }
         return res.toString()
+    }
+
+    fun toRow(): List<String> {
+        val sp = sportsman
+        return listOf(
+            number.toString(), sp.surname, sp.name, sp.birthYear.toString(), sp.level
+        )
     }
 }
 
