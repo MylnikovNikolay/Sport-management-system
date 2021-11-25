@@ -1,18 +1,7 @@
 package ru.emkn.kotlin.sms
 
 
-typealias Time = String
 
-/*
-Информация о старте спортсмена - время старта
- */
-typealias StartInfo = Time
-
-/*
-Результаты забега: список отметок времени,
-когда спортсмен пересекал контрольные точки.
- */
-typealias ResultInfo = Map<ControlPoint,Time>
 
 /*
 Группа: определяется дистанцией и участниками, хранит
@@ -28,7 +17,9 @@ class Group(val name: String, val distance: Distance) {
     }
     */
 
-    //Делает жеребьевку в группе
+    /*
+    Делает жеребьевку в группе
+     */
     fun calcStarts(startTime: Time = "12:00:00", folder: String = "data/starts/") {
         val filepath = folder + "start$name.csv"
         var time = startTime
@@ -57,7 +48,9 @@ class Group(val name: String, val distance: Distance) {
         members.forEach{ it.startInfo = inc(time,60)}
     }
 
-    //Делает протокол старта группы
+    /*
+    Делает протокол старта группы
+     */
     fun getStartsProtocol(): String{
         val strBuilder = StringBuilder(name)
         members.forEach{
@@ -69,6 +62,12 @@ class Group(val name: String, val distance: Distance) {
 
     //Делает протокол результатов группы
     fun getResultsProtocol(): String{
-        TODO()
+        val membersByResult = members
+        val strBuilder = StringBuilder(name)
+        membersByResult.forEach{
+            val info = if(it.startInfo==null) "no information" else it.startInfo.toString()
+            strBuilder.appendLine("${it.toProtocolRow()},$info")
+        }
+        return strBuilder.toString()
     }
 }

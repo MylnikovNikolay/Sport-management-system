@@ -18,3 +18,16 @@ fun writeToFile(filepath: String, str: String){
     }
     TODO()
 }
+
+
+fun stringToTimeOrNull(str: String): Time?{
+    val arr = str.split(":")
+    if(arr.size!=3) return null
+    val hour = arr[0].toIntOrNull()
+    val minute = arr[0].toIntOrNull()
+    val second = arr[0].toIntOrNull()
+    if(hour==null || minute==null || second==null) return null
+    return Time(hour,minute,second)
+}
+
+

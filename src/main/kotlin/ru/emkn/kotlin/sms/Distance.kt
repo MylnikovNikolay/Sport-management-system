@@ -43,7 +43,8 @@ class ControlPoint(val name: String, val distance: Distance) {
         }
 
         rows.drop(1).forEach {
-            info[it[0].toInt()] = it[1]
+            val timeOrNull = stringToTimeOrNull(it[1])
+            info[it[0].toInt()] = timeOrNull!!
         }
     }
 
@@ -51,6 +52,10 @@ class ControlPoint(val name: String, val distance: Distance) {
 
 
 class Distance(val name: String) {
-    val controlPoints: List<ControlPoint> = mutableListOf()
+    val start = ControlPoint("Start",this)
+    val finish = ControlPoint("Finish",this)
+    val controlPoints: List<ControlPoint> = mutableListOf(start,finish)
+
+
 }
 

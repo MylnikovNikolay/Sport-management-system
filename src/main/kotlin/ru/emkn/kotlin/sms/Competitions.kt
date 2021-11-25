@@ -1,7 +1,6 @@
 package ru.emkn.kotlin.sms
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import java.io.File
 
 
 class Competitions(val name: String, val date: String) {
@@ -44,7 +43,7 @@ class Competitions(val name: String, val date: String) {
      */
     fun calcStarts(){
         giveNumbersToSportsmenByGroups()
-        val time = "12:00:00"
+        val time = Time(12,0,0)
         groups.forEach { it.calcStarts(time) }
     }
 
@@ -72,6 +71,10 @@ data class CompetitionsTeam(val name: String,) {
     val members: MutableList<CompetitionsSportsman> = mutableListOf()
 }
 
+typealias Time = java.sql.Time//String
+
+
+
 
 /*
 Карточка спортсмена на соревнованиях
@@ -86,7 +89,6 @@ data class CompetitionsSportsman(
 ){
 
     val distance: Distance = group.distance
-
     //Составляет протокол прохождения дистанции
     fun getResultProtocol(): String{
         val res = StringBuilder("$number")
@@ -95,7 +97,7 @@ data class CompetitionsSportsman(
             return res.toString()
         }
         distance.controlPoints.forEach { point ->
-            val time = resultInfo[point]
+            val time = resultInfo.time[point]
             res.appendLine("${point.name}, ${time?:"wasn't passed"}")
         }
         return res.toString()
@@ -108,5 +110,17 @@ data class CompetitionsSportsman(
         )
     }
 
+    /*
+    Информация о старте спортсмена - время старта
+    */
+    data class StartInfo(val time: Time)
+    /*
+    Результаты забега: список отметок времени,
+    когда спортсмен пересекал контрольные точки.
+    */
+    class ResultInfo(val distance: Distance) {
+        val time: MutableMap<ControlPoint,Time> = mutableMapOf()
+        //val totalTime: Time get() = time[distance.finish]. - time[distance.start]
+    }
 }
 
