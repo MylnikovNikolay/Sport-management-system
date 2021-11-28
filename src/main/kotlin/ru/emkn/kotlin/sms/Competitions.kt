@@ -146,13 +146,23 @@ class Competitions(val name: String,
     fun getResultsFromSplits(protocol: String) {
         val rows = csvReader().readAll(protocol)
         rows.forEach { row ->
-            assert(row.isNotEmpty())
+            assert(row.size % 2 == 1)
             val strNumber = row[0]
             val number = strNumber.toIntOrNull()
-            checkNotNull(number)
+            checkNotNull(number) {"Спортсмены идентифицируются по целому числу! $strNumber"}
             val group = findGroupByNumber(number)
-            checkNotNull(group)
+            checkNotNull(group) {"Номер никому не присвоен: $number"}
+            val distance = group.distance
+            val sportsman = group.numbersToMembers[number]
+            checkNotNull(sportsman) {"Номер никому не присвоен: $number"}
 
+            val stringsCPs = row.drop(1).filterIndexed{index,_ -> index % 2 == 0 }
+            val stringsTimes = row.drop(1).filterIndexed{index,_ -> index % 2 == 1}
+
+            val stringsPairs = stringsCPs.zip(stringsTimes)
+
+
+            TODO("дописать")
 
         }
     }
