@@ -38,6 +38,7 @@ class ControlPoint(val name: String, val distance: Distance) {
         assert(rows.isNotEmpty() && rows[0].isNotEmpty()) {
             "Неверный формат CSV-файла для протокола КП: отсутствует имя"
         }
+
         assert(rows[0][0] == name) {
             "Имя КП не соответствует КП"
         }

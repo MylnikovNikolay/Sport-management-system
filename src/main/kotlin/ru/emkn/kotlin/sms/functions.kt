@@ -26,7 +26,8 @@ fun stringToTimeOrNull(str: String): Time?{
     val hour = arr[0].toIntOrNull()
     val minute = arr[0].toIntOrNull()
     val second = arr[0].toIntOrNull()
-    if(hour==null || minute==null || second==null) return null
+    if(hour==null || minute==null || second==null || hour >= 24 || minute >= 60 || second >= 60 || hour < 0 || minute < 0
+        || second < 0) return null
     return Time(hour,minute,second)
 }
 

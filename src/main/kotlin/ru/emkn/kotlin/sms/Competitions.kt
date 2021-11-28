@@ -6,8 +6,8 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 class Competitions(val name: String,
                    val date: String,
                    val teams: MutableList<CompetitionsTeam>,
-                   val groups: MutableList<Group>,
-                   val distances: MutableList<Distance>,
+                   val groups: MutableSet<Group>,
+                   val distances: MutableSet<Distance>,
                    val groupToDistance: MutableMap<String, String>,
 ) {
 
@@ -28,11 +28,31 @@ class Competitions(val name: String,
             val competitions = Competitions(name, date)
 
             val groupToDistanceData = csvReader().readAllWithHeader(filepath.format("classes"))
+
+
+            //собираем дистанция
+            groupToDistanceData.forEach {
+                requireNotNull(it["Дистанция"])
+                val distance = competitions.findDistanceByName(it["Дистанция"]!!)
+                if (distance == null) {
+                    competitions.distances.add(Distance(it["Дистанция"]!!))
+                }
+
+            }
+
+            //теперь считываем группы и на всякий случай еще мапу группа - дистанция
             groupToDistanceData.forEach {
                 requireNotNull(it["Название"])
                 requireNotNull(it["Дистанция"])
                 competitions.groupToDistance[it["Название"]!!] = it["Дистанция"]!!
+
+                val group = competitions.findGroupByName(it["Название"]!!)
+                if (group == null)
+                    competitions.groups.add(Group(it["Название"]!!, Distance(it["Дистанция"]!!)))
+
             }
+
+
 
             val distanceDataWithHeader = csvReader().readAll(filepath.format("courses"))
             assert(distanceDataWithHeader.isNotEmpty())
@@ -55,11 +75,13 @@ class Competitions(val name: String,
                 competitions.groupToDistance)
 
     constructor(name: String, date: String):
-            this(name, date, mutableListOf(), mutableListOf(), mutableListOf(), mutableMapOf())
+            this(name, date, mutableListOf(), mutableSetOf(), mutableSetOf(), mutableMapOf())
 
     constructor(path: String): this(getCompetitionsByConfig(path))
 
     fun findGroupByName(name: String) = groups.find{ it.name == name }
+
+    fun findDistanceByName (name: String) = distances.find{it.name == name}
 
     //Прием заявления от команды, добавление всех участников
     fun takeTeamApplication(protocol: String){
@@ -94,6 +116,8 @@ class Competitions(val name: String,
                 member.number = number
                 number++
             }
+            number = (number / 100 + 1) * 100
+            // чтобы в каждой группе с круглого числа начинать
         }
     }
 
