@@ -71,9 +71,7 @@ data class CompetitionsTeam(val name: String,) {
     val members: MutableList<CompetitionsSportsman> = mutableListOf()
 }
 
-typealias Time = java.sql.Time//String
-
-
+typealias Time = java.sql.Time
 
 
 /*
@@ -113,7 +111,7 @@ data class CompetitionsSportsman(
     /*
     Информация о старте спортсмена - время старта
     */
-    data class StartInfo(val time: Time)
+    data class StartInfo(var time: Time)
     /*
     Результаты забега: список отметок времени,
     когда спортсмен пересекал контрольные точки.
