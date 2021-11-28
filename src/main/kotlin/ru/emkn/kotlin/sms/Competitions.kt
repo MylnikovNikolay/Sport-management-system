@@ -146,7 +146,7 @@ class Competitions(val name: String,
     fun getResultsFromSplits(protocol: String) {
         val rows = csvReader().readAll(protocol)
         rows.forEach { row ->
-            assert(row.size % 2 == 1)
+            assert(row.size % 2 == 1 && row.size >= 5)
             val strNumber = row[0]
             val number = strNumber.toIntOrNull()
             checkNotNull(number) {"Спортсмены идентифицируются по целому числу! $strNumber"}
@@ -156,13 +156,37 @@ class Competitions(val name: String,
             val sportsman = group.numbersToMembers[number]
             checkNotNull(sportsman) {"Номер никому не присвоен: $number"}
 
-            val stringsCPs = row.drop(1).filterIndexed{index,_ -> index % 2 == 0 }
-            val stringsTimes = row.drop(1).filterIndexed{index,_ -> index % 2 == 1}
-
+            val stringsCPs = row.drop(1).filterIndexed{index, element -> index % 2 == 0 && element.isNotEmpty() }
+            val stringsTimes = row.drop(1).filterIndexed{index, element -> index % 2 == 1 && element.isNotEmpty()}
+            check(stringsCPs.size == stringsTimes.size)
             val stringsPairs = stringsCPs.zip(stringsTimes)
+            check(stringsPairs.size >= 2)
+
+            val pairsWithoutStartAndFinish = stringsPairs.drop(1).dropLast(1)
 
 
-            TODO("дописать")
+
+            val startPair = stringsPairs[0]
+            val finishPair = stringsPairs[stringsPairs.lastIndex]
+
+            val startCP = distance.findCPByName("${distance.name}-Start")
+            startCP!!.info[number] = stringToTimeOrNull(startPair.second)
+
+            val finishCP = distance.findCPByName("${distance.name}-Finish")
+            finishCP!!.info[number] = stringToTimeOrNull(finishPair.second)
+
+            /* У меня вопросы к файлу splits - я его не понимаю */
+
+            toBeContinued@ for (it in pairsWithoutStartAndFinish)  {
+                val stringCP = it.first
+                val stringTime = it.second
+                val CP = distance.findCPByName("${distance.name}-$it") ?: continue@toBeContinued
+                val time = stringToTimeOrNull(stringTime)
+                CP.info[number] = time
+
+            }
+
+            TODO("дописать - написал сохранение резов в кп, но нигде больше")
 
         }
     }

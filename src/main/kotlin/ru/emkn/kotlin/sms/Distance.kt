@@ -53,9 +53,11 @@ class ControlPoint(val name: String, val distance: Distance) {
 
 
 class Distance(val name: String) {
-    val start = ControlPoint("Start",this)
-    val finish = ControlPoint("Finish",this)
+    val start = ControlPoint("$name-Start",this)
+    val finish = ControlPoint("$name-Finish",this)
     val controlPoints: MutableSet<ControlPoint> = mutableSetOf(start,finish)
+
+    fun findCPByName(name: String) = controlPoints.find {it.name == name}
 
 }
 
