@@ -48,6 +48,10 @@ data class Sportsman(
                 "жен" -> Gender.FEMALE
                 "жен." -> Gender.FEMALE
                 "женский" -> Gender.FEMALE
+                "м" -> Gender.MALE
+                "ж" -> Gender.FEMALE
+                "м." -> Gender.MALE
+                "ж." -> Gender.FEMALE
                 else -> Gender.UNKNOWN
             }
         }

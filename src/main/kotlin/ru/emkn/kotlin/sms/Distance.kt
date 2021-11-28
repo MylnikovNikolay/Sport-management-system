@@ -6,7 +6,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 class ControlPoint(val name: String, val distance: Distance) {
 
     //Регистрирует номер прошедшего этот пункт участника и время
-    val info: MutableMap<Int,Time> = mutableMapOf()
+    val info: MutableMap<Int,Time?> = mutableMapOf()
 
 
     //Конструктор строит сразу по протоколу
@@ -45,7 +45,7 @@ class ControlPoint(val name: String, val distance: Distance) {
 
         rows.drop(1).forEach {
             val timeOrNull = stringToTimeOrNull(it[1])
-            info[it[0].toInt()] = timeOrNull!!
+            info[it[0].toInt()] = timeOrNull
         }
     }
 
@@ -56,7 +56,6 @@ class Distance(val name: String) {
     val start = ControlPoint("Start",this)
     val finish = ControlPoint("Finish",this)
     val controlPoints: MutableSet<ControlPoint> = mutableSetOf(start,finish)
-
 
 }
 

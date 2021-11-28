@@ -10,6 +10,12 @@ package ru.emkn.kotlin.sms
 class Group(val name: String, val distance: Distance) {
     val members: MutableList<CompetitionsSportsman> = mutableListOf()
 
+    //храним номера, принадлежащие данной группе
+    var numbers: IntRange? = null
+        set(value) {
+            if (numbers == null)
+                field = value
+        }
     /*
     //По протоколам создает группу, чтобы генерировать групповой протокол
     constructor(startProtocol: String, controlPointProtocols: List<String>){

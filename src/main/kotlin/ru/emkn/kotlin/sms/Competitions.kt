@@ -63,7 +63,9 @@ class Competitions(val name: String,
                 val distance = competitions.findDistanceByName(row[0])
                 checkNotNull(distance) {"Distance doesn't exist: ${row[0]}"}
                 row.drop(1).forEach{
-                    distance.controlPoints.add(ControlPoint("$it-${distance.name}", distance))
+                    if (it.isNotEmpty())
+                        distance.controlPoints.add(ControlPoint("$it-${distance.name}", distance))
+                    //Чтобы надежно различать КП, пусть на всякий случай в названии КП есть и название дистанции тоже
                 }
             }
 
@@ -87,6 +89,15 @@ class Competitions(val name: String,
     fun findGroupByName(name: String) = groups.find{ it.name == name }
 
     fun findDistanceByName (name: String) = distances.find{it.name == name}
+
+    fun findGroupByNumber (number: Int): Group? {
+        var result: Group? = null
+        groups.forEach { group ->
+            if (group.numbers != null && number in group.numbers!!)
+                result = group
+        }
+        return result
+    }
 
     //Прием заявления от команды, добавление всех участников
     fun takeTeamApplication(protocol: String){
@@ -117,11 +128,13 @@ class Competitions(val name: String,
     private fun giveNumbersToSportsmenByGroups(){
         var number = 100
         for(group in groups){
+            val beginningNumberInGroup = number
             for(member in group.members){
                 member.number = number
                 number++
             }
             number = (number / 100 + 1) * 100
+            group.numbers = beginningNumberInGroup..number
             // чтобы в каждой группе с круглого числа начинать
         }
     }
