@@ -1,7 +1,12 @@
 package ru.emkn.kotlin.sms
 
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import java.io.File
+
+
 fun main(args: Array<String>) {
-    TODO()
+    val configFolder = "./data/config/"
+    val competitions = Competitions(configFolder)
 }
 
 /*
@@ -9,7 +14,7 @@ fun main(args: Array<String>) {
 
 1. Создание соревнования
     Загрузка из конфигурационных файлов:
-    - название соревнования
+    - название соревнования и дата проведения
     - список групп
       (optional: возможность делать ограничение для группы, которое будет проверяться автоматически,
        например: для М21 обязательное условие, что возраст участника - 21 год и мужской пол)

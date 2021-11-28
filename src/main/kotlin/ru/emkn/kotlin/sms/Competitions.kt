@@ -3,26 +3,54 @@ package ru.emkn.kotlin.sms
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
 
-class Competitions(val name: String, val date: String) {
-    val teams: List<CompetitionsTeam>
-    val groups: List<Group>
-    val distances: List<Distance>
+class Competitions(val name: String,
+                   val date: String,
+                   val teams: MutableList<CompetitionsTeam>,
+                   val groups: MutableList<Group>,
+                   val distances: MutableList<Distance>,
+                   val groupToDistance: MutableMap<String, String>,
+) {
 
-    init {
-        this.groups = mutableListOf()
-        this.teams = mutableListOf()
-        this.distances = mutableListOf()
-    }
     companion object{
         fun fromProtocols(startProtocols: List<String>, CP_protocols: List<String>): Competitions{
             TODO()
         }
+
+        fun getCompetitionsByConfig(path: String): Competitions {
+            val filepath = "$path%s.csv"
+            val eventData = csvReader().readAllWithHeader(filepath.format("event"))
+            assert(eventData.size == 1)
+            requireNotNull(eventData[0]["Название"])
+            val name = eventData[0]["Название"]!!
+            requireNotNull(eventData[0]["Дата"])
+            val date = eventData[0]["Дата"]!!
+
+            val competitions = Competitions(name, date)
+
+            val groupData = csvReader().readAllWithHeader(filepath.format("classes"))
+            groupData.forEach {
+                requireNotNull(it["Название"])
+                requireNotNull(it["Дистанция"])
+                competitions.groupToDistance[it["Название"]!!] = it["Дистанция"]!!
+            }
+
+            return competitions
+        }
     }
-    /*
-    constructor(path: String){
-        TODO()
-    }
-    */
+
+    constructor(competitions: Competitions):
+            this(competitions.name,
+                competitions.date,
+                competitions.teams,
+                competitions.groups,
+                competitions.distances,
+                competitions.groupToDistance)
+
+    constructor(name: String, date: String):
+            this(name, date, mutableListOf(), mutableListOf(), mutableListOf(), mutableMapOf())
+
+    constructor(path: String): this(getCompetitionsByConfig(path))
+
     fun findGroupByName(name: String) = groups.find{ it.name == name }
 
     //Прием заявления от команды, добавление всех участников
