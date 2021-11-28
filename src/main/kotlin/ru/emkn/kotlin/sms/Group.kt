@@ -16,6 +16,8 @@ class Group(val name: String, val distance: Distance) {
             if (numbers == null)
                 field = value
         }
+
+    val numbersToMembers: MutableMap <Int, CompetitionsSportsman> = mutableMapOf()
     /*
     //По протоколам создает группу, чтобы генерировать групповой протокол
     constructor(startProtocol: String, controlPointProtocols: List<String>){
@@ -69,7 +71,7 @@ class Group(val name: String, val distance: Distance) {
         val membersByResult = members
         val strBuilder = StringBuilder(name)
         membersByResult.forEach{
-            val info = if(it.startInfo==null) "no information" else it.startInfo.toString()
+            val info = if (it.startInfo==null) "no information" else it.startInfo.toString()
             strBuilder.appendLine("${it.toProtocolRow()},$info")
         }
         return strBuilder.toString()

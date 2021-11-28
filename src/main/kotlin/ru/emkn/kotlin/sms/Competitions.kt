@@ -58,7 +58,7 @@ class Competitions(val name: String,
             assert(distanceDataWithHeader.isNotEmpty())
             val distanceData = distanceDataWithHeader.drop(1)
             distanceData.forEach { row ->
-                assert(row.size >= 3)
+                assert(row.isNotEmpty())
 
                 val distance = competitions.findDistanceByName(row[0])
                 checkNotNull(distance) {"Distance doesn't exist: ${row[0]}"}
@@ -126,16 +126,34 @@ class Competitions(val name: String,
     В каждой группе номера у участников близкие.
      */
     private fun giveNumbersToSportsmenByGroups(){
-        var number = 100
+        var number: Int = 100
         for(group in groups){
             val beginningNumberInGroup = number
             for(member in group.members){
                 member.number = number
+                group.numbersToMembers[number] = member
                 number++
             }
             number = (number / 100 + 1) * 100
             group.numbers = beginningNumberInGroup..number
             // чтобы в каждой группе с круглого числа начинать
+        }
+    }
+
+
+    //получаем результаты из splits
+
+    fun getResultsFromSplits(protocol: String) {
+        val rows = csvReader().readAll(protocol)
+        rows.forEach { row ->
+            assert(row.isNotEmpty())
+            val strNumber = row[0]
+            val number = strNumber.toIntOrNull()
+            checkNotNull(number)
+            val group = findGroupByNumber(number)
+            checkNotNull(group)
+
+
         }
     }
 
