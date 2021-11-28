@@ -172,18 +172,22 @@ class Competitions(val name: String,
             val startCP = distance.findCPByName("${distance.name}-Start")
             startCP!!.info[number] = stringToTimeOrNull(startPair.second)
 
+            sportsman.resultInfo.time[startCP] = stringToTimeOrNull(startPair.second)
+
             val finishCP = distance.findCPByName("${distance.name}-Finish")
             finishCP!!.info[number] = stringToTimeOrNull(finishPair.second)
 
+            sportsman.resultInfo.time[finishCP] = stringToTimeOrNull(finishPair.second)
             /* У меня вопросы к файлу splits - я его не понимаю */
 
             toBeContinued@ for (it in pairsWithoutStartAndFinish)  {
                 val stringCP = it.first
                 val stringTime = it.second
-                val CP = distance.findCPByName("${distance.name}-${it.first}") ?: continue@toBeContinued
+                val CP = distance.findCPByName("${distance.name}-${stringCP}") ?: continue@toBeContinued
                 val time = stringToTimeOrNull(stringTime)
                 CP.info[number] = time
 
+                sportsman.resultInfo.time[CP] = time
             }
 
             TODO("дописать - написал сохранение резов в кп, но нигде больше")
@@ -213,14 +217,14 @@ data class CompetitionsSportsman(
     val group: Group,
     var number: Int? = null,
     var startInfo: StartInfo? = null,
-    val resultInfo: ResultInfo? = null,
+    val resultInfo: ResultInfo = ResultInfo(group.distance),
 ){
 
     val distance: Distance = group.distance
     //Составляет протокол прохождения дистанции
     fun getResultProtocol(): String{
         val res = StringBuilder("$number")
-        if(resultInfo==null){
+        if(resultInfo.isEmpty()){
             res.appendLine("There's no information!")
             return res.toString()
         }
@@ -247,8 +251,9 @@ data class CompetitionsSportsman(
     когда спортсмен пересекал контрольные точки.
     */
     class ResultInfo(val distance: Distance) {
-        val time: MutableMap<ControlPoint,Time> = mutableMapOf()
-        //val totalTime: Time get() = time[distance.finish]. - time[distance.start]
+        val time: MutableMap<ControlPoint,Time?> = mutableMapOf()
+        fun isEmpty(): Boolean = time.isEmpty()
+        //val totalTime: Time get() = time[distance.finish]. - time[dstance.start]
     }
 }
 
