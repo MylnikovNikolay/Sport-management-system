@@ -55,7 +55,7 @@ class ControlPoint(val name: String, val distance: Distance) {
 class Distance(val name: String) {
     val start = ControlPoint("Start",this)
     val finish = ControlPoint("Finish",this)
-    val controlPoints: List<ControlPoint> = mutableListOf(start,finish)
+    val controlPoints: MutableSet<ControlPoint> = mutableSetOf(start,finish)
 
 
 }

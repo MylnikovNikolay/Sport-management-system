@@ -57,9 +57,14 @@ class Competitions(val name: String,
             val distanceDataWithHeader = csvReader().readAll(filepath.format("courses"))
             assert(distanceDataWithHeader.isNotEmpty())
             val distanceData = distanceDataWithHeader.drop(1)
-            distanceData.forEach {
-                assert(it.size >= 3)
-                TODO("Я не смог разобраться как должен работать ControlPoint и Distance")
+            distanceData.forEach { row ->
+                assert(row.size >= 3)
+
+                val distance = competitions.findDistanceByName(row[0])
+                checkNotNull(distance) {"Distance doesn't exist: ${row[0]}"}
+                row.drop(1).forEach{
+                    distance.controlPoints.add(ControlPoint("$it-${distance.name}", distance))
+                }
             }
 
             return competitions
@@ -110,7 +115,7 @@ class Competitions(val name: String,
     В каждой группе номера у участников близкие.
      */
     private fun giveNumbersToSportsmenByGroups(){
-        var number = 1
+        var number = 100
         for(group in groups){
             for(member in group.members){
                 member.number = number
