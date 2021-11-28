@@ -180,7 +180,7 @@ class Competitions(val name: String,
             toBeContinued@ for (it in pairsWithoutStartAndFinish)  {
                 val stringCP = it.first
                 val stringTime = it.second
-                val CP = distance.findCPByName("${distance.name}-$it") ?: continue@toBeContinued
+                val CP = distance.findCPByName("${distance.name}-${it.first}") ?: continue@toBeContinued
                 val time = stringToTimeOrNull(stringTime)
                 CP.info[number] = time
 
