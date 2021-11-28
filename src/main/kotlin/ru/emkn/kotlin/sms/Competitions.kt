@@ -27,11 +27,19 @@ class Competitions(val name: String,
 
             val competitions = Competitions(name, date)
 
-            val groupData = csvReader().readAllWithHeader(filepath.format("classes"))
-            groupData.forEach {
+            val groupToDistanceData = csvReader().readAllWithHeader(filepath.format("classes"))
+            groupToDistanceData.forEach {
                 requireNotNull(it["Название"])
                 requireNotNull(it["Дистанция"])
                 competitions.groupToDistance[it["Название"]!!] = it["Дистанция"]!!
+            }
+
+            val distanceDataWithHeader = csvReader().readAll(filepath.format("courses"))
+            assert(distanceDataWithHeader.isNotEmpty())
+            val distanceData = distanceDataWithHeader.drop(1)
+            distanceData.forEach {
+                assert(it.size >= 3)
+                TODO("Я не смог разобраться как должен работать ControlPoint и Distance")
             }
 
             return competitions
