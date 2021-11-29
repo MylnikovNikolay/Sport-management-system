@@ -1,12 +1,13 @@
 package ru.emkn.kotlin.sms
 
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import java.io.File
 
 
 fun main(args: Array<String>) {
     val configFolder = "./data/config/"
     val competitions = Competitions(configFolder)
+
+    competitions.takeAllApplicationsFromFolder("./data/applications/")
+    println(competitions.teams)
 }
 
 /*

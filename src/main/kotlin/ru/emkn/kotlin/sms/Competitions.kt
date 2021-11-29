@@ -1,6 +1,7 @@
 package ru.emkn.kotlin.sms
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import java.io.File
 
 
 class Competitions(val name: String,
@@ -18,7 +19,7 @@ class Competitions(val name: String,
 
         fun getCompetitionsByConfig(path: String): Competitions {
             val filepath = "$path%s.csv"
-            val eventData = csvReader().readAllWithHeader(filepath.format("event"))
+            val eventData = csvReader().readAllWithHeader(File(filepath.format("event")))
             assert(eventData.size == 1)
             requireNotNull(eventData[0]["Название"])
             val name = eventData[0]["Название"]!!
@@ -100,15 +101,21 @@ class Competitions(val name: String,
     }
 
     //Прием заявления от команды, добавление всех участников
-    fun takeTeamApplication(protocol: String){
-        val rows: List<List<String>> = csvReader().readAll(protocol)
+    fun takeTeamApplication(filepath: String){
+        val rows: List<List<String>> = csvReader().readAll(File(filepath))
         val team = CompetitionsTeam(rows[0][0])
         for(i in 1 until rows.size){
             val row = rows[i]
-            val group = findGroupByName(row[5])?:continue
+            val group = findGroupByName(row[0])?:continue
             val sportsman = Sportsman.getFromProtocolRow(row)
             val compSportsman = CompetitionsSportsman(sportsman, team, group)
             group.members.add(compSportsman)
+        }
+    }
+
+    fun takeAllApplicationsFromFolder(path: String) {
+        File(path).walk().drop(1).forEach {
+            takeTeamApplication(it.path)
         }
     }
 
