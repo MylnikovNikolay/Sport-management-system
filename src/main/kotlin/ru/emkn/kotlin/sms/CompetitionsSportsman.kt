@@ -8,7 +8,7 @@ data class CompetitionsTeam(val name: String,) {
     val members: MutableList<CompetitionsSportsman> = mutableListOf()
 }
 
-typealias Time = java.sql.Time
+
 
 
 /*

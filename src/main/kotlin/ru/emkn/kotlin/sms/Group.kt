@@ -25,32 +25,17 @@ class Group(val name: String, val distance: Distance) {
     }
     */
 
+
     /*
     Делает жеребьевку в группе
      */
-    fun calcStarts(startTime: Time = Time(12, 0, 0), folder: String = "data/starts/") {
+    fun calcStarts(startTime: Time = Time.of(12, 0, 0), folder: String = "data/starts/") {
         val filepath = folder + "start$name.csv"
         var time = startTime
         members.shuffle()
-
-        // Увеличивает время на seconds секунд
-        fun increaseTime(time: Time, increaseBy: Int): Time {
-            var hours = time.hours
-            var minutes = time.minutes
-            var seconds = time.seconds
-
-            seconds += increaseBy
-            minutes += seconds / 60
-            seconds %= 60
-
-            hours += minutes / 60
-            minutes %= 60
-
-            return Time(hours, minutes, seconds)
-        }
         members.forEach {
             it.startInfo = StartInfo(time)
-            time = increaseTime(time, 60)
+            time = time.plusSeconds(60)
         }
     }
 

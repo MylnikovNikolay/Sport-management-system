@@ -125,7 +125,7 @@ class Competitions(val name: String,
      */
     fun calcStarts(){
         giveNumbersToSportsmenByGroups()
-        val time = Time(12,0,0)
+        val time = Time.of(12,0,0)
         groups.forEach {
             it.calcStarts(time)
             it.createStartProtocolFile("./data/start protocols/")
