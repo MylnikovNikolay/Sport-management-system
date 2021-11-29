@@ -57,10 +57,10 @@ data class Sportsman(
         }
         fun getFromProtocolRow(row: List<String>): Sportsman{
             return Sportsman(
-                surname = row[0],
-                name = row[1],
-                birthYear =  row[2].toInt(),
-                level = row[3]
+                surname = row[1],
+                name = row[2],
+                birthYear =  row[3].toInt(),
+                level = row[4]
             )
         }
     }

@@ -28,8 +28,7 @@ class Competitions(val name: String,
 
             val competitions = Competitions(name, date)
 
-            val groupToDistanceData = csvReader().readAllWithHeader(filepath.format("classes"))
-
+            val groupToDistanceData = csvReader().readAllWithHeader(File(filepath.format("classes")))
 
             //собираем дистанция
             groupToDistanceData.forEach {
@@ -109,8 +108,10 @@ class Competitions(val name: String,
             val group = findGroupByName(row[0])?:continue
             val sportsman = Sportsman.getFromProtocolRow(row)
             val compSportsman = CompetitionsSportsman(sportsman, team, group)
+            team.members.add(compSportsman)
             group.members.add(compSportsman)
         }
+        teams.add(team)
     }
 
     fun takeAllApplicationsFromFolder(path: String) {
