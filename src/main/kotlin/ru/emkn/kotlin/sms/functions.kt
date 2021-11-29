@@ -3,6 +3,11 @@ package ru.emkn.kotlin.sms
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import java.io.File
 
+class ImportantValueIsMissing(key: String):
+    Exception("Важное значение '$key' отсутствует или имеет неверный формат")
+
+
+
 fun readCSV(pathname: String): String {
     assert(File(pathname).exists() && File(pathname).extension == "csv") {
         "Файла не существует либо у него не csv-расширение"
