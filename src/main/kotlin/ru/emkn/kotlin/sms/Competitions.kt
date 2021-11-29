@@ -126,7 +126,10 @@ class Competitions(val name: String,
     fun calcStarts(){
         giveNumbersToSportsmenByGroups()
         val time = Time(12,0,0)
-        groups.forEach { it.calcStarts(time) }
+        groups.forEach {
+            it.calcStarts(time)
+            it.createStartProtocolFile("./data/start protocols/")
+        }
     }
 
     /*
@@ -251,10 +254,6 @@ data class CompetitionsSportsman(
     }
 
     /*
-    Информация о старте спортсмена - время старта
-    */
-    data class StartInfo(var time: Time)
-    /*
     Результаты забега: список отметок времени,
     когда спортсмен пересекал контрольные точки.
     */
@@ -265,3 +264,7 @@ data class CompetitionsSportsman(
     }
 }
 
+/*
+    Информация о старте спортсмена - время старта
+*/
+data class StartInfo(var time: Time)

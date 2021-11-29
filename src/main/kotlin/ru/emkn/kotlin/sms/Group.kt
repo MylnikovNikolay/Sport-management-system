@@ -1,6 +1,6 @@
 package ru.emkn.kotlin.sms
 
-
+import java.io.File
 
 
 /*
@@ -34,12 +34,12 @@ class Group(val name: String, val distance: Distance) {
         members.shuffle()
 
         // Увеличивает время на seconds секунд
-        fun increaseTime(time: Time, seconds: Int): Time {
+        fun increaseTime(time: Time, increaseBy: Int): Time {
             var hours = time.hours
             var minutes = time.minutes
             var seconds = time.seconds
 
-            seconds += seconds
+            seconds += increaseBy
             minutes += seconds / 60
             seconds %= 60
 
@@ -48,8 +48,8 @@ class Group(val name: String, val distance: Distance) {
 
             return Time(hours, minutes, seconds)
         }
-        members.forEach{
-            it.startInfo?.time = time
+        members.forEach {
+            it.startInfo = StartInfo(time)
             time = increaseTime(time, 60)
         }
     }
@@ -61,9 +61,15 @@ class Group(val name: String, val distance: Distance) {
         val strBuilder = StringBuilder(name)
         members.forEach{
             val info = if(it.startInfo==null) "no information" else it.startInfo.toString()
-            strBuilder.appendLine("${it.toProtocolRow()},$info")
+            strBuilder.appendLine("${it.toProtocolRow().joinToString(",")},$info")
         }
         return strBuilder.toString()
+    }
+
+    fun createStartProtocolFile(folder: String) {
+        val file = File(folder + "startProtocol$name.csv")
+        file.createNewFile()
+        file.writeText(getStartsProtocol())
     }
 
     //Делает протокол результатов группы

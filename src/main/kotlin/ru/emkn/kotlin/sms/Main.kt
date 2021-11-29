@@ -7,6 +7,7 @@ fun main(args: Array<String>) {
     val competitions = Competitions(configFolder)
 
     competitions.takeAllApplicationsFromFolder("./data/applications/")
+    competitions.calcStarts()
 }
 
 /*
