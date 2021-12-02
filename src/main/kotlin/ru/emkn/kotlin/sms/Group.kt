@@ -46,7 +46,7 @@ class Group(val name: String, val distance: Distance) {
         val strBuilder = StringBuilder(name)
         members.forEach{
             val info = if(it.startTime==null) "no information" else it.startTime.toString()
-            strBuilder.appendLine("${it.toProtocolRow().joinToString(",")},$info")
+            strBuilder.appendLine("${it.toProtocolRow()},$info")
         }
         return strBuilder.toString()
     }
@@ -64,6 +64,7 @@ class Group(val name: String, val distance: Distance) {
         membersByResult.forEach{
             val info = if (it.startTime==null) "no information" else it.startTime.toString()
             strBuilder.appendLine("${it.toProtocolRow()},$info")
+            TODO("ЧТО ЭТО")
         }
         return strBuilder.toString()
     }

@@ -38,11 +38,10 @@ data class CompetitionsSportsman(
         return res.toString()
     }
 
-    fun toProtocolRow(): List<String> {
+    fun toProtocolRow(): String {
         val sp = sportsman
-        return listOf(
-            number.toString(), sp.surname, sp.name, sp.birthYear.toString(), sp.level
-        )
+        return "${number.toString()},${sp.surname},${sp.name},${sp.birthYear},${sp.level}"
+
     }
 
     /*
