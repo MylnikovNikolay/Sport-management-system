@@ -18,21 +18,21 @@ data class CompetitionsSportsman(
     val sportsman: Sportsman,
     val team: CompetitionsTeam,
     val group: Group,
-    var number: Int? = null,
-    var startInfo: StartInfo? = null,
-    val resultInfo: ResultInfo = ResultInfo(group.distance),
 ){
-
+    var startTime: Time? = null
+    var number: Int? = null
     val distance: Distance = group.distance
+    var resultInfo: ResultInfo? = null
+
     //Составляет протокол прохождения дистанции
     fun getResultProtocol(): String{
         val res = StringBuilder("$number")
-        if(resultInfo.isEmpty()){
+        if(resultInfo == null){
             res.appendLine("There's no information!")
             return res.toString()
         }
         distance.controlPoints.forEach { point ->
-            val time = resultInfo.time[point]
+            val time = resultInfo!!.CPtimes[point]
             res.appendLine("${point.name}, ${time?:"wasn't passed"}")
         }
         return res.toString()
@@ -49,10 +49,10 @@ data class CompetitionsSportsman(
     Результаты забега: список отметок времени,
     когда спортсмен пересекал контрольные точки.
     */
-    class ResultInfo(val distance: Distance) {
-        val time: MutableMap<ControlPoint,Time?> = mutableMapOf()
-        fun isEmpty(): Boolean = time.isEmpty()
-        //val totalTime: Time get() = time[distance.finish]. - time[dstance.start]
+    inner class ResultInfo {
+        val CPtimes: MutableMap<ControlPoint, Time?> = distance.controlPoints.map {it to null}.toMap().toMutableMap()
+        //val totalTime: Time
+        //    get() = CPtimes[distance.finish] - CPtimes[distance.start]
     }
 }
 

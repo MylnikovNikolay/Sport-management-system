@@ -156,7 +156,8 @@ class Competitions(val name: String,
 
     fun getResultsFromSplits(protocol: String) {
         val rows = csvReader().readAll(protocol)
-        rows.forEach { row ->
+        toBeContinued@ for (row in rows) {
+
             assert(row.size % 2 == 1 && row.size >= 5)
             val strNumber = row[0]
             val number = strNumber.toIntOrNull()
@@ -182,26 +183,25 @@ class Competitions(val name: String,
 
             val startCP = distance.findCPByName("${distance.name}-Start")
             startCP!!.info[number] = stringToTimeOrNull(startPair.second)
-
-            sportsman.resultInfo.time[startCP] = stringToTimeOrNull(startPair.second)
+            sportsman.resultInfo = sportsman.ResultInfo()
+            sportsman.resultInfo!!.CPtimes[startCP] = stringToTimeOrNull(startPair.second)
 
             val finishCP = distance.findCPByName("${distance.name}-Finish")
             finishCP!!.info[number] = stringToTimeOrNull(finishPair.second)
 
-            sportsman.resultInfo.time[finishCP] = stringToTimeOrNull(finishPair.second)
+            sportsman.resultInfo!!.CPtimes[finishCP] = stringToTimeOrNull(finishPair.second)
             /* У меня вопросы к файлу splits - я его не понимаю */
 
-            toBeContinued@ for (it in pairsWithoutStartAndFinish)  {
+            for (it in pairsWithoutStartAndFinish)  {
                 val stringCP = it.first
                 val stringTime = it.second
                 val CP = distance.findCPByName("${distance.name}-${stringCP}") ?: continue@toBeContinued
                 val time = stringToTimeOrNull(stringTime)
                 CP.info[number] = time
 
-                sportsman.resultInfo.time[CP] = time
+                sportsman.resultInfo!!.CPtimes[CP] = time
             }
-
-            TODO("дописать - написал сохранение резов в кп, но нигде больше")
+            TODO("Поменять ассерты на continue")
 
         }
     }

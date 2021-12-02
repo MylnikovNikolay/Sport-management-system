@@ -23,4 +23,7 @@ internal class SportsmanTests {
         assertEquals(2015, team.sportsmen[34].birthYear)
         assertEquals("", team.sportsmen[34].level)
     }
+
+
+
 }

@@ -35,7 +35,9 @@ fun stringToTimeOrNull(str: String): Time?{
     try {
         val time = Time.parse(str)
         return time
-    }finally{ return null }
+    }finally{
+        return null
+    }
 }
 
 

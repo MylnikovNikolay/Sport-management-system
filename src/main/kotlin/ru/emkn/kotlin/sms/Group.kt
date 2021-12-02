@@ -34,7 +34,7 @@ class Group(val name: String, val distance: Distance) {
         var time = startTime
         members.shuffle()
         members.forEach {
-            it.startInfo = StartInfo(time)
+            it.startTime = time
             time = time.plusSeconds(60)
         }
     }
@@ -45,7 +45,7 @@ class Group(val name: String, val distance: Distance) {
     fun getStartsProtocol(): String{
         val strBuilder = StringBuilder(name)
         members.forEach{
-            val info = if(it.startInfo==null) "no information" else it.startInfo.toString()
+            val info = if(it.startTime==null) "no information" else it.startTime.toString()
             strBuilder.appendLine("${it.toProtocolRow().joinToString(",")},$info")
         }
         return strBuilder.toString()
@@ -62,7 +62,7 @@ class Group(val name: String, val distance: Distance) {
         val membersByResult = members
         val strBuilder = StringBuilder(name)
         membersByResult.forEach{
-            val info = if (it.startInfo==null) "no information" else it.startInfo.toString()
+            val info = if (it.startTime==null) "no information" else it.startTime.toString()
             strBuilder.appendLine("${it.toProtocolRow()},$info")
         }
         return strBuilder.toString()
