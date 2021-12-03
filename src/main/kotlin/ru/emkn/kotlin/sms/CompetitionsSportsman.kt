@@ -1,16 +1,29 @@
 package ru.emkn.kotlin.sms
 
 
+
+
+class CompetitionsSportsman(
+    sportsman: Sportsman,
+    team: _CompetitionsTeam,
+    group: _Group,
+) : _CompetitionsSportsman(sportsman,team,group){
+
+    override fun getDistancePassingProtocol(): String {
+        TODO("Not yet implemented")
+    }
+
+    fun toProtocolRow(): String =
+        "$number,$surname,$name,$birthYear,$level"
+
+}
+/*
 /*
 Карточка группы на соревнованиях
  */
 data class CompetitionsTeam(val name: String,) {
     val members: MutableList<CompetitionsSportsman> = mutableListOf()
 }
-
-
-
-
 /*
 Карточка спортсмена на соревнованиях
  */
@@ -18,40 +31,41 @@ data class CompetitionsSportsman(
     val sportsman: Sportsman,
     val team: CompetitionsTeam,
     val group: Group,
+    var number: Int? = null,
+    var startInfo: StartInfo? = null,
+    val resultInfo: ResultInfo = ResultInfo(group.distance),
 ){
-    var startTime: Time? = null
-    var number: Int? = null
-    val distance: Distance = group.distance
-    var resultInfo: ResultInfo? = null
 
+    val distance: Distance = group.distance
     //Составляет протокол прохождения дистанции
     fun getResultProtocol(): String{
         val res = StringBuilder("$number")
-        if(resultInfo == null){
+        if(resultInfo.isEmpty()){
             res.appendLine("There's no information!")
             return res.toString()
         }
         distance.controlPoints.forEach { point ->
-            val time = resultInfo!!.CPtimes[point]
+            val time = resultInfo.time[point]
             res.appendLine("${point.name}, ${time?:"wasn't passed"}")
         }
         return res.toString()
     }
 
-    fun toProtocolRow(): String {
+    fun toProtocolRow(): List<String> {
         val sp = sportsman
-        return "${number.toString()},${sp.surname},${sp.name},${sp.birthYear},${sp.level}"
-
+        return listOf(
+            number.toString(), sp.surname, sp.name, sp.birthYear.toString(), sp.level
+        )
     }
 
     /*
     Результаты забега: список отметок времени,
     когда спортсмен пересекал контрольные точки.
     */
-    inner class ResultInfo {
-        val CPtimes: MutableMap<ControlPoint, Time?> = distance.controlPoints.map {it to null}.toMap().toMutableMap()
-        //val totalTime: Time
-        //    get() = CPtimes[distance.finish] - CPtimes[distance.start]
+    class ResultInfo(val distance: Distance) {
+        val time: MutableMap<ControlPoint,Time?> = mutableMapOf()
+        fun isEmpty(): Boolean = time.isEmpty()
+        //val totalTime: Time get() = time[distance.finish]. - time[dstance.start]
     }
 }
 
@@ -59,3 +73,4 @@ data class CompetitionsSportsman(
     Информация о старте спортсмена - время старта
 */
 data class StartInfo(var time: Time)
+*/

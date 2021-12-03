@@ -19,7 +19,7 @@ abstract class _Competitions(val name: String, val date: String) {
     abstract fun makeADraw()
 
     //Складывает результаты всех групп в единый протокол (results.csv)
-    abstract fun getTotalResults()
+    abstract fun getTotalResults(): String
 
     //Обработка заявления от команды (applications)
     abstract fun takeTeamApplication(protocol: String)
@@ -40,22 +40,25 @@ abstract class _Group(val name: String, val distance: _Distance){
 
     val sportsmen: MutableSet<_CompetitionsSportsman> = mutableSetOf()
 
-    fun addSportsman(sportsman: _CompetitionsSportsman) = sportsmen.add(sportsman)
+    //fun addSportsman(sportsman: _CompetitionsSportsman) = sportsmen.add(sportsman)
 
     //Жеребьевка в группе
-    abstract fun makeADraw()
+    abstract fun makeADraw(startTime: Time)
 
     //Запись стартов из стартового протокола (README.md)
     abstract fun takeStartsProtocol(protocol: String)
 
     //Генерация стартового протокола (README.md)
-    abstract fun getStartsProtocol(protocol: String): String
+    abstract fun getStartsProtocol(): String
+
+    //Генерация стартового протокола (README.md)
+    abstract fun getResultsProtocol(): String
 
     val bestTime: Time = sportsmen.filter{it.distanceWasPassed}.minOf { it.totalTime }
 }
 
 
-abstract class _Distance(val name: String, val controlPoints: List<_ControlPoint>,)
+abstract class _Distance(val name: String, open val controlPoints: List<_ControlPoint>,)
 
 
 typealias CP = _ControlPoint
@@ -65,6 +68,9 @@ abstract class _ControlPoint(val name: String){
     //Функции для заполнения data - информации о прохождении этой точки спортсменами
     fun addPassingCP(passingCP: PassingCP) = data.add(passingCP)
     fun addPassingCPs(collection: Collection<PassingCP>) = data.addAll(collection)
+
+    //Протокол прохождения КП (README.md)
+    abstract fun getProtocol(): String
 
 }
 
@@ -79,8 +85,8 @@ abstract class _CompetitionsSportsman(
     val team: _CompetitionsTeam,
     val group: _Group,
 ): Sportsman(sportsman){
-    val number: Int? = null
-    val startTime: Int? = null
+    var number: Int? = null
+    var startTime: Time? = null
 
     //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована
     private val passingData: MutableSet<PassingCP> = mutableSetOf()

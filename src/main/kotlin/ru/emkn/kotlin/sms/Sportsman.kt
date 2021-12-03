@@ -1,5 +1,5 @@
 package ru.emkn.kotlin.sms
-
+/*
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.File
 import java.util.*
@@ -91,4 +91,5 @@ class Team(
         }
     }
 }
+ */
 

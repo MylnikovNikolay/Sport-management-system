@@ -3,11 +3,14 @@ package ru.emkn.kotlin.sms
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
 
-class ControlPoint(val name: String, val distance: Distance) {
-
+class ControlPoint(name: String): _ControlPoint(name) {
+    override fun getProtocol(): String {
+        TODO("Not yet implemented")
+    }
+}
+/*
     //Регистрирует номер прошедшего этот пункт участника и время
     val info: MutableMap<Int,Time?> = mutableMapOf()
-
 
     //Конструктор строит сразу по протоколу
     constructor(inputDistance: Distance, inputProtocol: String):
@@ -48,14 +51,14 @@ class ControlPoint(val name: String, val distance: Distance) {
             info[it[0].toInt()] = timeOrNull
         }
     }
+ */
 
-}
 
 
-class Distance(val name: String) {
-    val start = ControlPoint("$name-Start",this)
-    val finish = ControlPoint("$name-Finish",this)
-    val controlPoints: MutableSet<ControlPoint> = mutableSetOf(start,finish)
+
+class Distance(name: String, controlPoints: List<_ControlPoint>): _Distance(name, controlPoints) {
+    //val start = ControlPoint("$name-Start",this)
+    //val finish = ControlPoint("$name-Finish",this)
 
     fun findCPByName(name: String) = controlPoints.find {it.name == name}
 
