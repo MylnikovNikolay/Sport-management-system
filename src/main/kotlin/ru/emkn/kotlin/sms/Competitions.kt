@@ -9,6 +9,12 @@ class Competitions(
     date: String,
 ): _Competitions(name, date) {
 
+    val sportsmen: List<_CompetitionsSportsman>
+        get()=groups.flatMap { it.sportsmen }
+
+    val controlPoints: List<_ControlPoint>
+        get()=distances.flatMap { it.controlPoints }
+
     companion object{
         fun fromString(protocol: String): Competitions{
             val eventData = csvReader().readAllWithHeader(protocol)
@@ -33,24 +39,41 @@ class Competitions(
         groups.forEach { it.makeADraw(time) }
     }
 
+    //Все результаты складываются в единый протокол по типу results.csv
     override fun getTotalResults(): String {
         TODO("Все результаты складываются в единый протокол по типу results.csv")
     }
 
+    //Прием заявления от команды
     override fun takeTeamApplication(protocol: String) {
         TODO("Прием заявления от команды - перенести и исправить старый код")
     }
 
+    //Создание дистанций и КП - как из courses.csv
     override fun takeDistancesAndCPs(protocol: String) {
         TODO("Создание дистанций и КП - как из courses.csv")
     }
 
+    //Создание групп по протоколу, как из файла classes.csv
     override fun takeGroupsAndDistances(protocol: String) {
         TODO("Создание групп по протоколу, как из файла classes.csv")
     }
 
+    //Заполнение всех результатов - как из splits.csv
     override fun takeResults(protocol: String) {
-        TODO("Заполнение всех результатов - как из splits.csv - перенести и исправить старый код")
+        //Концепция такова - всю некорректную информацию пропускаем
+        val data = csvReader().readAll(protocol)
+        val rows = data.map{it.filter{str -> str.isNotEmpty()}}
+        for(row in rows){
+            if(row.size % 2 != 1) continue
+            val spNumber = row[0].toIntOrNull()?:continue
+            val sportsman = findSportsmanByNumber(spNumber)?:continue
+            for(i in 0 until row.size/2){
+                val CP = findCPByName(row[2*i+1])?:continue
+                val time = stringToTimeOrNull(row[2*i+2])?:continue
+                PassingCP(sportsman,CP,time)
+            }
+        }
     }
 
     /*
@@ -69,6 +92,13 @@ class Competitions(
             //group.numbers = beginningNumberInGroup..number
             // чтобы в каждой группе с круглого числа начинать
         }
+    }
+
+    private fun findSportsmanByNumber(number: Int): _CompetitionsSportsman?{
+        return sportsmen.firstOrNull { it.number == number }
+    }
+    private fun findCPByName(name: String): _ControlPoint?{
+        return controlPoints.firstOrNull { it.name == name }
     }
 
     /*
