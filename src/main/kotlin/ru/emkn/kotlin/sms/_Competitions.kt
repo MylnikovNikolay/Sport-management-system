@@ -10,6 +10,8 @@ abstract class _Competitions(val name: String, val date: String) {
     protected val teams: MutableSet<_CompetitionsTeam> = mutableSetOf()
     protected val groups: MutableSet<_Group> = mutableSetOf()
     protected val distances: MutableSet<_Distance> = mutableSetOf()
+    protected val controlPoints: MutableSet<_ControlPoint> = mutableSetOf()
+    protected val sportsmen: MutableSet<_CompetitionsSportsman> = mutableSetOf()
 
     companion object{
         //Эту функцию надо реализовать в наследнике (чтение event.csv)

@@ -9,12 +9,6 @@ class Competitions(
     date: String,
 ): _Competitions(name, date) {
 
-    val sportsmen: List<_CompetitionsSportsman>
-        get()=groups.flatMap { it.sportsmen }
-
-    val controlPoints: List<_ControlPoint>
-        get()=distances.flatMap { it.controlPoints }
-
     companion object{
         fun fromString(protocol: String): Competitions{
             val eventData = csvReader().readAllWithHeader(protocol)
