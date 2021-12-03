@@ -4,6 +4,7 @@ package ru.emkn.kotlin.sms
 В этом файле собраны абстрактные классы, определяющие работу программы.
 Они не зависят от формата протоколов - вся работа с протоколами должна быть определена в потомках.
 При этом большая часть внутренних вычислений уже реализована тут.
+ЭТОТ ФАЙЛ НЕ МЕНЯТЬ, А ТО ВСЕ ПОЛЕТИТ К ЧЕРТЯМ
  */
 abstract class _Competitions(val name: String, val date: String) {
     private val teams: MutableSet<_CompetitionsTeam> = mutableSetOf()
@@ -63,11 +64,12 @@ abstract class _Distance(val name: String, open val controlPoints: List<_Control
 
 typealias CP = _ControlPoint
 abstract class _ControlPoint(val name: String){
-    val data: MutableSet<PassingCP> = mutableSetOf()
+    private val data: MutableSet<PassingCP> = mutableSetOf()
 
     //Функции для заполнения data - информации о прохождении этой точки спортсменами
     fun addPassingCP(passingCP: PassingCP) = data.add(passingCP)
     fun addPassingCPs(collection: Collection<PassingCP>) = data.addAll(collection)
+    fun removePassingCP(passingCP: PassingCP) = data.remove(passingCP)
 
     //Протокол прохождения КП (README.md)
     abstract fun getProtocol(): String
@@ -101,6 +103,10 @@ abstract class _CompetitionsSportsman(
         passingData.addAll(collection)
         dataWasChanged = true
     }
+    fun removePassingCP(passingCP: PassingCP){
+        passingData.remove(passingCP)
+        dataWasChanged = true
+    }
 
     val distance: _Distance  get() = group.distance
 
@@ -132,9 +138,19 @@ abstract class _CompetitionsSportsman(
 }
 
 /*
-Событие: спортсмен пересек КП в момент времени time
+Событие: спортсмен пересек КП в момент времени time.
+Это нужно для простого хранения всей информации.
+Спортсмены и КП автоматически получают ссылки на эти объекты, и не нужно заполнять все отдельно
  */
 data class PassingCP(val sportsman: CompSportsman, val CP: _ControlPoint, val time: Time): Comparable<PassingCP>{
+    init {
+        sportsman.addPassingCP(this)
+        CP.addPassingCP(this)
+    }
+    fun destroy(){
+        sportsman.removePassingCP(this)
+        CP.removePassingCP(this)
+    }
     override fun compareTo(other: PassingCP): Int = time.compareTo(other.time)
 }
 
