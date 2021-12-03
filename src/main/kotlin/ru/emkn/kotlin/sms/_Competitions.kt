@@ -4,7 +4,6 @@ package ru.emkn.kotlin.sms
 В этом файле собраны абстрактные классы, определяющие работу программы.
 Они не зависят от формата протоколов - вся работа с протоколами должна быть определена в потомках.
 При этом большая часть внутренних вычислений уже реализована тут.
-ЭТОТ ФАЙЛ НЕ МЕНЯТЬ, А ТО ВСЕ ПОЛЕТИТ К ЧЕРТЯМ
  */
 abstract class _Competitions(val name: String, val date: String) {
     protected val teams: MutableSet<_CompetitionsTeam> = mutableSetOf()
@@ -91,6 +90,11 @@ abstract class _CompetitionsSportsman(
 ): Sportsman(sportsman){
     var number: Int? = null
     var startTime: Time? = null
+
+    init{
+        team.sportsmen.add(this)
+        group.sportsmen.add(this)
+    }
 
     //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована
     private val passingData: MutableSet<PassingCP> = mutableSetOf()

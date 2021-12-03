@@ -38,6 +38,10 @@ class Competitions(
         TODO("Все результаты складываются в единый протокол по типу results.csv")
     }
 
+    /*
+    Концепция такова - всю некорректную информацию пропускаем
+     */
+
     //Прием заявления от команды
     override fun takeTeamApplication(protocol: String) {
         TODO("Прием заявления от команды - перенести и исправить старый код")
@@ -45,17 +49,32 @@ class Competitions(
 
     //Создание дистанций и КП - как из courses.csv
     override fun takeDistancesAndCPs(protocol: String) {
-        TODO("Создание дистанций и КП - как из courses.csv")
+        val rows = csvReader().readAll(protocol).drop(1)
+        for(row in rows){
+            val distName = row.firstOrNull()?:continue
+            val CPList = mutableListOf<_ControlPoint>()
+            for(CPname in row.drop(1)){
+                val CP = findCPByName(CPname)?:ControlPoint(CPname)
+                CPList.add(CP)
+            }
+            distances.add(Distance(distName,CPList))
+        }
     }
 
     //Создание групп по протоколу, как из файла classes.csv
     override fun takeGroupsAndDistances(protocol: String) {
-        TODO("Создание групп по протоколу, как из файла classes.csv")
+        val rows = csvReader().readAll(protocol).drop(1)
+        for (row in rows){
+            if(row.size!=2) continue
+            //не допускаем двух групп с одним именем
+            if(findGroupByName(row[0])!=null) continue
+            val distance = findDistanceByName(row[1])?:continue
+            groups.add(Group(row[0],distance))
+        }
     }
 
     //Заполнение всех результатов - как из splits.csv
     override fun takeResults(protocol: String) {
-        //Концепция такова - всю некорректную информацию пропускаем
         val data = csvReader().readAll(protocol)
         val rows = data.map{it.filter{str -> str.isNotEmpty()}}
         for(row in rows){
@@ -88,12 +107,17 @@ class Competitions(
         }
     }
 
-    private fun findSportsmanByNumber(number: Int): _CompetitionsSportsman?{
-        return sportsmen.firstOrNull { it.number == number }
-    }
-    private fun findCPByName(name: String): _ControlPoint?{
-        return controlPoints.firstOrNull { it.name == name }
-    }
+    private fun findSportsmanByNumber(number: Int): _CompetitionsSportsman? =
+        sportsmen.firstOrNull { it.number == number }
+
+    private fun findCPByName(name: String): _ControlPoint? =
+        controlPoints.firstOrNull { it.name == name }
+
+    private fun findDistanceByName(name: String): _Distance?=
+        distances.firstOrNull { it.name == name }
+
+    private fun findGroupByName(name: String): _Group?=
+        groups.firstOrNull { it.name == name }
 
     /*
     Функции, связанные с выводом

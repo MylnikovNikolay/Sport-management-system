@@ -7,7 +7,7 @@ import java.io.File
 Группа: определяется дистанцией и участниками, хранит
 всю информацию о соревновании
  */
-class Group(name: String, distance: Distance): _Group(name, distance) {
+class Group(name: String, distance: _Distance): _Group(name, distance) {
 
     override fun makeADraw(startTime: Time) {
         var time = startTime

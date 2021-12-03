@@ -22,4 +22,5 @@ internal class CompetitionsTests {
             assert(false)
         } catch (_: IllegalArgumentException) { }
     }
+
 }
