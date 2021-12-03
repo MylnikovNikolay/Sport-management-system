@@ -4,7 +4,11 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import java.io.File
 import java.time.LocalTime
 
-typealias Time = LocalTime//java.sql.Time
+typealias Time = LocalTime
+
+//Вычитание времени. Если вычитается из меньшего большее, остается 00:00:00
+operator fun Time.minus(other: Time): Time =
+    Time.ofNanoOfDay(maxOf(this.toNanoOfDay()-other.toNanoOfDay(),0))
 
 class ImportantValueIsMissing(key: String):
     Exception("Важное значение '$key' отсутствует или имеет неверный формат")
