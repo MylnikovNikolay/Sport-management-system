@@ -13,7 +13,7 @@ class Competitions(
         fun fromString(protocol: String): Competitions{
             val eventData = csvReader().readAllWithHeader(protocol
             )
-            assert(eventData.size == 1)
+            require(eventData.size == 1)
             requireNotNull(eventData[0]["Название"])
             val name = eventData[0]["Название"]!!
 

@@ -3,6 +3,8 @@ import java.io.File
 import kotlin.test.*
 
 internal class ControlPointsTests {
+
+    /*
     @Test
     fun cp1test() {
         val cp1 = ControlPoint(
@@ -31,5 +33,5 @@ internal class ControlPointsTests {
         }
     }
 
-
+*/
 }
