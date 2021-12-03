@@ -28,7 +28,7 @@ fun writeToFile(filepath: String, str: String){
     if (!file.exists()) {
         file.createNewFile()
     }
-    TODO()
+    file.writeText(str)
 }
 
 

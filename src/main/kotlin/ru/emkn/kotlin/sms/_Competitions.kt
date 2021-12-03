@@ -7,7 +7,7 @@ package ru.emkn.kotlin.sms
  */
 abstract class _Competitions(val name: String, val date: String) {
     private val teams: MutableSet<_CompetitionsTeam> = mutableSetOf()
-    private val groups: MutableSet<_Group> = mutableSetOf()
+    protected val groups: MutableSet<_Group> = mutableSetOf()
     private val distances: MutableSet<_Distance> = mutableSetOf()
 
     companion object{
