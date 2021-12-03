@@ -5,7 +5,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
 class ControlPoint(name: String): _ControlPoint(name) {
     override fun getProtocol(): String {
-        TODO("Not yet implemented")
+        TODO("Выдает протокол прохождения КП (как в README.MD)")
     }
 }
 /*

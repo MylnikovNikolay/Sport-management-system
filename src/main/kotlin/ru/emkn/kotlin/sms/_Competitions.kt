@@ -24,11 +24,11 @@ abstract class _Competitions(val name: String, val date: String) {
     //Обработка заявления от команды (applications)
     abstract fun takeTeamApplication(protocol: String)
 
-    //Создание групп из конфигурационного протокола (classes.csv)
-    abstract fun takeGroupsAndDistances(protocol: String)
-
     //Создание дистанций и КП из конфигурационного протокола (courses.csv)
     abstract fun takeDistancesAndCPs(protocol: String)
+
+    //Создание групп из конфигурационного протокола (classes.csv)
+    abstract fun takeGroupsAndDistances(protocol: String)
 
     //Заполнение всех результатов из конфигурационного протокола (splits.csv)
     abstract fun takeResults(protocol: String)

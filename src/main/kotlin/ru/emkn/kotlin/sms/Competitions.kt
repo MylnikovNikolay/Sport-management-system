@@ -9,30 +9,35 @@ class Competitions(
     date: String,
 ): _Competitions(name, date) {
 
+    companion object{
+        fun fromString(protocol: String): Competitions{
+            TODO("Чтение даты и названия из строки (не файла!) по типу event.csv")
+        }
+    }
 
 
     override fun makeADraw() {
-        TODO("Not yet implemented")
+        TODO("Жеребьевка - перенести сюда и исправить старый код")
     }
 
     override fun getTotalResults(): String {
-        TODO("Not yet implemented")
+        TODO("Все результаты складываются в единый протокол по типу results.csv")
     }
 
     override fun takeTeamApplication(protocol: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun takeGroupsAndDistances(protocol: String) {
-        TODO("Not yet implemented")
+        TODO("Прием заявления от команды - перенести и исправить старый код")
     }
 
     override fun takeDistancesAndCPs(protocol: String) {
-        TODO("Not yet implemented")
+        TODO("Создание дистанций и КП - как из courses.csv")
+    }
+
+    override fun takeGroupsAndDistances(protocol: String) {
+        TODO("Создание групп по протоколу, как из файла classes.csv")
     }
 
     override fun takeResults(protocol: String) {
-        TODO("Not yet implemented")
+        TODO("Заполнение всех результатов - как из splits.csv - перенести и исправить старый код")
     }
 }
 

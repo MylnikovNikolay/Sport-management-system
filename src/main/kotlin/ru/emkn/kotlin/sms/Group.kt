@@ -8,10 +8,8 @@ import java.io.File
 всю информацию о соревновании
  */
 class Group(name: String, distance: Distance): _Group(name, distance) {
-    //override val sportsmen: MutableList<CompetitionsSportsman> = mutableListOf()
 
     override fun makeADraw(startTime: Time) {
-        //val filepath = folder + "start$name.csv"
         var time = startTime
         val members = sportsmen.toMutableList()
         members.shuffle()
@@ -22,10 +20,11 @@ class Group(name: String, distance: Distance): _Group(name, distance) {
     }
 
     override fun takeStartsProtocol(protocol: String) {
-        TODO("Not yet implemented")
+        TODO("По протоколу старта (как в README.MD) заполнить данные")
     }
 
     override fun getStartsProtocol(): String{
+        TODO("Исправить, чтобы на выходе был CSV формат (проблемы с запятыми)")
         val strBuilder = StringBuilder(name)
         sportsmen.forEach{
             //it as CompetitionsSportsman
@@ -37,8 +36,9 @@ class Group(name: String, distance: Distance): _Group(name, distance) {
 
     override fun getResultsProtocol(): String{
         val membersByResult = sportsmen.toMutableList()
-        TODO("Not yet implemented")
+        TODO("Создает протокол результатов группы (как в README.MD)")
     }
+}
 /*
     fun createStartProtocolFile(folder: String) {
         val file = File(folder + "startProtocol$name.csv")
@@ -46,4 +46,3 @@ class Group(name: String, distance: Distance): _Group(name, distance) {
         file.writeText(getStartsProtocol())
     }
  */
-}
