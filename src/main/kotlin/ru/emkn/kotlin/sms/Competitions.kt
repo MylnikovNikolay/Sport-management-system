@@ -44,7 +44,18 @@ class Competitions(
 
     //Прием заявления от команды
     override fun takeTeamApplication(protocol: String) {
-        TODO("Прием заявления от команды - перенести и исправить старый код")
+        val rows = csvReader().readAll(protocol)
+        val teamName = rows[0][0]
+        val team = CompetitionsTeam(name)
+        for(row in rows.drop(1)){
+            if(row.size!=5) continue
+            val group = findGroupByName(row[0])?:continue
+            val birthYear = row[3].toIntOrNull()?:continue
+            val sportsman = Sportsman(name=row[2], surname = row[1], birthYear = birthYear, level = row[4])
+
+            //При создании CompSportsman автоматически добавляется в свою команду и группу
+            sportsmen.add(CompetitionsSportsman(sportsman, team, group))
+        }
     }
 
     //Создание дистанций и КП - как из courses.csv
@@ -84,6 +95,8 @@ class Competitions(
             for(i in 0 until row.size/2){
                 val CP = findCPByName(row[2*i+1])?:continue
                 val time = stringToTimeOrNull(row[2*i+2])?:continue
+
+                //Автоматически добавляется куда нужно в спортсмена и в КП
                 PassingCP(sportsman,CP,time)
             }
         }

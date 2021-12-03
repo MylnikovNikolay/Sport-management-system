@@ -1,7 +1,7 @@
 package ru.emkn.kotlin.sms
 
 
-
+class CompetitionsTeam(name: String): _CompetitionsTeam(name)
 
 class CompetitionsSportsman(
     sportsman: Sportsman,
