@@ -7,9 +7,9 @@ package ru.emkn.kotlin.sms
 ЭТОТ ФАЙЛ НЕ МЕНЯТЬ, А ТО ВСЕ ПОЛЕТИТ К ЧЕРТЯМ
  */
 abstract class _Competitions(val name: String, val date: String) {
-    private val teams: MutableSet<_CompetitionsTeam> = mutableSetOf()
+    protected val teams: MutableSet<_CompetitionsTeam> = mutableSetOf()
     protected val groups: MutableSet<_Group> = mutableSetOf()
-    private val distances: MutableSet<_Distance> = mutableSetOf()
+    protected val distances: MutableSet<_Distance> = mutableSetOf()
 
     companion object{
         //Эту функцию надо реализовать в наследнике (чтение event.csv)

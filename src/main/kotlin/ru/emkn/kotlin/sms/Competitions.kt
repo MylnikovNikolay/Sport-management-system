@@ -11,8 +11,7 @@ class Competitions(
 
     companion object{
         fun fromString(protocol: String): Competitions{
-            val eventData = csvReader().readAllWithHeader(protocol
-            )
+            val eventData = csvReader().readAllWithHeader(protocol)
             require(eventData.size == 1)
             requireNotNull(eventData[0]["Название"])
             val name = eventData[0]["Название"]!!
@@ -25,29 +24,13 @@ class Competitions(
     }
 
 
+    /*
+    Переопределения
+     */
     override fun makeADraw() {
         giveNumbersToSportsmenByGroups()
         val time = Time.of(12,0,0)
-        groups.forEach {
-            it.makeADraw(time)
-            val filepath = "/data/start protocols/startProtocol%s.csv"
-            writeToFile(filepath.format(it.name), it.getStartsProtocol())
-        }
-    }
-
-    private fun giveNumbersToSportsmenByGroups(){
-        var number: Int = 100
-        for(group in groups){
-            //val beginningNumberInGroup = number
-            for(member in group.sportsmen){
-                member.number = number
-                //group.numbersToMembers[number] = member
-                number++
-            }
-            number = (number / 100 + 1) * 100
-            //group.numbers = beginningNumberInGroup..number
-            // чтобы в каждой группе с круглого числа начинать
-        }
+        groups.forEach { it.makeADraw(time) }
     }
 
     override fun getTotalResults(): String {
@@ -68,6 +51,35 @@ class Competitions(
 
     override fun takeResults(protocol: String) {
         TODO("Заполнение всех результатов - как из splits.csv - перенести и исправить старый код")
+    }
+
+    /*
+    Просто внутренние функции
+     */
+    private fun giveNumbersToSportsmenByGroups(){
+        var number: Int = 100
+        for(group in groups){
+            //val beginningNumberInGroup = number
+            for(member in group.sportsmen){
+                member.number = number
+                //group.numbersToMembers[number] = member
+                number++
+            }
+            number = (number / 100 + 1) * 100
+            //group.numbers = beginningNumberInGroup..number
+            // чтобы в каждой группе с круглого числа начинать
+        }
+    }
+
+    /*
+    Функции, связанные с выводом
+     */
+    fun makeADrawAndWrite(){
+        makeADraw()
+        groups.forEach {
+            val filepath = "/data/start protocols/startProtocol%s.csv"
+            writeToFile(filepath.format(it.name), it.getStartsProtocol())
+        }
     }
 }
 
