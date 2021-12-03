@@ -3,11 +3,7 @@ package ru.emkn.kotlin.sms
 
 
 fun main(args: Array<String>) {
-    val configFolder = "./data/config/"
-    val competitions = Competitions(configFolder)
 
-    competitions.takeAllApplicationsFromFolder("./data/applications/")
-    competitions.calcStarts()
 }
 
 /*

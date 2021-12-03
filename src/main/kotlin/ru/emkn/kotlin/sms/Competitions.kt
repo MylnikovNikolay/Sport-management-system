@@ -11,7 +11,16 @@ class Competitions(
 
     companion object{
         fun fromString(protocol: String): Competitions{
-            TODO("Чтение даты и названия из строки (не файла!) по типу event.csv")
+            val eventData = csvReader().readAllWithHeader(protocol
+            )
+            require(eventData.size == 1)
+            requireNotNull(eventData[0]["Название"])
+            val name = eventData[0]["Название"]!!
+
+            requireNotNull(eventData[0]["Дата"])
+            val date = eventData[0]["Дата"]!!
+
+            return Competitions(name, date)
         }
     }
 
