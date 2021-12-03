@@ -120,6 +120,7 @@ abstract class _CompetitionsSportsman(
         private set
         get(){
             if(dataWasChanged) passingList = passingData.sorted()
+            dataWasChanged = false
             return passingList
         }
 
