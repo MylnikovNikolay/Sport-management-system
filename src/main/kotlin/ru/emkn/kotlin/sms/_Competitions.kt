@@ -56,7 +56,8 @@ abstract class _Group(val name: String, val distance: _Distance){
     //Генерация протокола результатов (README.md)
     abstract fun getResultsProtocol(): String
 
-    val bestTime: Time = sportsmen.filter{it.distanceWasPassed}.minOf { it.totalTime }
+    val bestTime: Time
+        get() = sportsmen.filter{it.distanceWasPassed}.minOf { it.totalTime }
 }
 
 

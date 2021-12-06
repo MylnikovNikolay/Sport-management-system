@@ -24,12 +24,11 @@ class Group(name: String, distance: _Distance): _Group(name, distance) {
     }
 
     override fun getStartsProtocol(): String{
-        // Добавил перенос строки в конец, возможно это решило проблему
         val strBuilder = StringBuilder(name + "\n")
         sportsmen.forEach{
             //it as CompetitionsSportsman
             val info = if(it.startTime==null) "no information" else it.startTime.toString()
-            strBuilder.appendLine("${it.number},${it.surname},${it.name},${it.birthYear},${it.level},$info\n")
+            strBuilder.appendLine("${it.number},${it.surname},${it.name},${it.birthYear},${it.level},$info")
         }
         return strBuilder.toString()
     }

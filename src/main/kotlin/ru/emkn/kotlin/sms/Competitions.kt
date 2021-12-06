@@ -66,7 +66,7 @@ class Competitions(
 
     //Создание дистанций и КП - как из courses.csv
     override fun takeDistancesAndCPs(protocol: String) {
-        val rows = csvReader().readAll(protocol).drop(1)
+        val rows = csvReader().readAll(File(protocol)).drop(1)
         for(row in rows){
             val distName = row.firstOrNull()?:continue
             val CPList = mutableListOf<_ControlPoint>()
@@ -80,7 +80,7 @@ class Competitions(
 
     //Создание групп по протоколу, как из файла classes.csv
     override fun takeGroupsAndDistances(protocol: String) {
-        val rows = csvReader().readAll(protocol).drop(1)
+        val rows = csvReader().readAll(File(protocol)).drop(1)
         for (row in rows){
             if(row.size!=2) continue
             //не допускаем двух групп с одним именем
@@ -92,7 +92,7 @@ class Competitions(
 
     //Заполнение всех результатов - как из splits.csv
     override fun takeResults(protocol: String) {
-        val data = csvReader().readAll(protocol)
+        val data = csvReader().readAll(File(protocol))
         val rows = data.map{it.filter{str -> str.isNotEmpty()}}
         for(row in rows){
             if(row.size % 2 != 1) continue

@@ -5,8 +5,8 @@ package ru.emkn.kotlin.sms
 fun main(args: Array<String>) {
     val configPath = "./data/config/%s"
     val competitions = Competitions.fromString(configPath.format("event.csv"))
-    competitions.takeGroupsAndDistances(configPath.format("classes.csv"))
     competitions.takeDistancesAndCPs(configPath.format("courses.csv"))
+    competitions.takeGroupsAndDistances(configPath.format("classes.csv"))
 
     competitions.takeAllApplicationsFromFolder("./data/applications/")
 
@@ -19,10 +19,10 @@ fun main(args: Array<String>) {
 1. Создание соревнования
     Загрузка из конфигурационных файлов:
     - название соревнования и дата проведения
+    - дистанции
     - список групп
       (optional: возможность делать ограничение для группы, которое будет проверяться автоматически,
        например: для М21 обязательное условие, что возраст участника - 21 год и мужской пол)
-    - дистанции
 
 2. Формирование списка участников
     - приём заявок от команд с распределением по группам
