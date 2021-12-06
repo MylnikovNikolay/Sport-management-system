@@ -4,8 +4,16 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
 
 class ControlPoint(name: String): _ControlPoint(name) {
+
+    //Выдает протокол прохождения КП (как в README.MD)
     override fun getProtocol(): String {
-        TODO("Выдает протокол прохождения КП (как в README.MD)")
+        val strBuilder = StringBuilder(name).append(",,")
+        passingList.forEach { passingCP ->
+            strBuilder.appendLine(passingCP.sportsman.number)
+            strBuilder.append(",")
+            strBuilder.append(passingCP.time)
+        }
+        return strBuilder.toString()
     }
 }
 /*
