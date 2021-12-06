@@ -11,7 +11,7 @@ class Competitions(
 
     companion object{
         fun fromString(protocol: String): Competitions{
-            val eventData = csvReader().readAllWithHeader(File(protocol))
+            val eventData = csvReader().readAllWithHeader(protocol)
             require(eventData.size == 1)
             requireNotNull(eventData[0]["Название"])
             val name = eventData[0]["Название"]!!
@@ -44,7 +44,7 @@ class Competitions(
 
     //Прием заявления от команды
     override fun takeTeamApplication(protocol: String) {
-        val rows = csvReader().readAll(File(protocol))
+        val rows = csvReader().readAll(protocol)
         val teamName = rows[0][0]
         val team = CompetitionsTeam(name)
         for(row in rows.drop(1)){
@@ -60,13 +60,13 @@ class Competitions(
 
     fun takeAllApplicationsFromFolder(path: String) {
         File(path).walk().drop(1).forEach {
-            takeTeamApplication(it.path)
+            takeTeamApplication(readCSV(it.path))
         }
     }
 
     //Создание дистанций и КП - как из courses.csv
     override fun takeDistancesAndCPs(protocol: String) {
-        val rows = csvReader().readAll(File(protocol)).drop(1)
+        val rows = csvReader().readAll(protocol).drop(1)
         for(row in rows){
             val distName = row.firstOrNull()?:continue
             val CPList = mutableListOf<_ControlPoint>()
@@ -80,7 +80,7 @@ class Competitions(
 
     //Создание групп по протоколу, как из файла classes.csv
     override fun takeGroupsAndDistances(protocol: String) {
-        val rows = csvReader().readAll(File(protocol)).drop(1)
+        val rows = csvReader().readAll(protocol).drop(1)
         for (row in rows){
             if(row.size!=2) continue
             //не допускаем двух групп с одним именем
@@ -92,7 +92,7 @@ class Competitions(
 
     //Заполнение всех результатов - как из splits.csv
     override fun takeResults(protocol: String) {
-        val data = csvReader().readAll(File(protocol))
+        val data = csvReader().readAll(protocol)
         val rows = data.map{it.filter{str -> str.isNotEmpty()}}
         for(row in rows){
             if(row.size % 2 != 1) continue
