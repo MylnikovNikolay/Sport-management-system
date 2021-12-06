@@ -36,7 +36,20 @@ class Group(name: String, distance: _Distance): _Group(name, distance) {
 
     override fun getResultsProtocol(): String{
         val membersByResult = sportsmen.toMutableList()
-        TODO("Создает протокол результатов группы (как в README.MD)")
+        membersByResult.sortBy { it.totalTime } // ? totalTime - startTime
+        val strBuilder = StringBuilder("$name\n")
+
+        // Я не понял зачем и что такое № п/п в results.csv в sample-data
+        strBuilder.appendLine("Номер,Фамилия,Имя,Г.р.,Разр.,Команда,Результат,Место,Отставание")
+        for (i in membersByResult.indices) {
+            val sp = membersByResult[i]
+            val line = "${sp.number},${sp.surname},${sp.name},${sp.birthYear},${sp.level},${sp.team.name}," +
+                    "${sp.totalTime}" + if (i > 0) "${sp.totalTime - membersByResult[i - 1].totalTime}" else ""
+            
+            strBuilder.appendLine(line)
+        }
+
+        return strBuilder.toString()
     }
 }
 /*

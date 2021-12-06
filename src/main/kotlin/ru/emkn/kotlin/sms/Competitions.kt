@@ -120,7 +120,7 @@ class Competitions(
         }
     }
 
-    fun writeAllResults(folder: String = "./data/results") {
+    fun writeTotalResults(folder: String = "./data/results") {
         val strBuilder = StringBuilder("Протокол результатов\n")
         groups.forEach {
             strBuilder.appendLine(it.getResultsProtocol())

@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
 
     // Рассчет на то, что сплиты будут хранится не только в одном файле
     competitions.takeResults(readCSV( "./data/splits/splits.csv" ))
-    competitions.writeAllResults()
+    competitions.writeTotalResults()
 }
 
 /*

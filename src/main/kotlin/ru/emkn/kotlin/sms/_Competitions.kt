@@ -123,23 +123,26 @@ abstract class _CompetitionsSportsman(
     //Результат спортсмена
     val totalTime: Time
         get() = if(distanceWasPassed)
-            passingList.last().time - passingList.first().time
+            _passingList.last().time - _passingList.first().time
         else Time.of(0,0,0)
 
 
     //События прохождения спортсменом КП в порядке времени.
     //Считаются лениво
-    var passingList: List<PassingCP> = listOf()
-        private set
-        get(){
-            if(dataWasChanged) passingList = passingData.sorted()
+    val passingList: List<PassingCP>
+        get() {
+            if (dataWasChanged)
+                _passingList = passingData.sorted()
             dataWasChanged = false
-            return passingList
+            return _passingList
         }
+
+    var _passingList: List<PassingCP> = listOf()
+        private set
 
     //Была ли дистанция корректно пройдена
     val distanceWasPassed: Boolean
-        get() = number!=null && startTime!=null && passingList.map{it.CP}==route
+        get() = number!=null && startTime!=null && _passingList.map{it.CP}==route
 
     //Протокол прохождения дистанции (README.md)
     abstract fun getDistancePassingProtocol(): String
