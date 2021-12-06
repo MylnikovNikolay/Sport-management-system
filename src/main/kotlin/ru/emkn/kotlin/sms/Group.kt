@@ -24,12 +24,12 @@ class Group(name: String, distance: _Distance): _Group(name, distance) {
     }
 
     override fun getStartsProtocol(): String{
-        TODO("Исправить, чтобы на выходе был CSV формат (проблемы с запятыми)")
-        val strBuilder = StringBuilder(name)
+        // Добавил перенос строки в конец, возможно это решило проблему
+        val strBuilder = StringBuilder(name + "\n")
         sportsmen.forEach{
             //it as CompetitionsSportsman
             val info = if(it.startTime==null) "no information" else it.startTime.toString()
-            strBuilder.appendLine("${it.number},${it.surname},${it.name},${it.birthYear},${it.level},$info")
+            strBuilder.appendLine("${it.number},${it.surname},${it.name},${it.birthYear},${it.level},$info\n")
         }
         return strBuilder.toString()
     }

@@ -3,7 +3,14 @@ package ru.emkn.kotlin.sms
 
 
 fun main(args: Array<String>) {
+    val configPath = "./data/config/%s"
+    val competitions = Competitions.fromString(configPath.format("event.csv"))
+    competitions.takeGroupsAndDistances(configPath.format("classes.csv"))
+    competitions.takeDistancesAndCPs(configPath.format("courses.csv"))
 
+    competitions.takeAllApplicationsFromFolder("./data/applications/")
+
+    competitions.makeADrawAndWrite()
 }
 
 /*

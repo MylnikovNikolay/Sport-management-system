@@ -11,7 +11,7 @@ class Competitions(
 
     companion object{
         fun fromString(protocol: String): Competitions{
-            val eventData = csvReader().readAllWithHeader(protocol)
+            val eventData = csvReader().readAllWithHeader(File(protocol))
             require(eventData.size == 1)
             requireNotNull(eventData[0]["Название"])
             val name = eventData[0]["Название"]!!
@@ -44,7 +44,7 @@ class Competitions(
 
     //Прием заявления от команды
     override fun takeTeamApplication(protocol: String) {
-        val rows = csvReader().readAll(protocol)
+        val rows = csvReader().readAll(File(protocol))
         val teamName = rows[0][0]
         val team = CompetitionsTeam(name)
         for(row in rows.drop(1)){
@@ -55,6 +55,12 @@ class Competitions(
 
             //При создании CompSportsman автоматически добавляется в свою команду и группу
             sportsmen.add(CompetitionsSportsman(sportsman, team, group))
+        }
+    }
+
+    fun takeAllApplicationsFromFolder(path: String) {
+        File(path).walk().drop(1).forEach {
+            takeTeamApplication(it.path)
         }
     }
 
@@ -103,6 +109,17 @@ class Competitions(
     }
 
     /*
+    Функции, связанные с выводом
+     */
+    fun makeADrawAndWrite(folder: String = "./data/start protocols"){
+        makeADraw()
+        groups.forEach {
+            val filepath = "$folder/startProtocol%s.csv"
+            writeToFile(filepath.format(it.name), it.getStartsProtocol())
+        }
+    }
+
+    /*
     Просто внутренние функции
      */
     private fun giveNumbersToSportsmenByGroups(){
@@ -131,17 +148,6 @@ class Competitions(
 
     private fun findGroupByName(name: String): _Group?=
         groups.firstOrNull { it.name == name }
-
-    /*
-    Функции, связанные с выводом
-     */
-    fun makeADrawAndWrite(){
-        makeADraw()
-        groups.forEach {
-            val filepath = "/data/start protocols/startProtocol%s.csv"
-            writeToFile(filepath.format(it.name), it.getStartsProtocol())
-        }
-    }
 }
 
 
