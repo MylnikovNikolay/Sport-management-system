@@ -2,7 +2,7 @@ package ru.emkn.kotlin.sms
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.File
-import java.lang.StringBuilder
+import kotlin.text.StringBuilder
 
 
 class Competitions(
@@ -36,7 +36,11 @@ class Competitions(
 
     //Все результаты складываются в единый протокол по типу results.csv
     override fun getTotalResults(): String {
-        TODO("Все результаты складываются в единый протокол по типу results.csv")
+        val strBuilder = StringBuilder("Протокол результатов.,,,,,,,,,")
+        groups.forEach { group ->
+            strBuilder.appendLine(group.getResultsProtocol())
+        }
+        return strBuilder.toString()
     }
 
     /*
