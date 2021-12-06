@@ -11,6 +11,15 @@ fun main(args: Array<String>) {
     competitions.takeAllApplicationsFromFolder("./data/applications/")
 
     competitions.makeADrawAndWrite()
+
+    /*
+     * Тут пользователь как-то сообщит программе, что соревнование закончилось и результаты загружены
+     * (пока что хотя бы в папку в виде файлов). После этого произойдет загрузка рез-ов.
+     */
+
+    // Рассчет на то, что сплиты будут хранится не только в одном файле
+    competitions.takeResults(readCSV( "./data/splits/splits.csv" ))
+    competitions.writeAllResults()
 }
 
 /*

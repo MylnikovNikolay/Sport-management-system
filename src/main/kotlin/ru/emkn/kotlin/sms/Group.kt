@@ -25,6 +25,7 @@ class Group(name: String, distance: _Distance): _Group(name, distance) {
 
     override fun getStartsProtocol(): String{
         val strBuilder = StringBuilder(name + "\n")
+        strBuilder.appendLine("Номер,Фамилия,Имя,Г.р.,Разр.,Время старта")
         sportsmen.forEach{
             //it as CompetitionsSportsman
             val info = if(it.startTime==null) "no information" else it.startTime.toString()

@@ -119,6 +119,14 @@ class Competitions(
         }
     }
 
+    fun writeAllResults(folder: String = "./data/results") {
+        writeToFile("$folder/total results.csv", getTotalResults())
+        groups.forEach {
+            val filepath = "$folder/results for %s.csv"
+            writeToFile(filepath.format(it.name), it.getResultsProtocol())
+        }
+    }
+
     /*
     Просто внутренние функции
      */
