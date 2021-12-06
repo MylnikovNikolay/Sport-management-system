@@ -1,5 +1,7 @@
 package ru.emkn.kotlin.sms
 
+import java.util.*
+
 /*
 В этом файле собраны абстрактные классы, определяющие работу программы.
 Они не зависят от формата протоколов - вся работа с протоколами должна быть определена в потомках.
@@ -66,7 +68,9 @@ abstract class _Distance(val name: String, open val controlPoints: List<_Control
 
 typealias CP = _ControlPoint
 abstract class _ControlPoint(val name: String){
-    private val data: MutableSet<PassingCP> = mutableSetOf()
+    private val data: TreeSet<PassingCP> = TreeSet()
+
+    val passingList: List<PassingCP> = data.toList()
 
     //Функции для заполнения data - информации о прохождении этой точки спортсменами
     fun addPassingCP(passingCP: PassingCP) = data.add(passingCP)
@@ -98,7 +102,7 @@ abstract class _CompetitionsSportsman(
     }
 
     //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована
-    private val passingData: MutableSet<PassingCP> = mutableSetOf()
+    private val passingData: TreeSet<PassingCP> = TreeSet()
     private var dataWasChanged = false
 
     //Функции для заполнения passingData - информации о прохождении дистанции
@@ -123,26 +127,16 @@ abstract class _CompetitionsSportsman(
     //Результат спортсмена
     val totalTime: Time
         get() = if(distanceWasPassed)
-            _passingList.last().time - _passingList.first().time
+            passingData.last().time - passingData.first().time
         else Time.of(0,0,0)
 
 
     //События прохождения спортсменом КП в порядке времени.
-    //Считаются лениво
-    val passingList: List<PassingCP>
-        get() {
-            if (dataWasChanged)
-                _passingList = passingData.sorted()
-            dataWasChanged = false
-            return _passingList
-        }
-
-    var _passingList: List<PassingCP> = listOf()
-        private set
+    val passingList: List<PassingCP> = passingData.toList()
 
     //Была ли дистанция корректно пройдена
     val distanceWasPassed: Boolean
-        get() = number!=null && startTime!=null && _passingList.map{it.CP}==route
+        get() = number!=null && startTime!=null && passingList.map{it.CP}==route
 
     //Протокол прохождения дистанции (README.md)
     abstract fun getDistancePassingProtocol(): String
