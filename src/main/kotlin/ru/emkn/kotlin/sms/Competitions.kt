@@ -2,6 +2,7 @@ package ru.emkn.kotlin.sms
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.File
+import java.lang.StringBuilder
 
 
 class Competitions(
@@ -120,11 +121,11 @@ class Competitions(
     }
 
     fun writeAllResults(folder: String = "./data/results") {
-        writeToFile("$folder/total results.csv", getTotalResults())
+        val strBuilder = StringBuilder("Протокол результатов\n")
         groups.forEach {
-            val filepath = "$folder/results for %s.csv"
-            writeToFile(filepath.format(it.name), it.getResultsProtocol())
+            strBuilder.appendLine(it.getResultsProtocol())
         }
+        writeToFile("$folder/results.csv", strBuilder.toString())
     }
 
     /*
