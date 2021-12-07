@@ -14,10 +14,10 @@ abstract class Competitions(val name: String, val date: String) {
     protected val controlPoints: MutableSet<ControlPoint> = mutableSetOf()
     protected val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
 
-    companion object{
-        //Эту функцию надо реализовать в наследнике (чтение event.csv)
-        //fun fromString(protocol: String): Competitions{}
-    }
+    fun findGroupByName(nameOfGroup: String) = groups.find{it.name == nameOfGroup}
+    fun findCPByName(nameOfCP: String) = controlPoints.find{it.name == nameOfCP}
+    fun findSportsmanByNumber(numberOfSportsman: Int) = sportsmen.find{it.number == numberOfSportsman}
+    fun findDistanceByName (nameOfDistance: String) = distances.find {it.name == nameOfDistance}
 
     //Жеребьевка - присвоение номеров участникам и жеребьевка в каждой из групп
     abstract fun makeADraw()

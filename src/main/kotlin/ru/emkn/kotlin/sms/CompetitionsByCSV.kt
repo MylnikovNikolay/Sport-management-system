@@ -150,17 +150,6 @@ class CompetitionsByCSV(
         }
     }
 
-    private fun findSportsmanByNumber(number: Int): CompetitionsSportsman? =
-        sportsmen.firstOrNull { it.number == number }
-
-    private fun findCPByName(name: String): ControlPoint? =
-        controlPoints.firstOrNull { it.name == name }
-
-    private fun findDistanceByName(name: String): Distance?=
-        distances.firstOrNull { it.name == name }
-
-    private fun findGroupByName(name: String): Group?=
-        groups.firstOrNull { it.name == name }
 }
 
 
@@ -292,9 +281,10 @@ private fun giveNumbersToSportsmenByGroups(){
 }
 }
 
-
+*/
 //получаем результаты из splits
-fun Competitions.getResultsFromSplits(protocol: String) {
+/*
+fun CompetitionsByCSV.getResultsFromSplits(protocol: String) {
 val rows = csvReader().readAll(protocol)
 toBeContinued@ for (row in rows) {
 
@@ -343,5 +333,4 @@ toBeContinued@ for (row in rows) {
     }
     TODO("Поменять ассерты на continue")
 }
-
-*/
+ */
