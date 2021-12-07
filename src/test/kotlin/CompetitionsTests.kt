@@ -79,5 +79,48 @@ internal class CompetitionsTests {
         assertEquals(1, comp.controlPoints.count{it.name == "finish"})
     }
 
+    @Test
+    fun takeGroupsAndDistances() {
+        val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
+        comp.takeDistancesAndCPs(
+            File("sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/distances.csv").readText()
+        )
+        comp.takeGroupsAndDistances(
+            File("sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/groups-distances.csv").readText()
+        )
+        assertEquals(4, comp.groups.size)
+        val group67 = comp.findGroupByName("М67")
+        assertTrue(group67 != null)
+
+        val distance1 = comp.findDistanceByName("distance1")
+        assertEquals(distance1, group67.distance)
+
+        val group25 = comp.findGroupByName("М25")
+        assertTrue(group25 != null)
+        assertEquals(distance1, group25.distance)
+
+        val group = comp.findGroupByName("")
+        assertTrue(group == null)
+
+        val group34 = comp.findGroupByName("М34")
+        assertTrue(group34 == null)
+
+        val group29 = comp.findGroupByName("Ж29")
+        assertTrue(group29 == null)
+
+        assertFailsWith<NoSuchElementException> {
+            val e = group25.bestTime
+        }
+
+        val group28 = comp.findGroupByName("Ж28")
+        assertTrue(group28 != null)
+
+        val distance2 = comp.findDistanceByName("distance2")
+        assertEquals(distance2, group28.distance)
+
+        assertEquals(1, comp.groups.count{it.name == "Ж28"})
+    }
+
+
 
 }

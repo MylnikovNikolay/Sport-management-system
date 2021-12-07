@@ -109,6 +109,7 @@ open class CompetitionsByCSV(
         for (row in rows){
             if(row.size!=2) continue
             //не допускаем двух групп с одним именем
+            if (row[0].isEmpty()) continue
             if(findGroupByName(row[0])!=null) continue
             val distance = findDistanceByName(row[1])?:continue
             groups.add(GroupByCSV(row[0],distance))
