@@ -14,8 +14,7 @@ internal class SportsmanTests {
         val team = comp.teams.first()
 
         assertEquals("ПСКОВ,РУСЬ", team.name)
-        //assertEquals(, team.sportsmen.size)
-
+        assertEquals(34, team.sportsmen.size)
 
         assertNotNull(team.sportsmen.find {
             it.surname == "НИКИТИН" && it.name == "ВАЛЕНТИН" && it.birthYear == 1941 && it.level == ""
