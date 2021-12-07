@@ -5,10 +5,22 @@ import java.io.File
 import kotlin.text.StringBuilder
 
 
-class CompetitionsByCSV(
+open class CompetitionsByCSV(
     name: String,
     date: String,
 ): Competitions(name, date) {
+
+    open override val distances
+        get() = super.distances
+    open override val groups
+        get() = super.groups
+    open override val controlPoints
+        get() = super.controlPoints
+    open override val sportsmen
+        get() = super.sportsmen
+    open override val teams
+        get() = super.teams
+
 
     companion object{
         fun fromString(protocol: String): CompetitionsByCSV{
@@ -76,9 +88,12 @@ class CompetitionsByCSV(
             val distName = row.firstOrNull()?:continue
             val CPList = mutableListOf<ControlPoint>()
             for(CPname in row.drop(1)){
-                val CP = findCPByName(CPname)?:ControlPointByCSV(CPname)
-                CPList.add(CP)
+                if (CPname.isNotEmpty()) {
+                    val CP = findCPByName(CPname) ?: ControlPointByCSV(CPname)
+                    CPList.add(CP)
+                }
             }
+            if (CPList.size < 2) continue
             distances.add(DistanceByCSV(distName,CPList))
         }
     }

@@ -8,11 +8,11 @@ import java.util.*
 При этом большая часть внутренних вычислений уже реализована тут.
  */
 abstract class Competitions(val name: String, val date: String) {
-    protected val teams: MutableSet<CompetitionsTeam> = mutableSetOf()
-    protected val groups: MutableSet<Group> = mutableSetOf()
-    protected val distances: MutableSet<Distance> = mutableSetOf()
-    protected val controlPoints: MutableSet<ControlPoint> = mutableSetOf()
-    protected val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
+    protected open val teams: MutableSet<CompetitionsTeam> = mutableSetOf()
+    protected open val groups: MutableSet<Group> = mutableSetOf()
+    protected open val distances: MutableSet<Distance> = mutableSetOf()
+    protected open val controlPoints: MutableSet<ControlPoint> = mutableSetOf()
+    protected open val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
 
     fun findGroupByName(nameOfGroup: String) = groups.find{it.name == nameOfGroup}
     fun findCPByName(nameOfCP: String) = controlPoints.find{it.name == nameOfCP}

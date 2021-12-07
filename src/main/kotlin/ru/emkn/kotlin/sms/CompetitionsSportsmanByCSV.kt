@@ -12,14 +12,16 @@ class CompetitionsSportsmanByCSV(
     override fun getDistancePassingProtocol(): String {
         val strBuilder = StringBuilder()
         strBuilder.appendLine("$number,")
+        val copyOfPassingList = passingList.toMutableList()
         group.distance.controlPoints.forEach { point ->
-            val infoAboutPassing = passingList.find {it.CP == point}
+            val infoAboutPassing = copyOfPassingList.firstOrNull {it.CP == point}
             if (infoAboutPassing == null)
                 strBuilder.appendLine("${point.name},-")
-            else
+            else {
                 strBuilder.appendLine("${point.name},${infoAboutPassing.time}")
+                copyOfPassingList.remove(infoAboutPassing) //убираем информацию о первом прохождении
+            }
         }
-
         return strBuilder.toString()
     }
 
