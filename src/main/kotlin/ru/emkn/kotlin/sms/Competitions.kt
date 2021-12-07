@@ -1,347 +1,174 @@
 package ru.emkn.kotlin.sms
 
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import java.io.File
-import kotlin.text.StringBuilder
+import java.util.*
 
-
-class Competitions(
-    name: String,
-    date: String,
-): _Competitions(name, date) {
+/*
+В этом файле собраны абстрактные классы, определяющие работу программы.
+Они не зависят от формата протоколов - вся работа с протоколами должна быть определена в потомках.
+При этом большая часть внутренних вычислений уже реализована тут.
+ */
+abstract class Competitions(val name: String, val date: String) {
+    protected val teams: MutableSet<CompetitionsTeam> = mutableSetOf()
+    protected val groups: MutableSet<Group> = mutableSetOf()
+    protected val distances: MutableSet<Distance> = mutableSetOf()
+    protected val controlPoints: MutableSet<ControlPoint> = mutableSetOf()
+    protected val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
 
     companion object{
-        fun fromString(protocol: String): Competitions{
-            val eventData = csvReader().readAllWithHeader(protocol)
-            require(eventData.size == 1)
-            requireNotNull(eventData[0]["Название"])
-            val name = eventData[0]["Название"]!!
-
-            requireNotNull(eventData[0]["Дата"])
-            val date = eventData[0]["Дата"]!!
-
-            return Competitions(name, date)
-        }
+        //Эту функцию надо реализовать в наследнике (чтение event.csv)
+        //fun fromString(protocol: String): Competitions{}
     }
 
+    //Жеребьевка - присвоение номеров участникам и жеребьевка в каждой из групп
+    abstract fun makeADraw()
 
-    /*
-    Переопределения
-     */
-    override fun makeADraw() {
-        giveNumbersToSportsmenByGroups()
-        val time = Time.of(12,0,0)
-        groups.forEach { it.makeADraw(time) }
-    }
+    //Складывает результаты всех групп в единый протокол (results.csv)
+    abstract fun getTotalResults(): String
 
-    //Все результаты складываются в единый протокол по типу results.csv
-    override fun getTotalResults(): String {
-        val strBuilder = StringBuilder("Протокол результатов.,,,,,,,,,")
-        groups.forEach { group ->
-            strBuilder.appendLine(group.getResultsProtocol())
-        }
-        return strBuilder.toString()
-    }
+    //Обработка заявления от команды (applications)
+    abstract fun takeTeamApplication(protocol: String)
 
-    /*
-    Концепция такова - всю некорректную информацию пропускаем
-     */
+    //Создание дистанций и КП из конфигурационного протокола (courses.csv)
+    abstract fun takeDistancesAndCPs(protocol: String)
 
-    //Прием заявления от команды
-    override fun takeTeamApplication(protocol: String) {
-        val rows = csvReader().readAll(protocol)
-        val teamName = rows[0][0]
-        val team = CompetitionsTeam(name)
-        for(row in rows.drop(1)){
-            if(row.size!=5) continue
-            val group = findGroupByName(row[0])?:continue
-            val birthYear = row[3].toIntOrNull()?:continue
-            val sportsman = Sportsman(name=row[2], surname = row[1], birthYear = birthYear, level = row[4])
+    //Создание групп из конфигурационного протокола (classes.csv)
+    abstract fun takeGroupsAndDistances(protocol: String)
 
-            //При создании CompSportsman автоматически добавляется в свою команду и группу
-            sportsmen.add(CompetitionsSportsman(sportsman, team, group))
-        }
-    }
+    //Заполнение всех результатов из конфигурационного протокола (splits.csv)
+    abstract fun takeResults(protocol: String)
 
-    fun takeAllApplicationsFromFolder(path: String) {
-        File(path).walk().drop(1).forEach {
-            takeTeamApplication(readCSV(it.path))
-        }
-    }
-
-    //Создание дистанций и КП - как из courses.csv
-    override fun takeDistancesAndCPs(protocol: String) {
-        val rows = csvReader().readAll(protocol).drop(1)
-        for(row in rows){
-            val distName = row.firstOrNull()?:continue
-            val CPList = mutableListOf<_ControlPoint>()
-            for(CPname in row.drop(1)){
-                val CP = findCPByName(CPname)?:ControlPoint(CPname)
-                CPList.add(CP)
-            }
-            distances.add(Distance(distName,CPList))
-        }
-    }
-
-    //Создание групп по протоколу, как из файла classes.csv
-    override fun takeGroupsAndDistances(protocol: String) {
-        val rows = csvReader().readAll(protocol).drop(1)
-        for (row in rows){
-            if(row.size!=2) continue
-            //не допускаем двух групп с одним именем
-            if(findGroupByName(row[0])!=null) continue
-            val distance = findDistanceByName(row[1])?:continue
-            groups.add(Group(row[0],distance))
-        }
-    }
-
-    //Заполнение всех результатов - как из splits.csv
-    override fun takeResults(protocol: String) {
-        val data = csvReader().readAll(protocol)
-        val rows = data.map{it.filter{str -> str.isNotEmpty()}}
-        for(row in rows){
-            if(row.size % 2 != 1) continue
-            val spNumber = row[0].toIntOrNull()?:continue
-            val sportsman = findSportsmanByNumber(spNumber)?:continue
-            for(i in 0 until row.size/2){
-                val CP = findCPByName(row[2*i+1])?:continue
-                val time = stringToTimeOrNull(row[2*i+2])?:continue
-
-                //Автоматически добавляется куда нужно в спортсмена и в КП
-                PassingCP(sportsman,CP,time)
-            }
-        }
-    }
-
-    /*
-    Функции, связанные с выводом
-     */
-    fun makeADrawAndWrite(folder: String = "./data/start protocols"){
-        makeADraw()
-        groups.forEach {
-            val filepath = "$folder/startProtocol%s.csv"
-            writeToFile(filepath.format(it.name), it.getStartsProtocol())
-        }
-    }
-
-    fun writeTotalResults(folder: String = "./data/results") {
-        val strBuilder = StringBuilder("Протокол результатов\n")
-        groups.forEach {
-            strBuilder.appendLine(it.getResultsProtocol())
-        }
-        writeToFile("$folder/results.csv", strBuilder.toString())
-    }
-
-    /*
-    Просто внутренние функции
-     */
-    private fun giveNumbersToSportsmenByGroups(){
-        var number: Int = 100
-        for(group in groups){
-            //val beginningNumberInGroup = number
-            for(member in group.sportsmen){
-                member.number = number
-                //group.numbersToMembers[number] = member
-                number++
-            }
-            number = (number / 100 + 1) * 100
-            //group.numbers = beginningNumberInGroup..number
-            // чтобы в каждой группе с круглого числа начинать
-        }
-    }
-
-    private fun findSportsmanByNumber(number: Int): _CompetitionsSportsman? =
-        sportsmen.firstOrNull { it.number == number }
-
-    private fun findCPByName(name: String): _ControlPoint? =
-        controlPoints.firstOrNull { it.name == name }
-
-    private fun findDistanceByName(name: String): _Distance?=
-        distances.firstOrNull { it.name == name }
-
-    private fun findGroupByName(name: String): _Group?=
-        groups.firstOrNull { it.name == name }
 }
 
 
+abstract class Group(val name: String, val distance: Distance){
 
-/*
-companion object{
-    fun getCompetitionsByConfig(path: String): Competitions {
-        val filepath = "$path%s.csv"
-        val eventData = csvReader().readAllWithHeader(File(filepath.format("event")))
-        assert(eventData.size == 1)
-        requireNotNull(eventData[0]["Название"])
-        val name = eventData[0]["Название"]!!
-        requireNotNull(eventData[0]["Дата"])
-        val date = eventData[0]["Дата"]!!
+    val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
 
-        val competitions = Competitions(name, date)
+    //fun addSportsman(sportsman: _CompetitionsSportsman) = sportsmen.add(sportsman)
 
-        val groupToDistanceData = csvReader().readAllWithHeader(File(filepath.format("classes")))
+    //Жеребьевка в группе
+    abstract fun makeADraw(startTime: Time)
 
-        //собираем дистанция
-        groupToDistanceData.forEach {
-            requireNotNull(it["Дистанция"])
-            val distance = competitions.findDistanceByName(it["Дистанция"]!!)
-            if (distance == null) {
-                competitions.distances.add(Distance(it["Дистанция"]!!))
-            }
+    //Запись стартов из стартового протокола (README.md)
+    abstract fun takeStartsProtocol(protocol: String)
 
-        }
+    //Генерация стартового протокола (README.md)
+    abstract fun getStartsProtocol(): String
 
-        //теперь считываем группы и на всякий случай еще мапу группа - дистанция
-        groupToDistanceData.forEach {
-            requireNotNull(it["Название"])
-            requireNotNull(it["Дистанция"])
-            competitions.groupToDistance[it["Название"]!!] = it["Дистанция"]!!
+    //Генерация протокола результатов (README.md)
+    abstract fun getResultsProtocol(): String
 
-            val group = competitions.findGroupByName(it["Название"]!!)
-            if (group == null)
-                competitions.groups.add(Group(it["Название"]!!, Distance(it["Дистанция"]!!)))
-
-        }
-
-
-
-        val distanceDataWithHeader = csvReader().readAll(filepath.format("courses"))
-        assert(distanceDataWithHeader.isNotEmpty())
-        val distanceData = distanceDataWithHeader.drop(1)
-        distanceData.forEach { row ->
-            assert(row.isNotEmpty())
-
-            val distance = competitions.findDistanceByName(row[0])
-            checkNotNull(distance) {"Distance doesn't exist: ${row[0]}"}
-            row.drop(1).forEach{
-                if (it.isNotEmpty())
-                    distance.controlPoints.add(ControlPoint("$it-${distance.name}", distance))
-                //Чтобы надежно различать КП, пусть на всякий случай в названии КП есть и название дистанции тоже
-            }
-        }
-
-        return competitions
-    }
+    val bestTime: Time
+        get() = sportsmen.filter{it.distanceWasPassed}.minOf { it.totalTime }
 }
 
 
-constructor(path: String): this(getCompetitionsByConfig(path))
+abstract class Distance(val name: String, open val controlPoints: List<ControlPoint>,)
 
-fun findGroupByName(name: String) = groups.find{ it.name == name }
 
-fun findDistanceByName (name: String) = distances.find{it.name == name}
+typealias CP = ControlPoint
+abstract class ControlPoint(val name: String){
+    private val data: TreeSet<PassingCP> = TreeSet()
 
-fun findGroupByNumber (number: Int): Group? {
-    var result: Group? = null
-    groups.forEach { group ->
-        if (group.numbers != null && number in group.numbers!!)
-            result = group
-    }
-    return result
+    val passingList: List<PassingCP> = data.toList()
+
+    //Функции для заполнения data - информации о прохождении этой точки спортсменами
+    fun addPassingCP(passingCP: PassingCP) = data.add(passingCP)
+    fun addPassingCPs(collection: Collection<PassingCP>) = data.addAll(collection)
+    fun removePassingCP(passingCP: PassingCP) = data.remove(passingCP)
+
+    //Протокол прохождения КП (README.md)
+    abstract fun getProtocol(): String
+
 }
 
-//Прием заявления от команды, добавление всех участников
-override fun takeTeamApplication(filepath: String){
-    val rows: List<List<String>> = csvReader().readAll(File(filepath))
-    val team = CompetitionsTeam(rows[0][0])
-    for(i in 1 until rows.size){
-        val row = rows[i]
-        val group = findGroupByName(row[0])?:continue
-        val sportsman = Sportsman.getFromProtocolRow(row)
-        val compSportsman = CompetitionsSportsman(sportsman, team, group)
-        team.members.add(compSportsman)
-        group.members.add(compSportsman)
-    }
-    teams.add(team)
+typealias CompTeam = CompetitionsTeam
+abstract class CompetitionsTeam(val name: String){
+    val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
 }
 
-fun takeAllApplicationsFromFolder(path: String) {
-    File(path).walk().drop(1).forEach {
-        takeTeamApplication(it.path)
+typealias CompSportsman = CompetitionsSportsman
+abstract class CompetitionsSportsman(
+    sportsman: Sportsman,
+    val team: CompetitionsTeam,
+    val group: Group,
+): Sportsman(sportsman){
+    var number: Int? = null
+    var startTime: Time? = null
+
+    init{
+        team.sportsmen.add(this)
+        group.sportsmen.add(this)
     }
+
+    //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована
+    private val passingData: TreeSet<PassingCP> = TreeSet()
+    private var dataWasChanged = false
+
+    //Функции для заполнения passingData - информации о прохождении дистанции
+    fun addPassingCP(passingCP: PassingCP){
+        passingData.add(passingCP)
+        dataWasChanged = true
+    }
+    fun addPassingCPs(collection: Collection<PassingCP>){
+        passingData.addAll(collection)
+        dataWasChanged = true
+    }
+    fun removePassingCP(passingCP: PassingCP){
+        passingData.remove(passingCP)
+        dataWasChanged = true
+    }
+
+    val distance: Distance  get() = group.distance
+
+    //Маршрут, по которому должен бежать спортсмен
+    val route: List<ControlPoint>  get() = distance.controlPoints
+
+    //Результат спортсмена
+    val totalTime: Time
+        get() = if(distanceWasPassed)
+            passingData.last().time - passingData.first().time
+        else Time.of(0,0,0)
+
+
+    //События прохождения спортсменом КП в порядке времени.
+    val passingList: List<PassingCP> = passingData.toList()
+
+    //Была ли дистанция корректно пройдена
+    val distanceWasPassed: Boolean
+        get() = number!=null && startTime!=null && passingList.map{it.CP}==route
+
+    //Протокол прохождения дистанции (README.md)
+    abstract fun getDistancePassingProtocol(): String
 }
 
 /*
-Начало соревнований - во всех группах проводится жеребьевка
+Событие: спортсмен пересек КП в момент времени time.
+Это нужно для простого хранения всей информации.
+Спортсмены и КП автоматически получают ссылки на эти объекты, и не нужно заполнять все отдельно
  */
-fun calcStarts(){
-    giveNumbersToSportsmenByGroups()
-    val time = Time.of(12,0,0)
-    groups.forEach {
-        it.calcStarts(time)
-        it.createStartProtocolFile("./data/start protocols/")
+data class PassingCP(val sportsman: CompSportsman, val CP: ControlPoint, val time: Time): Comparable<PassingCP>{
+    init {
+        sportsman.addPassingCP(this)
+        CP.addPassingCP(this)
     }
-}
-
-/*
-Все участники получают номера.
-В каждой группе номера у участников близкие.
- */
-private fun giveNumbersToSportsmenByGroups(){
-    var number: Int = 100
-    for(group in groups){
-        val beginningNumberInGroup = number
-        for(member in group.members){
-            member.number = number
-            group.numbersToMembers[number] = member
-            number++
-        }
-        number = (number / 100 + 1) * 100
-        group.numbers = beginningNumberInGroup..number
-        // чтобы в каждой группе с круглого числа начинать
+    fun destroy(){
+        sportsman.removePassingCP(this)
+        CP.removePassingCP(this)
     }
-}
-}
-
-
-//получаем результаты из splits
-fun Competitions.getResultsFromSplits(protocol: String) {
-val rows = csvReader().readAll(protocol)
-toBeContinued@ for (row in rows) {
-
-    assert(row.size % 2 == 1 && row.size >= 5)
-    val strNumber = row[0]
-    val number = strNumber.toIntOrNull()
-    checkNotNull(number) {"Спортсмены идентифицируются по целому числу! $strNumber"}
-    val group = findGroupByNumber(number)
-    checkNotNull(group) {"Номер никому не присвоен: $number"}
-    val distance = group.distance
-    val sportsman = group.numbersToMembers[number]
-    checkNotNull(sportsman) {"Номер никому не присвоен: $number"}
-
-    val stringsCPs = row.drop(1).filterIndexed{index, element -> index % 2 == 0 && element.isNotEmpty() }
-    val stringsTimes = row.drop(1).filterIndexed{index, element -> index % 2 == 1 && element.isNotEmpty()}
-    check(stringsCPs.size == stringsTimes.size)
-    val stringsPairs = stringsCPs.zip(stringsTimes)
-    check(stringsPairs.size >= 2)
-
-    val pairsWithoutStartAndFinish = stringsPairs.drop(1).dropLast(1)
-
-
-
-    val startPair = stringsPairs[0]
-    val finishPair = stringsPairs[stringsPairs.lastIndex]
-
-    val startCP = distance.findCPByName("${distance.name}-Start")
-    startCP!!.info[number] = stringToTimeOrNull(startPair.second)
-    sportsman.resultInfo = sportsman.ResultInfo()
-    sportsman.resultInfo!!.CPtimes[startCP] = stringToTimeOrNull(startPair.second)
-
-    val finishCP = distance.findCPByName("${distance.name}-Finish")
-    finishCP!!.info[number] = stringToTimeOrNull(finishPair.second)
-
-    sportsman.resultInfo!!.CPtimes[finishCP] = stringToTimeOrNull(finishPair.second)
-    /* У меня вопросы к файлу splits - я его не понимаю */
-
-    for (it in pairsWithoutStartAndFinish)  {
-        val stringCP = it.first
-        val stringTime = it.second
-        val CP = distance.findCPByName("${distance.name}-${stringCP}") ?: continue@toBeContinued
-        val time = stringToTimeOrNull(stringTime)
-        CP.info[number] = time
-
-        sportsman.resultInfo!!.CPtimes[CP] = time
-    }
-    TODO("Поменять ассерты на continue")
+    override fun compareTo(other: PassingCP): Int = time.compareTo(other.time)
 }
 
-*/
+enum class Gender{ MALE, FEMALE, UNKNOWN }
+open class Sportsman(
+    val name: String,
+    val surname: String,
+    val birthYear: Int,
+    val level: String,                      //спортивный разряд
+    val gender: Gender = Gender.UNKNOWN,    //пол
+    val medExamination: String="",          //данные про медосмотр
+    val insurance: String="",               //страхование
+){
+    constructor(sp: Sportsman): this(sp.name,sp.surname,sp.birthYear,sp.level,sp.gender,sp.medExamination,sp.insurance)
+}
+

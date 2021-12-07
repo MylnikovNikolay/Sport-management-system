@@ -1,9 +1,7 @@
 package ru.emkn.kotlin.sms
 
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 
-
-class ControlPoint(name: String): _ControlPoint(name) {
+class ControlPointByCSV(name: String): ControlPoint(name) {
 
     //Выдает протокол прохождения КП (как в README.MD)
     override fun getProtocol(): String {
@@ -60,15 +58,3 @@ class ControlPoint(name: String): _ControlPoint(name) {
         }
     }
  */
-
-
-
-
-class Distance(name: String, controlPoints: List<_ControlPoint>): _Distance(name, controlPoints) {
-    //val start = ControlPoint("$name-Start",this)
-    //val finish = ControlPoint("$name-Finish",this)
-
-    fun findCPByName(name: String) = controlPoints.find {it.name == name}
-
-}
-

@@ -1,13 +1,11 @@
 package ru.emkn.kotlin.sms
 
-import java.io.File
-
 
 /*
 Группа: определяется дистанцией и участниками, хранит
 всю информацию о соревновании
  */
-class Group(name: String, distance: _Distance): _Group(name, distance) {
+class GroupByCSV(name: String, distance: Distance): Group(name, distance) {
 
     override fun makeADraw(startTime: Time) {
         var time = startTime

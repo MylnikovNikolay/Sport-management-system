@@ -4,7 +4,7 @@ package ru.emkn.kotlin.sms
 
 fun main(args: Array<String>) {
     val configPath = "./data/config/%s"
-    val competitions = Competitions.fromString(readCSV( configPath.format("event.csv") ))
+    val competitions = CompetitionsByCSV.fromString(readCSV( configPath.format("event.csv") ))
     competitions.takeDistancesAndCPs(readCSV( configPath.format("courses.csv") ))
     competitions.takeGroupsAndDistances(readCSV( configPath.format("classes.csv") ))
 

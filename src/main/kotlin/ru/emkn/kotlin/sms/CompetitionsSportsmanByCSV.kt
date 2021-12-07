@@ -1,13 +1,13 @@
 package ru.emkn.kotlin.sms
 
 
-class CompetitionsTeam(name: String): _CompetitionsTeam(name)
+class CompetitionsTeamByCSV(name: String): CompetitionsTeam(name)
 
-class CompetitionsSportsman(
+class CompetitionsSportsmanByCSV(
     sportsman: Sportsman,
-    team: _CompetitionsTeam,
-    group: _Group,
-) : _CompetitionsSportsman(sportsman,team,group){
+    team: CompetitionsTeam,
+    group: Group,
+) : CompetitionsSportsman(sportsman,team,group){
 
     override fun getDistancePassingProtocol(): String {
         TODO("Not yet implemented")
