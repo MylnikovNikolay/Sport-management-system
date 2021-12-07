@@ -86,6 +86,7 @@ open class CompetitionsByCSV(
         val rows = csvReader().readAll(protocol).drop(1)
         for(row in rows){
             val distName = row.firstOrNull()?:continue
+            if (distName.isEmpty()) continue
             val CPList = mutableListOf<ControlPoint>()
             for(CPname in row.drop(1)){
                 if (CPname.isNotEmpty()) {
@@ -94,7 +95,9 @@ open class CompetitionsByCSV(
                 }
             }
             if (CPList.size < 2) continue
+            if (findDistanceByName(distName) != null) continue
             distances.add(DistanceByCSV(distName,CPList))
+            controlPoints.addAll(CPList.toSet())
         }
     }
 
