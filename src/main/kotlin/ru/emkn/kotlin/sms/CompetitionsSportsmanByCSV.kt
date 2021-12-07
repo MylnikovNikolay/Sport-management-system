@@ -10,7 +10,17 @@ class CompetitionsSportsmanByCSV(
 ) : CompetitionsSportsman(sportsman,team,group){
 
     override fun getDistancePassingProtocol(): String {
-        TODO("Not yet implemented")
+        val strBuilder = StringBuilder()
+        strBuilder.appendLine("$number,")
+        group.distance.controlPoints.forEach { point ->
+            val infoAboutPassing = passingList.find {it.CP == point}
+            if (infoAboutPassing == null)
+                strBuilder.appendLine("${point.name},-")
+            else
+                strBuilder.appendLine("${point.name},${infoAboutPassing.time}")
+        }
+
+        return strBuilder.toString()
     }
 
     fun toProtocolRow(): String =
