@@ -70,7 +70,8 @@ typealias CP = ControlPoint
 abstract class ControlPoint(val name: String){
     private val data: TreeSet<PassingCP> = TreeSet()
 
-    val passingList: List<PassingCP> = data.toList()
+    val passingList: List<PassingCP>
+        get() = data.toList()
 
     //Функции для заполнения data - информации о прохождении этой точки спортсменами
     fun addPassingCP(passingCP: PassingCP) = data.add(passingCP)
@@ -128,11 +129,12 @@ abstract class CompetitionsSportsman(
     val totalTime: Time
         get() = if(distanceWasPassed)
             passingData.last().time - passingData.first().time
-        else Time.of(0,0,0)
+                else Time.of(23,59,59) //такого точно не будет, это уже следующий день
 
 
     //События прохождения спортсменом КП в порядке времени.
-    val passingList: List<PassingCP> = passingData.toList()
+    val passingList: List<PassingCP>
+        get() = passingData.toList()
 
     //Была ли дистанция корректно пройдена
     val distanceWasPassed: Boolean

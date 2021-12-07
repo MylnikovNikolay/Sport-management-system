@@ -35,14 +35,20 @@ class GroupByCSV(name: String, distance: Distance): Group(name, distance) {
     override fun getResultsProtocol(): String{
         val membersByResult = sportsmen.toMutableList()
         membersByResult.sortBy { it.totalTime } // ? totalTime - startTime
-        val strBuilder = StringBuilder("$name\n")
+        val strBuilder = StringBuilder("$name,,,,,,,,,\n")
 
         // Я не понял зачем и что такое № п/п в results.csv в sample-data
-        strBuilder.appendLine("Номер,Фамилия,Имя,Г.р.,Разр.,Команда,Результат,Место,Отставание")
+        strBuilder.appendLine("№ п/п,Номер,Фамилия,Имя,Г.р.,Разр.,Команда,Результат,Место,Отставание")
         for (i in membersByResult.indices) {
             val sp = membersByResult[i]
-            val line = "${sp.number},${sp.surname},${sp.name},${sp.birthYear},${sp.level},${sp.team.name}," +
-                    "${sp.totalTime}" + if (i > 0) "${sp.totalTime - membersByResult[i - 1].totalTime}" else ""
+
+            val line: String = if (sp.totalTime != Time.of(23,59, 59))
+                "${i + 1},${sp.number},${sp.surname},${sp.name},${sp.birthYear},${sp.level},${sp.team.name}," +
+                        "${sp.totalTime},${i + 1}," +
+                        if (i > 0) "+${sp.totalTime - membersByResult[i - 1].totalTime}" else ""
+            else
+                "${i + 1},${sp.number},${sp.surname},${sp.name},${sp.birthYear},${sp.level},${sp.team.name}," +
+                        "снят с дистанции/неявка/некорректные данные,,"
             
             strBuilder.appendLine(line)
         }
