@@ -31,6 +31,8 @@ fun writeToFile(filepath: String, str: String){
     file.writeText(str)
 }
 
+fun removeExtraSpaces(str: String): String =
+    str.split(" ").map { it.trim() }.filter { it != "" }.joinToString(" ")
 
 /*
 Перевод строки во время - чтобы не писать каждый раз try-catch

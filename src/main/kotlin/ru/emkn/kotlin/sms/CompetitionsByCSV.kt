@@ -61,9 +61,11 @@ open class CompetitionsByCSV(
 
     //Прием заявления от команды
     override fun takeTeamApplication(protocol: String) {
-        val rows = csvReader().readAll(protocol)
+        val rows = csvReader().readAll(protocol).map {list-> list.map { removeExtraSpaces(it) } }
         val teamName = rows[0][0]
-        val team = CompetitionsTeamByCSV(name)
+        val team = CompetitionsTeamByCSV(teamName)
+        teams.add(team)
+
         for(row in rows.drop(1)){
             if(row.size!=5) continue
             val group = findGroupByName(row[0])?:continue
@@ -83,7 +85,7 @@ open class CompetitionsByCSV(
 
     //Создание дистанций и КП - как из courses.csv
     override fun takeDistancesAndCPs(protocol: String) {
-        val rows = csvReader().readAll(protocol).drop(1)
+        val rows = csvReader().readAll(protocol).drop(1).map {list-> list.map { removeExtraSpaces(it) } }
         for(row in rows){
             val distName = row.firstOrNull()?:continue
             val CPList = mutableListOf<ControlPoint>()
@@ -100,7 +102,7 @@ open class CompetitionsByCSV(
 
     //Создание групп по протоколу, как из файла classes.csv
     override fun takeGroupsAndDistances(protocol: String) {
-        val rows = csvReader().readAll(protocol).drop(1)
+        val rows = csvReader().readAll(protocol).drop(1).map {list-> list.map { removeExtraSpaces(it) } }
         for (row in rows){
             if(row.size!=2) continue
             //не допускаем двух групп с одним именем
@@ -112,7 +114,7 @@ open class CompetitionsByCSV(
 
     //Заполнение всех результатов - как из splits.csv
     override fun takeResults(protocol: String) {
-        val data = csvReader().readAll(protocol)
+        val data = csvReader().readAll(protocol).map {list-> list.map { removeExtraSpaces(it) } }
         val rows = data.map{it.filter{str -> str.isNotEmpty()}}
         for(row in rows){
             if(row.size % 2 != 1) continue
