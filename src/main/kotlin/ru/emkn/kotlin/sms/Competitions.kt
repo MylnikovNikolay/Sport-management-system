@@ -59,11 +59,15 @@ abstract class Group(val name: String, val distance: Distance){
     abstract fun getResultsProtocol(): String
 
     val bestTime: Time
-        get() = sportsmen.filter{it.distanceWasPassed}.minOf { it.totalTime }
+        get() = sportsmen.minOf { it.totalTime?:Time.of(23,59,59) }
 }
 
 
-abstract class Distance(val name: String, open val controlPoints: List<ControlPoint>,)
+abstract class Distance(val name: String, val controlPoints: List<ControlPoint>,){
+    fun findCPByName(name: String) = controlPoints.find {it.name == name}
+    val start = controlPoints.first()
+    val finish = controlPoints.last()
+}
 
 
 typealias CP = ControlPoint
@@ -126,10 +130,10 @@ abstract class CompetitionsSportsman(
     val route: List<ControlPoint>  get() = distance.controlPoints
 
     //Результат спортсмена
-    val totalTime: Time
+    val totalTime: Time?
         get() = if(distanceWasPassed)
             passingData.last().time - passingData.first().time
-                else Time.of(23,59,59) //такого точно не будет, это уже следующий день
+                else null//Time.of(23,59,59) //такого точно не будет, это уже следующий день
 
 
     //События прохождения спортсменом КП в порядке времени.
@@ -138,7 +142,9 @@ abstract class CompetitionsSportsman(
 
     //Была ли дистанция корректно пройдена
     val distanceWasPassed: Boolean
-        get() = number!=null && startTime!=null && passingList.map{it.CP}==route
+        get() = number != null &&
+                (startTime ?: Time.of(23, 59,59)) <= passingData.first().time &&
+                passingList.map { it.CP } == route
 
     //Протокол прохождения дистанции (README.md)
     abstract fun getDistancePassingProtocol(): String
