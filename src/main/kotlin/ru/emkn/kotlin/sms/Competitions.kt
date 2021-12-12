@@ -129,10 +129,10 @@ abstract class CompetitionsSportsman(
     //Маршрут, по которому должен бежать спортсмен
     val route: List<ControlPoint>  get() = distance.controlPoints
 
-    //Результат спортсмена
+    //Результат спортсмена, !!первый КП считается как стартовый
     val totalTime: Time?
         get() = if(distanceWasPassed)
-            passingData.last().time - startTime!!
+            passingData.last().time - passingData.first().time
                 else null//Time.of(23,59,59) //такого точно не будет, это уже следующий день
 
 
