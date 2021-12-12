@@ -3,23 +3,30 @@ package ru.emkn.kotlin.sms
 
 
 fun main(args: Array<String>) {
-    val configPath = "./data/config/%s"
-    val competitions = CompetitionsByCSV.fromString(readCSV( configPath.format("event.csv") ))
-    competitions.takeDistancesAndCPs(readCSV( configPath.format("courses.csv") ))
-    competitions.takeGroupsAndDistances(readCSV( configPath.format("classes.csv") ))
+    // Может быть название папки с данными лучше откуда-нибудь считывать
+    val dataFolder = "small test data"
+    val configPath = "./$dataFolder/config/%s"
+    val eventFileName = "event.csv"
+    val coursesFileName = "courses.csv"
+    val classesFileName = "classes.csv"
+    val competitions = CompetitionsByCSV.fromString(readCSV( configPath.format(eventFileName) ))
+    competitions.takeDistancesAndCPs(readCSV( configPath.format(coursesFileName) ))
+    competitions.takeGroupsAndDistances(readCSV( configPath.format(classesFileName) ))
 
-    competitions.takeAllApplicationsFromFolder("./data/applications/")
+    competitions.takeAllApplicationsFromFolder("./$dataFolder/applications/")
 
-    competitions.makeADrawAndWrite()
+    competitions.makeADrawAndWrite("./$dataFolder/start protocols/")
 
     /*
      * Тут пользователь как-то сообщит программе, что соревнование закончилось и результаты загружены
      * (пока что хотя бы в папку в виде файлов). После этого произойдет загрузка рез-ов.
      */
+    println("Поместите результаты в файл в папке data/splits и введите название файла:")
+    val splitsFileName = readLine()
 
     // Рассчет на то, что сплиты будут храниться не только в одном файле
-    competitions.takeResults(readCSV( "./data/splits/splits.csv" ))
-    competitions.writeTotalResults()
+    competitions.takeResults(readCSV( "./$dataFolder/splits/$splitsFileName" ))
+    competitions.writeTotalResults("./$dataFolder/results")
 }
 
 /*

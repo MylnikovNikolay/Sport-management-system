@@ -132,7 +132,7 @@ abstract class CompetitionsSportsman(
     //Результат спортсмена
     val totalTime: Time?
         get() = if(distanceWasPassed)
-            passingData.last().time - passingData.first().time
+            passingData.last().time - startTime!!
                 else null//Time.of(23,59,59) //такого точно не будет, это уже следующий день
 
 
