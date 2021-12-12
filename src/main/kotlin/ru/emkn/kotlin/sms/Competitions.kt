@@ -106,7 +106,7 @@ abstract class CompetitionsSportsman(
         group.sportsmen.add(this)
     }
 
-    //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована
+    //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована (уже видимо отсортирована? + dataWasChanged уже не нужно?)
     private val passingData: TreeSet<PassingCP> = TreeSet()
     private var dataWasChanged = false
 
@@ -142,7 +142,7 @@ abstract class CompetitionsSportsman(
 
     //Была ли дистанция корректно пройдена
     val distanceWasPassed: Boolean
-        get() = number != null &&
+        get() = number != null && passingData.isNotEmpty() &&
                 (startTime ?: Time.of(23, 59,59)) <= passingData.first().time &&
                 passingList.map { it.CP } == route
 

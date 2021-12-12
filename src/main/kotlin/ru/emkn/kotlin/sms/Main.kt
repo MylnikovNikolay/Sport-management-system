@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
      * (пока что хотя бы в папку в виде файлов). После этого произойдет загрузка рез-ов.
      */
 
-    // Рассчет на то, что сплиты будут хранится не только в одном файле
+    // Рассчет на то, что сплиты будут храниться не только в одном файле
     competitions.takeResults(readCSV( "./data/splits/splits.csv" ))
     competitions.writeTotalResults()
 }

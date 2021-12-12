@@ -38,11 +38,10 @@ fun removeExtraSpaces(str: String): String =
 Перевод строки во время - чтобы не писать каждый раз try-catch
  */
 fun stringToTimeOrNull(str: String): Time?{
-    try {
-        val time = Time.parse(str)
-        return time
-    }finally{
-        return null
+    return try {
+        Time.parse(str)
+    } catch (e : java.time.format.DateTimeParseException){
+        null
     }
 }
 
