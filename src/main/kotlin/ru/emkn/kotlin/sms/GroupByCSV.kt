@@ -34,19 +34,17 @@ class GroupByCSV(name: String, distance: Distance): Group(name, distance) {
 
     override fun getResultsProtocol(): String{
         val membersByResult = sportsmen.toMutableList()
-        membersByResult.sortBy { it.totalTime }
+        membersByResult.sortBy { if (it.totalTime == null) Time.of(23, 59, 59) else it.totalTime}
         val strBuilder = StringBuilder("$name,,,,,,,,,\n")
 
         strBuilder.appendLine("№ п/п,Номер,Фамилия,Имя,Г.р.,Разр.,Команда,Результат,Место,Отставание")
-        val minTime = bestTime
         for (i in membersByResult.indices) {
             val sp = membersByResult[i]
             val totalTime = sp.totalTime
-            val line: String = if (totalTime != null)
-                "${i + 1},${sp.number},${sp.surname},${sp.name},${sp.birthYear},${sp.level},${sp.team.name}," +
+            val line: String = "${i + 1},${sp.number},${sp.surname},${sp.name},${sp.birthYear},${sp.level},${sp.team.name}," +
+                    if (totalTime != null)
                         "${sp.totalTime},${i + 1},${totalTime - bestTime}"
-            else
-                "${i + 1},${sp.number},${sp.surname},${sp.name},${sp.birthYear},${sp.level},${sp.team.name}," +
+                    else
                         "снят с дистанции/неявка/некорректные данные,,"
             
             strBuilder.appendLine(line)
