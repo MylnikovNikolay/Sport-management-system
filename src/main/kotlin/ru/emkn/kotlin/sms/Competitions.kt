@@ -90,6 +90,8 @@ abstract class ControlPoint(val name: String){
 typealias CompTeam = CompetitionsTeam
 abstract class CompetitionsTeam(val name: String){
     val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
+    val teamPoints: Double
+        get() = sportsmen.sumOf { it.points }
 }
 
 typealias CompSportsman = CompetitionsSportsman
@@ -105,6 +107,8 @@ abstract class CompetitionsSportsman(
         team.sportsmen.add(this)
         group.sportsmen.add(this)
     }
+
+    abstract val points: Double
 
     //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована (уже видимо отсортирована? + dataWasChanged уже не нужно?)
     private val passingData: TreeSet<PassingCP> = TreeSet()

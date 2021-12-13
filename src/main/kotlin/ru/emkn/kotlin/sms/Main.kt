@@ -4,7 +4,7 @@ package ru.emkn.kotlin.sms
 
 fun main(args: Array<String>) {
     // Может быть название папки с данными лучше откуда-нибудь считывать
-    val dataFolder = "small test data"
+    val dataFolder = if (args.isNotEmpty()) args[0] else "data"
     val configPath = "./$dataFolder/config/%s"
     val eventFileName = "event.csv"
     val coursesFileName = "courses.csv"
@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
      * Тут пользователь как-то сообщит программе, что соревнование закончилось и результаты загружены
      * (пока что хотя бы в папку в виде файлов). После этого произойдет загрузка рез-ов.
      */
-    println("Поместите результаты в файл в папке data/splits и введите название файла:")
+    println("Поместите результаты в файл в папке $dataFolder/splits и введите название файла:")
     val splitsFileName = readLine()
 
     // Рассчет на то, что сплиты будут храниться не только в одном файле
