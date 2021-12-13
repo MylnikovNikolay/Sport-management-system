@@ -27,6 +27,7 @@ fun main(args: Array<String>) {
     // Рассчет на то, что сплиты будут храниться не только в одном файле
     competitions.takeResults(readCSV( "./$dataFolder/splits/$splitsFileName" ))
     competitions.writeTotalResults("./$dataFolder/results")
+    competitions.writeTeamResults("./$dataFolder/results")
 }
 
 /*

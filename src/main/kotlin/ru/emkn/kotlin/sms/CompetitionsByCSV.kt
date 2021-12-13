@@ -48,9 +48,17 @@ open class CompetitionsByCSV(
 
     //Все результаты складываются в единый протокол по типу results.csv
     override fun getTotalResults(): String {
-        val strBuilder = StringBuilder("Протокол результатов.,,,,,,,,,")
-        groups.forEach { group ->
-            strBuilder.appendLine(group.getResultsProtocol())
+        val strBuilder = StringBuilder("Протокол результатов\n")
+        groups.forEach {
+            strBuilder.appendLine(it.getResultsProtocol())
+        }
+        return strBuilder.toString()
+    }
+
+    override fun getTeamResults(): String {
+        val strBuilder = StringBuilder("Протокол результатов для команд,\n")
+        teams.forEach {
+            strBuilder.appendLine("${it.name},${it.teamPoints}")
         }
         return strBuilder.toString()
     }
@@ -146,11 +154,11 @@ open class CompetitionsByCSV(
     }
 
     fun writeTotalResults(folder: String = "./data/results") {
-        val strBuilder = StringBuilder("Протокол результатов\n")
-        groups.forEach {
-            strBuilder.appendLine(it.getResultsProtocol())
-        }
-        writeToFile("$folder/results.csv", strBuilder.toString())
+        writeToFile("$folder/results.csv", getTotalResults())
+    }
+
+    fun writeTeamResults(folder: String = "./data/results") {
+        writeToFile("$folder/teamResults.csv", getTeamResults())
     }
 
     /*

@@ -1,5 +1,6 @@
 package ru.emkn.kotlin.sms
 
+import java.io.StringBufferInputStream
 import java.util.*
 
 /*
@@ -24,6 +25,9 @@ abstract class Competitions(val name: String, val date: String) {
 
     //Складывает результаты всех групп в единый протокол (results.csv)
     abstract fun getTotalResults(): String
+
+    //Формирует протокол результатов для команд
+    abstract fun getTeamResults(): String
 
     //Обработка заявления от команды (applications)
     abstract fun takeTeamApplication(protocol: String)
