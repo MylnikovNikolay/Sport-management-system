@@ -68,13 +68,16 @@ object CsvReader {
                     afterQuotes = false
                 }
                 else {
+                    //printError(line)
                     return null
                 }
             }
             else if (!afterQuotes && !between) {
                 if (c == '"'){
-                    if(actualLine.isNotEmpty())
+                    if(actualLine.isNotEmpty()) {
+                        //printError(line)
                         return null
+                    }
                     else {
                         between = true
                     }

@@ -26,16 +26,16 @@ internal class CompetitionsTests {
         assertEquals(comp.name, "Первенство пятой бани")
         assertEquals(comp.date, "01.01.2022")
 
-        comp = fromString("Дата,Название\n" + "04.01.2021,Первенство четвёртой бани")
-        assertEquals(comp.name, "Первенство четвёртой бани")
-        assertEquals(comp.date, "04.01.2021")
+        assertFails {
+            fromString("Дата,Название\n" + "04.01.2021,Первенство четвёртой бани")
+        }
 
-        assertFailsWith<IllegalArgumentException> {
+        assertFails {
             fromString("abracadabra,abacaba")
         }
 
-        assertFailsWith<IllegalArgumentException> {
-            fromString("Дота,название\n" + "Первенство пятой бани,01.01.2022")
+        assertFails{
+            fromString("Название,Дота\n" + "Первенство пятой бани,01.01.2022")
         }
     }
 
@@ -45,7 +45,7 @@ internal class CompetitionsTests {
         UsualLogger.start()
         ErrorsAndWarningsLogger.start()
         val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
-        comp.takeDistancesAndCPs(File("sample-data/additional sample-data/takeDistancesAndCPsTest.csv").readText())
+        comp.takeDistancesAndCPs(readCSV("sample-data/additional sample-data/takeDistancesAndCPsTest.csv"))
         assertEquals(3, comp.distances.size)
 
         val distance1 = comp.findDistanceByName("distance1")
@@ -87,10 +87,10 @@ internal class CompetitionsTests {
         ErrorsAndWarningsLogger.start()
         val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
         comp.takeDistancesAndCPs(
-            File("sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/distances.csv").readText()
+            readCSV("sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/distances.csv")
         )
         comp.takeGroupsAndDistances(
-            File("sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/groups-distances.csv").readText()
+            readCSV("sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/groups-distances.csv")
         )
         assertEquals(4, comp.groups.size)
         val group67 = comp.findGroupByName("М67")

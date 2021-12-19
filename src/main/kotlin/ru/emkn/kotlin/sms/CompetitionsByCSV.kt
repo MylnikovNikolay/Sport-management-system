@@ -24,30 +24,30 @@ open class CompetitionsByCSV(
 
     companion object{
         fun fromString(protocol: String): CompetitionsByCSV{
-            if (!checkProtocolIsCorrectCSV(protocol)) {
-                printError("В файле с общей информацией о соревновании ошибка: в csv-файле в каждой строчке равное" +
-                        " количество полей")
+            if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+                printError("В файле с общей информацией о соревновании ошибка: файл не является корректным csv")
+                throw Exception("Без корректного файла с общей информацией о соревновании дальнейшая работа невозможна")
             }
-            if (protocol.lines()[0] != "Название,Дата"){
+            if (protocol.lines().isEmpty() ||
+                CsvReader.readOneLine(protocol.lines()[0])!![0] != "Название" ||
+                CsvReader.readOneLine(protocol.lines()[0])!![1] != "Дата"
+            ){
                 printError("В файле с общей информацией о соревновании ошибка: в этом файле первая строчка " +
                         "должна быть: 'Название,Дата'")
+                throw Exception("Без корректного файла с общей информацией о соревновании дальнейшая работа невозможна")
             }
-            val eventData = csvReader().readAllWithHeader(protocol)
+            val eventData = CsvReader.readWithHeader(protocol)!!
             if (eventData.size != 1) {
                 printError("В файле с общей информацией о соревновании ошибка: в этом файле должно быть ровно две" +
                         " строки")
+                throw Exception("Без корректного файла с общей информацией о соревновании дальнейшая работа невозможна")
             }
-            require(eventData.size == 1)
-            requireNotNull(eventData[0]["Название"])
             val name = eventData[0]["Название"]!!
             if (name.isEmpty()){
                 printError("В файле с общей информацией о соревновании ошибка: пустое название недопустимо")
-                require(name.isNotEmpty())
+                throw Exception("Без корректного файла с общей информацией о соревновании дальнейшая работа невозможна")
             }
-
-            requireNotNull(eventData[0]["Дата"])
             val date = eventData[0]["Дата"]!!
-
             return CompetitionsByCSV(name, date)
         }
     }
@@ -85,11 +85,11 @@ open class CompetitionsByCSV(
 
     //Прием заявления от команды
     override fun takeTeamApplication(protocol: String) {
-        if(!checkProtocolIsCorrectCSV(protocol)) {
-            printError("В файле с заявкой команды ошибка: в csv-файле в каждой строчке равное количество полей")
+        if(!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError("В файле с заявкой команды ошибка: файл не является корректным csv")
             return
         }
-        val rows = csvReader().readAll(protocol).map {list-> list.map { removeExtraSpaces(it) } }
+        val rows = CsvReader.read(protocol)!!
         if (rows.isEmpty()) {
             printError("В файле с заявкой команды ошибка: отсутствует строка с названием команды")
             return
@@ -134,11 +134,10 @@ open class CompetitionsByCSV(
 
     //Создание дистанций и КП - как из courses.csv
     override fun takeDistancesAndCPs(protocol: String) {
-        if(!checkProtocolIsCorrectCSV(protocol)){
-            printError("В файле с соответствиями дистанций и КП ошибка: в csv-файле в каждой строчке равное" +
-            " количество полей")
+        if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
+            printError("В файле с соответствиями дистанций и КП ошибка: файл не является корректным csv")
         }
-        val rows = csvReader().readAll(protocol).drop(1).map {list-> list.map { removeExtraSpaces(it) } }
+        val rows = CsvReader.read(protocol)!!.drop(1)
         for(row in rows){
             val distName = row.firstOrNull()
             if (distName == null) {
@@ -174,11 +173,11 @@ open class CompetitionsByCSV(
 
     //Создание групп по протоколу, как из файла classes.csv
     override fun takeGroupsAndDistances(protocol: String) {
-        if(!checkProtocolIsCorrectCSV(protocol)){
-            printError("В файле с соответствиями групп и дистанций ошибка: в csv-файле в каждой строчке равное" +
-                    " количество полей")
+        if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
+            printError("В файле с соответствиями групп и дистанций ошибка: файл не является корректным csv")
+            return
         }
-        val rows = csvReader().readAll(protocol).drop(1).map {list-> list.map { removeExtraSpaces(it) } }
+        val rows = CsvReader.read(protocol)!!.drop(1)
         for (row in rows){
             if(row.size!=2) {
                 printError("В файле с соответствиями групп и дистанций ошибка: в этом файле должно быть ровно " +
