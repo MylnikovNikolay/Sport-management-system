@@ -47,6 +47,17 @@ abstract class Competitions(val name: String, val date: String) {
 
     abstract fun takeResultsFromReverseSplits(protocol: String)
 
+    protected fun giveNumbersToSportsmenByGroups(){
+        var number = 100
+        for(group in groups){
+            for(member in group.sportsmen){
+                member.number = number
+                number++
+            }
+            number = (number / 100 + 1) * 100
+            // чтобы в каждой группе с круглого числа начинать
+        }
+    }
 }
 
 
