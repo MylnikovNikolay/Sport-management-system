@@ -53,10 +53,3 @@ class GroupByCSV(name: String, distance: Distance): Group(name, distance) {
         return strBuilder.toString()
     }
 }
-/*
-    fun createStartProtocolFile(folder: String) {
-        val file = File(folder + "startProtocol$name.csv")
-        file.createNewFile()
-        file.writeText(getStartsProtocol())
-    }
- */
