@@ -41,4 +41,12 @@ fun stringToTimeOrNull(str: String): Time?{
     }
 }
 
+fun printWarning(string: String) {
+    ErrorsAndWarningsLogger.log("Warning: $string")
+}
 
+fun printError(string: String) {
+    ErrorsAndWarningsLogger.log("Error: $string")
+}
+
+typealias CompSportsman = CompetitionsSportsman

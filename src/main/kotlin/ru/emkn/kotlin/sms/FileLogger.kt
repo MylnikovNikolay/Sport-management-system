@@ -3,7 +3,7 @@ package ru.emkn.kotlin.sms
 import java.io.File
 
 abstract class FileLogger (private val pathnameToFile: String) {
-    fun clear() {
+    private fun clear() {
         assert(File(pathnameToFile).exists())
         File(pathnameToFile).writeText("")
     }
@@ -15,16 +15,4 @@ abstract class FileLogger (private val pathnameToFile: String) {
         clear()
         log("Сессия начата")
     }
-}
-
-object UsualLogger: FileLogger("loggers/logger.txt")
-
-object ErrorsAndWarningsLogger: FileLogger("loggers/errors_and_warnings.txt")
-
-fun printWarning(string: String) {
-    ErrorsAndWarningsLogger.log("Warning: $string")
-}
-
-fun printError(string: String) {
-    ErrorsAndWarningsLogger.log("Error: $string")
 }

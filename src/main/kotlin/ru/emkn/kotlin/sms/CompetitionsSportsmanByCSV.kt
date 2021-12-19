@@ -3,7 +3,7 @@ package ru.emkn.kotlin.sms
 import java.lang.Double.max
 
 
-class CompetitionsTeamByCSV(name: String): CompetitionsTeam(name)
+
 
 class CompetitionsSportsmanByCSV(
     sportsman: Sportsman,
