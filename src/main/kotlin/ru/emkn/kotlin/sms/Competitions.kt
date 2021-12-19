@@ -9,6 +9,11 @@ import java.util.*
 При этом большая часть внутренних вычислений уже реализована тут.
  */
 abstract class Competitions(val name: String, val date: String) {
+    init {
+        UsualLogger.log(
+            "Соревнование с названием '$name' и датой $date создано"
+        )
+    }
     protected open val teams: MutableSet<CompetitionsTeam> = mutableSetOf()
     protected open val groups: MutableSet<Group> = mutableSetOf()
     protected open val distances: MutableSet<Distance> = mutableSetOf()
@@ -45,6 +50,11 @@ abstract class Competitions(val name: String, val date: String) {
 
 
 abstract class Group(val name: String, val distance: Distance){
+    init {
+        UsualLogger.log(
+            "Группа с названием '$name' создана и привязана к дистанции '${distance.name}'"
+        )
+    }
 
     val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
 
@@ -68,6 +78,16 @@ abstract class Group(val name: String, val distance: Distance){
 
 
 abstract class Distance(val name: String, val controlPoints: List<ControlPoint>,){
+    init {
+        UsualLogger.log(
+            "Добавлена дистанция '$name'"
+        )
+        controlPoints.forEach {
+            UsualLogger.log(
+                "К дистанции '$name' привязан КП '${it.name}'"
+            )
+        }
+    }
     fun findCPByName(name: String) = controlPoints.find {it.name == name}
     val start = controlPoints.first()
     val finish = controlPoints.last()
@@ -76,6 +96,11 @@ abstract class Distance(val name: String, val controlPoints: List<ControlPoint>,
 
 typealias CP = ControlPoint
 abstract class ControlPoint(val name: String){
+    init {
+        UsualLogger.log(
+            "Добавлен КП '$name'"
+        )
+    }
     private val data: TreeSet<PassingCP> = TreeSet()
 
     val passingList: List<PassingCP>
@@ -93,6 +118,11 @@ abstract class ControlPoint(val name: String){
 
 typealias CompTeam = CompetitionsTeam
 abstract class CompetitionsTeam(val name: String){
+    init {
+        UsualLogger.log(
+            "Зарегистрирована команда '$name'"
+        )
+    }
     val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
     val teamPoints: Double
         get() = sportsmen.sumOf { it.points }
@@ -105,9 +135,21 @@ abstract class CompetitionsSportsman(
     val group: Group,
 ): Sportsman(sportsman){
     var number: Int? = null
+        set(value) {
+            UsualLogger.log("Спортсмену $name $surname присвоен номер $value")
+            field = value
+        }
     var startTime: Time? = null
+        set(value) {
+            UsualLogger.log("Cпортсмену $name $surname присвоено стартовое время $value")
+            field = value
+        }
 
     init{
+        UsualLogger.log(
+            "Спортсмен ${sportsman.name} ${sportsman.surname} из команды " +
+                    "'${team.name}' зарегистрирован и добавлен в группу '${group.name}'"
+        )
         team.sportsmen.add(this)
         group.sportsmen.add(this)
     }
@@ -165,6 +207,10 @@ abstract class CompetitionsSportsman(
  */
 data class PassingCP(val sportsman: CompSportsman, val CP: ControlPoint, val time: Time): Comparable<PassingCP>{
     init {
+        UsualLogger.log(
+            "Информация о событии: спортсмен ${sportsman.name} ${sportsman.surname} прошел КП '${CP.name}'" +
+                    " в $time"
+        )
         sportsman.addPassingCP(this)
         CP.addPassingCP(this)
     }

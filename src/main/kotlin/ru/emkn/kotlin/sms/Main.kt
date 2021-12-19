@@ -3,6 +3,8 @@ package ru.emkn.kotlin.sms
 
 
 fun main(args: Array<String>) {
+    UsualLogger.start()
+    ErrorsAndWarningsLogger.start()
     // Может быть название папки с данными лучше откуда-нибудь считывать
     val dataFolder = if (args.isNotEmpty()) args[0] else "data"
     val configPath = "./$dataFolder/config/%s"

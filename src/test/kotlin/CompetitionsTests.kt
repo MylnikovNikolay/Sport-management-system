@@ -42,6 +42,7 @@ internal class CompetitionsTests {
 
     @Test
     fun takeDistancesAndCPsTest () {
+        UsualLogger.start()
         val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
         comp.takeDistancesAndCPs(File("sample-data/additional sample-data/takeDistancesAndCPsTest.csv").readText())
         assertEquals(3, comp.distances.size)
@@ -81,6 +82,7 @@ internal class CompetitionsTests {
 
     @Test
     fun takeGroupsAndDistances() {
+        UsualLogger.start()
         val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
         comp.takeDistancesAndCPs(
             File("sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/distances.csv").readText()
@@ -120,6 +122,8 @@ internal class CompetitionsTests {
 
         assertEquals(1, comp.groups.count{it.name == "Ж28"})
     }
+
+
 
 
 
