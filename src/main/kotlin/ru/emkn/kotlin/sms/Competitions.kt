@@ -160,20 +160,16 @@ abstract class CompetitionsSportsman(
 
     //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована (уже видимо отсортирована? + dataWasChanged уже не нужно?)
     private val passingData: TreeSet<PassingCP> = TreeSet()
-    private var dataWasChanged = false
 
     //Функции для заполнения passingData - информации о прохождении дистанции
     fun addPassingCP(passingCP: PassingCP){
         passingData.add(passingCP)
-        dataWasChanged = true
     }
     fun addPassingCPs(collection: Collection<PassingCP>){
         passingData.addAll(collection)
-        dataWasChanged = true
     }
     fun removePassingCP(passingCP: PassingCP){
         passingData.remove(passingCP)
-        dataWasChanged = true
     }
 
     val distance: Distance  get() = group.distance
@@ -185,7 +181,7 @@ abstract class CompetitionsSportsman(
     val totalTime: Time?
         get() = if(distanceWasPassed)
             passingData.last().time - passingData.first().time
-                else null//Time.of(23,59,59) //такого точно не будет, это уже следующий день
+                else null
 
 
     //События прохождения спортсменом КП в порядке времени.
