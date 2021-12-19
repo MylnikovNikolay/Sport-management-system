@@ -20,3 +20,11 @@ abstract class FileLogger (private val pathnameToFile: String) {
 object UsualLogger: FileLogger("loggers/logger.txt")
 
 object ErrorsAndWarningsLogger: FileLogger("loggers/errors_and_warnings.txt")
+
+fun printWarning(string: String) {
+    ErrorsAndWarningsLogger.log("Warning: $string")
+}
+
+fun printError(string: String) {
+    ErrorsAndWarningsLogger.log("Error: $string")
+}
