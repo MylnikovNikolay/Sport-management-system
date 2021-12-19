@@ -22,6 +22,7 @@ fun main(args: Array<String>) {
      * (пока что хотя бы в папку в виде файла). После этого произойдет загрузка рез-ов.
      */
     println("Поместите результаты в файл в папке $dataFolder/splits и введите название файла:")
+    // TODO(стоит сделать эту часть адекватнее, все равно файл со сплитами один всего)
     val splitsFileName = readLine()
 
     competitions.takeResults(readCSV( "./$dataFolder/splits/$splitsFileName" ))
