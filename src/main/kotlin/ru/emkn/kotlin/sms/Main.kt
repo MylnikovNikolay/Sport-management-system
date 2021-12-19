@@ -25,7 +25,7 @@ fun main(args: Array<String>) {
     // TODO(стоит сделать эту часть адекватнее, все равно файл со сплитами один всего)
     val splitsFileName = readLine()
 
-    competitions.takeResults(readCSV( "./$dataFolder/splits/$splitsFileName" ))
+    competitions.takeResultsFromSplits(readCSV( "./$dataFolder/splits/$splitsFileName" ))
     competitions.writeTotalResults("./$dataFolder/results")
     competitions.writeTeamResults("./$dataFolder/results")
 }

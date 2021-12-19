@@ -44,9 +44,9 @@ abstract class Competitions(val name: String, val date: String) {
     abstract fun takeGroupsAndDistances(protocol: String)
 
     //Заполнение всех результатов из конфигурационного протокола (splits.csv)
-    abstract fun takeResults(protocol: String)
+    abstract fun takeResultsFromSplits(protocol: String)
 
-    abstract fun takeResultsFromReverseFile(protocol: String)
+    abstract fun takeResultsFromReverseSplits(protocol: String)
 
 }
 

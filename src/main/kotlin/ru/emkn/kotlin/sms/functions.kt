@@ -22,7 +22,7 @@ fun readCSV(pathname: String): String {
     assert(File(pathname).exists() && File(pathname).extension == "csv") {
         "Файла $pathname не существует либо у него не csv-расширение"
     }
-    return File(pathname).readLines().dropWhile { it.isEmpty() }.dropLastWhile { it.isEmpty() }.joinToString("\n")
+    return File(pathname).readLines().dropWhile { it.isBlank() }.dropLastWhile { it.isBlank() }.joinToString("\n")
 }
 
 

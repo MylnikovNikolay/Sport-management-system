@@ -1,6 +1,4 @@
 package ru.emkn.kotlin.sms
-
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.File
 import kotlin.text.StringBuilder
 
@@ -10,15 +8,15 @@ open class CompetitionsByCSV(
     date: String,
 ): Competitions(name, date) {
 
-    open override val distances
+    override val distances
         get() = super.distances
-    open override val groups
+    override val groups
         get() = super.groups
-    open override val controlPoints
+    override val controlPoints
         get() = super.controlPoints
-    open override val sportsmen
+    override val sportsmen
         get() = super.sportsmen
-    open override val teams
+    override val teams
         get() = super.teams
 
 
@@ -204,7 +202,7 @@ open class CompetitionsByCSV(
     }
 
     //Заполнение всех результатов - как из splits.csv
-    override fun takeResults(protocol: String) {
+    override fun takeResultsFromSplits(protocol: String) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с данными пробега ошибка: файл не является корректным csv")
             return
@@ -251,7 +249,7 @@ open class CompetitionsByCSV(
     }
 
 
-    override fun takeResultsFromReverseFile(protocol: String) {
+    override fun takeResultsFromReverseSplits(protocol: String) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с данными пробега ошибка: файл не является корректным csv")
             return
@@ -319,7 +317,7 @@ open class CompetitionsByCSV(
     Просто внутренние функции
      */
     private fun giveNumbersToSportsmenByGroups(){
-        var number: Int = 100
+        var number = 100
         for(group in groups){
             //val beginningNumberInGroup = number
             for(member in group.sportsmen){
