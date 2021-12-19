@@ -89,14 +89,13 @@ object CsvReader {
                     result.add(actualLine.toString())
                     actualLine = StringBuilder()
                     between = false
-                    afterQuotes = true
                 }
                 else {
                     actualLine.append(c)
                 }
             }
         }
-        if (newLine[newLine.lastIndex] != '"'){
+        if (newLine.isEmpty() || newLine[newLine.lastIndex] != '"'){
             result.add(actualLine.toString())
         }
         return result.map {
