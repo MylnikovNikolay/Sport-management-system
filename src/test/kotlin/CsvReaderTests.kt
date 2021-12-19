@@ -151,7 +151,7 @@ class CsvReaderTests {
         """.trimIndent()
         val listOfMaps = CsvReader.readWithHeader(string)
         assertEquals(2.toString(), listOfMaps!![0]["%4 == 2"])
-        assertEquals(11.toString(), listOfMaps!![2]["%4 == 3"])
-        assertEquals(8.toString(), listOfMaps!![1]["%4 == 0"])
+        assertEquals(11.toString(), listOfMaps[2]["%4 == 3"])
+        assertEquals(8.toString(), listOfMaps[1]["%4 == 0"])
     }
 }

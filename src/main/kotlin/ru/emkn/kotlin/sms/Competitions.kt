@@ -1,6 +1,5 @@
 package ru.emkn.kotlin.sms
 
-import java.io.StringBufferInputStream
 import java.util.*
 
 /*
@@ -91,12 +90,9 @@ abstract class Distance(val name: String, val controlPoints: List<ControlPoint>,
         }
     }
     fun findCPByName(name: String) = controlPoints.find {it.name == name}
-    val start = controlPoints.first()
-    val finish = controlPoints.last()
 }
 
 
-typealias CP = ControlPoint
 abstract class ControlPoint(val name: String){
     init {
         UsualLogger.log(
@@ -110,7 +106,6 @@ abstract class ControlPoint(val name: String){
 
     //Функции для заполнения data - информации о прохождении этой точки спортсменами
     fun addPassingCP(passingCP: PassingCP) = data.add(passingCP)
-    fun addPassingCPs(collection: Collection<PassingCP>) = data.addAll(collection)
     fun removePassingCP(passingCP: PassingCP) = data.remove(passingCP)
 
     //Протокол прохождения КП (README.md)
@@ -164,9 +159,6 @@ abstract class CompetitionsSportsman(
     //Функции для заполнения passingData - информации о прохождении дистанции
     fun addPassingCP(passingCP: PassingCP){
         passingData.add(passingCP)
-    }
-    fun addPassingCPs(collection: Collection<PassingCP>){
-        passingData.addAll(collection)
     }
     fun removePassingCP(passingCP: PassingCP){
         passingData.remove(passingCP)

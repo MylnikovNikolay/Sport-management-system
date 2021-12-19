@@ -17,9 +17,9 @@ object CsvReader {
         }
         val headers = readOneLine(protocol.lines()[0])!!.mapIndexed { index, s ->  index to s}.toMap()
         val listOfMaps = mutableListOf<Map<String, String>>()
-        protocol.lines().drop(1).forEach {
+        protocol.lines().drop(1).forEach { string ->
             val map = mutableMapOf<String, String>()
-            readOneLine(it)!!.forEachIndexed { index, it ->
+            readOneLine(string)!!.forEachIndexed { index, it ->
                 map[headers[index]!!] = it
             }
             listOfMaps.add(map)
@@ -46,8 +46,8 @@ object CsvReader {
         val newLine = line.dropLastWhile { it.toString().matches("""\s""".toRegex()) }
             .dropWhile { it.toString().matches("""\s""".toRegex()) }
         val result = mutableListOf<String>()
-        var between: Boolean = false //между кавычками или нет
-        var afterQuotes: Boolean = false //если находимся между закрывающими кавычками и запятой
+        var between = false //между кавычками или нет
+        var afterQuotes = false //если находимся между закрывающими кавычками и запятой
         var actualLine = StringBuilder()
         for (c in newLine) {
             if (between) {
@@ -101,8 +101,8 @@ object CsvReader {
         if (newLine.isEmpty() || newLine[newLine.lastIndex] != '"'){
             result.add(actualLine.toString())
         }
-        return result.map {
-            it.dropLastWhile { it.toString().matches("""\s""".toRegex()) }
+        return result.map {string ->
+            string.dropLastWhile { it.toString().matches("""\s""".toRegex()) }
                 .dropWhile { it.toString().matches("""\s""".toRegex()) }.split("""(\s)+""".toRegex()).joinToString(" ")
         }.map {
             if (it.count{char -> char == ','} > 0)

@@ -1,6 +1,5 @@
 import ru.emkn.kotlin.sms.*
 import ru.emkn.kotlin.sms.CompetitionsByCSV.Companion.fromString
-import java.io.File
 import kotlin.test.*
 
 class TestCompetitions(comp: CompetitionsByCSV): CompetitionsByCSV(comp.name, comp.date) {
@@ -115,7 +114,7 @@ internal class CompetitionsTests {
         assertTrue(group29 == null)
 
         assertFailsWith<NoSuchElementException> {
-            val e = group25.bestTime
+            group25.bestTime
         }
 
         val group28 = comp.findGroupByName("Ж28")

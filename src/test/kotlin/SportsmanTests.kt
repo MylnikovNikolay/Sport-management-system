@@ -1,6 +1,5 @@
 import TestCompetitions.Companion.fromString
 import ru.emkn.kotlin.sms.*
-import java.io.File
 import kotlin.test.*
 
 internal class SportsmanTests {
