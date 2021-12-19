@@ -1,5 +1,7 @@
 import ru.emkn.kotlin.sms.CompetitionsByCSV
 
+//это наследник для тестов
+
 class TestCompetitions(comp: CompetitionsByCSV): CompetitionsByCSV(comp.name, comp.date) {
     public override val distances
         get() = super.distances

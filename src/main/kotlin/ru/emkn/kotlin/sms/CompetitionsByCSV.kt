@@ -197,7 +197,7 @@ open class CompetitionsByCSV(
                 printError("В файле с соответствиями групп и дистанций ошибка: не найдена дистанция '${row[1]}'")
                 continue
             }
-            groups.add(GroupByCSV(row[0],distance))
+            groups.add(GroupByCSV(row[0],distance, this))
         }
     }
 
@@ -312,20 +312,4 @@ open class CompetitionsByCSV(
     fun writeTeamResults(folder: String = "./data/results") {
         writeToFile("$folder/teamResults.csv", getTeamResults())
     }
-
-    /*
-    Просто внутренние функции
-     */
-    private fun giveNumbersToSportsmenByGroups(){
-        var number = 100
-        for(group in groups){
-            for(member in group.sportsmen){
-                member.number = number
-                number++
-            }
-            number = (number / 100 + 1) * 100
-            // чтобы в каждой группе с круглого числа начинать
-        }
-    }
-
 }
