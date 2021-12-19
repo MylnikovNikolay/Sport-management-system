@@ -73,7 +73,7 @@ open class CompetitionsByCSV(
 
     override fun getTeamResults(): String {
         val strBuilder = StringBuilder("Протокол результатов для команд,\n")
-        teams.sortedBy{ it.teamPoints }.forEach {
+        teams.sortedBy{ -it.teamPoints }.forEach {
             strBuilder.appendLine("${it.name}," + String.format("%.2f", it.teamPoints))
         }
         return strBuilder.toString()
