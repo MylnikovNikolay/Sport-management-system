@@ -6,6 +6,8 @@ import kotlin.test.*
 internal class SportsmanTests {
     @Test
     fun testReadTeamFromCSV() {
+        UsualLogger.start()
+        ErrorsAndWarningsLogger.start()
         val filepath = "./sample-data/applications/application1.csv"
         val comp = fromString("Название,Дата\n" + "test,test")
         comp.takeDistancesAndCPs(readCSV("./sample-data/courses.csv"))
@@ -13,7 +15,7 @@ internal class SportsmanTests {
         comp.takeTeamApplication(readCSV(filepath))
         val team = comp.teams.first()
 
-        assertEquals("ПСКОВ,РУСЬ", team.name)
+        assertEquals("\"ПСКОВ,РУСЬ\"", team.name)
         assertEquals(34, team.sportsmen.size)
 
         assertNotNull(team.sportsmen.find {

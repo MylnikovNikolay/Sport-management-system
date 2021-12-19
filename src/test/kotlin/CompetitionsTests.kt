@@ -22,7 +22,9 @@ class TestCompetitions(comp: CompetitionsByCSV): CompetitionsByCSV(comp.name, co
 internal class CompetitionsTests {
     @Test
     fun fromStringTest() {
-        var comp = fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
+        UsualLogger.start()
+        ErrorsAndWarningsLogger.start()
+        val comp = fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
         assertEquals(comp.name, "Первенство пятой бани")
         assertEquals(comp.date, "01.01.2022")
 

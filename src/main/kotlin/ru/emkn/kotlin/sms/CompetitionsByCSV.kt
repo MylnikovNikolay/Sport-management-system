@@ -32,7 +32,7 @@ open class CompetitionsByCSV(
                 CsvReader.readOneLine(protocol.lines()[0])!![0] != "Название" ||
                 CsvReader.readOneLine(protocol.lines()[0])!![1] != "Дата"
             ){
-                printError("В файле с общей информацией о соревновании ошибка: в этом файле первая строчка " +
+                printError("В файле с общей информацией о соревновании ошибка: в этом файле первая строка " +
                         "должна быть: 'Название,Дата'")
                 throw Exception("Без корректного файла с общей информацией о соревновании дальнейшая работа невозможна")
             }
@@ -205,15 +205,44 @@ open class CompetitionsByCSV(
 
     //Заполнение всех результатов - как из splits.csv
     override fun takeResults(protocol: String) {
-        val data = csvReader().readAll(protocol).map {list-> list.map { removeExtraSpaces(it) } }
-        val rows = data.map{it.filter{str -> str.isNotEmpty()}}
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError("В файле с данными пробега ошибка: файл не является корректным csv")
+            return
+        }
+        val data = CsvReader.read(protocol)
+        val rows = data!!.map{it.filter{str -> str.isNotEmpty()}}
         for(row in rows){
-            if(row.size % 2 != 1) continue
-            val spNumber = row[0].toIntOrNull()?:continue
-            val sportsman = findSportsmanByNumber(spNumber)?:continue
-            for(i in 0 until row.size/2){
-                val CP = findCPByName(row[2*i+1])?:continue
-                val time = stringToTimeOrNull(row[2*i+2])?:continue
+            if(row.size % 2 != 1) {
+                printError("В файле с данными пробега ошибка: в этом файле должно быть нечетное количество полей " +
+                        "в каждой строке")
+                continue
+            }
+            val spNumber = row[0].toIntOrNull()
+            if (spNumber == null){
+                printError("В файле с данными пробега ошибка: на первом месте в строке должно стоять целое число -" +
+                        " номер спортсмена" )
+                continue
+            }
+            val sportsman = findSportsmanByNumber(spNumber)
+            if (sportsman == null) {
+                printError("В файле с данными пробега ошибка: никакому спортсмену не присвоен номер $spNumber")
+                continue
+            }
+            that@for(i in 0 until row.size/2){
+                val CP = findCPByName(row[2*i+1])
+                if (CP == null){
+                    printWarning("В файле с данными пробега потенциальная ошибка: не найден КП по названию " +
+                            row[2*i+1]
+                    )
+                    continue@that
+                }
+                val time = stringToTimeOrNull(row[2*i+2])
+                if (time == null){
+                    printWarning("В файле с данными пробега потенциальная ошибка: невозможное время " +
+                            row[2*i+2]
+                    )
+                    continue@that
+                }
 
                 //Автоматически добавляется куда нужно в спортсмена и в КП
                 PassingCP(sportsman,CP,time)
