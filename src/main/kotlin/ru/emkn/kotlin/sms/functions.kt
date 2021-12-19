@@ -16,8 +16,11 @@ class ImportantValueIsMissing(key: String):
 
 
 fun readCSV(pathname: String): String {
+    if (!File(pathname).exists() && File(pathname).extension != "csv") {
+        printError("Файла $pathname не существует либо у него не csv-расширение")
+    }
     assert(File(pathname).exists() && File(pathname).extension == "csv") {
-        "Файла не существует либо у него не csv-расширение"
+        "Файла $pathname не существует либо у него не csv-расширение"
     }
     return File(pathname).readText()
 }
@@ -43,6 +46,19 @@ fun stringToTimeOrNull(str: String): Time?{
     } catch (e : java.time.format.DateTimeParseException){
         null
     }
+}
+
+fun checkProtocolIsCorrectCSV(protocol: String): Boolean {
+    val list = protocol.lines()
+    if (list.size > 1) {
+        val neededSize = list[0].split(",").size
+        list.forEach{
+            if (it.split(",").size != neededSize) {
+                return false
+            }
+        }
+    }
+    return true
 }
 
 
