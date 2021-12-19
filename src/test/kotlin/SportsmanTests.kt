@@ -7,10 +7,10 @@ internal class SportsmanTests {
     fun testReadTeamFromCSV() {
         UsualLogger.start()
         ErrorsAndWarningsLogger.start()
-        val filepath = "./sample-data/applications/application1.csv"
+        val filepath = "./test-data/sample-data/applications/application1.csv"
         val comp = fromString("Название,Дата\n" + "test,test")
-        comp.takeDistancesAndCPs(readCSV("./sample-data/courses.csv"))
-        comp.takeGroupsAndDistances(readCSV("./sample-data/classes.csv"))
+        comp.takeDistancesAndCPs(readCSV("./test-data/sample-data/courses.csv"))
+        comp.takeGroupsAndDistances(readCSV("./test-data/sample-data/classes.csv"))
         comp.takeTeamApplication(readCSV(filepath))
         val team = comp.teams.first()
 
