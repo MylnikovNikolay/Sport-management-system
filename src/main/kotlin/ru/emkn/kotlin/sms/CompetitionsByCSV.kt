@@ -319,14 +319,11 @@ open class CompetitionsByCSV(
     private fun giveNumbersToSportsmenByGroups(){
         var number = 100
         for(group in groups){
-            //val beginningNumberInGroup = number
             for(member in group.sportsmen){
                 member.number = number
-                //group.numbersToMembers[number] = member
                 number++
             }
             number = (number / 100 + 1) * 100
-            //group.numbers = beginningNumberInGroup..number
             // чтобы в каждой группе с круглого числа начинать
         }
     }

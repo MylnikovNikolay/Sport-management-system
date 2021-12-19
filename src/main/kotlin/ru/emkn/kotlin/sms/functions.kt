@@ -1,6 +1,5 @@
 package ru.emkn.kotlin.sms
 
-import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import java.io.File
 import java.time.LocalTime
 
@@ -9,9 +8,6 @@ typealias Time = LocalTime
 //Вычитание времени. Если вычитается из меньшего большее, остается 00:00:00
 operator fun Time.minus(other: Time): Time =
     Time.ofNanoOfDay(maxOf(this.toNanoOfDay()-other.toNanoOfDay(),0))
-
-class ImportantValueIsMissing(key: String):
-    Exception("Важное значение '$key' отсутствует или имеет неверный формат")
 
 
 
@@ -33,9 +29,6 @@ fun writeToFile(filepath: String, str: String){
     }
     file.writeText(str)
 }
-
-fun removeExtraSpaces(str: String): String =
-    str.split(" ").map { it.trim() }.filter { it != "" }.joinToString(" ")
 
 /*
 Перевод строки во время - чтобы не писать каждый раз try-catch
