@@ -213,7 +213,7 @@ open class CompetitionsByCSV(
         val rows = data!!.map{it.filter{str -> str.isNotEmpty()}}
         for(row in rows){
             if(row.size % 2 != 1) {
-                printError("В файле с данными пробега ошибка: в этом файле должно быть нечетное количество полей " +
+                printError("В файле с данными пробега ошибка: в этом файле должно быть нечетное количество непустых полей " +
                         "в каждой строке")
                 continue
             }
@@ -250,6 +250,52 @@ open class CompetitionsByCSV(
         }
     }
 
+
+    override fun takeResultsFromReverseFile(protocol: String) {
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError("В файле с данными пробега ошибка: файл не является корректным csv")
+            return
+        }
+        val data = CsvReader.read(protocol)
+        val rows = data!!.map{it.filter{str -> str.isNotEmpty()}}
+        for(row in rows){
+            if(row.size % 2 != 1) {
+                printError("В файле с данными пробега ошибка: в этом файле должно быть нечетное количество непустых полей " +
+                        "в каждой строке")
+                continue
+            }
+            val cp = findCPByName(row[0])
+            if (cp == null){
+                printError("В файле с данными пробега ошибка: КП ${row[0]} не найден" )
+                continue
+            }
+
+            that@for(i in 0 until row.size/2){
+                val spNumber = row[2*i+1].toIntOrNull()
+                if (spNumber == null){
+                    printWarning("В файле с данными пробега потенциальная ошибка: номер спортсмена должен быть целым" +
+                            " числом"
+                    )
+                    continue@that
+                }
+                val sportsman = findSportsmanByNumber(spNumber)
+                if (sportsman == null) {
+                    printError("В файле с данными пробега ошибка: никакому спортсмену не присвоен номер $spNumber")
+                    continue@that
+                }
+                val time = stringToTimeOrNull(row[2*i+2])
+                if (time == null){
+                    printWarning("В файле с данными пробега потенциальная ошибка: невозможное время " +
+                            row[2*i+2]
+                    )
+                    continue@that
+                }
+
+                //Автоматически добавляется куда нужно в спортсмена и в КП
+                PassingCP(sportsman,cp,time)
+            }
+        }
+    }
     /*
     Функции, связанные с выводом
      */
