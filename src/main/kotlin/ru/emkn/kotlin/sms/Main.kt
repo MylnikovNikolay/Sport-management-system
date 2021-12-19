@@ -3,7 +3,11 @@ package ru.emkn.kotlin.sms
 fun main(args: Array<String>) {
     UsualLogger.start()
     ErrorsAndWarningsLogger.start()
-    // Может быть название папки с данными лучше откуда-нибудь считывать
+    /*
+     * В папке test-data есть несколько наборов тестовых данных
+     * Можно указать как параметр командной строки test-data/data , test-data/data1 или test-data/small-test/data
+     * для проверки на одном из этих наборов
+     */
     val dataFolder = if (args.isNotEmpty()) args[0] else "data"
     val configPath = "./$dataFolder/config/%s"
     val eventFileName = "event.csv"
