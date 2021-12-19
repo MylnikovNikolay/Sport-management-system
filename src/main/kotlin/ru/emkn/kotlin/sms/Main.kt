@@ -1,7 +1,5 @@
 package ru.emkn.kotlin.sms
 
-
-
 fun main(args: Array<String>) {
     UsualLogger.start()
     ErrorsAndWarningsLogger.start()
@@ -21,16 +19,17 @@ fun main(args: Array<String>) {
 
     /*
      * Тут пользователь как-то сообщит программе, что соревнование закончилось и результаты загружены
-     * (пока что хотя бы в папку в виде файлов). После этого произойдет загрузка рез-ов.
+     * (пока что хотя бы в папку в виде файла). После этого произойдет загрузка рез-ов.
      */
     println("Поместите результаты в файл в папке $dataFolder/splits и введите название файла:")
     val splitsFileName = readLine()
 
-    // Рассчет на то, что сплиты будут храниться не только в одном файле
     competitions.takeResults(readCSV( "./$dataFolder/splits/$splitsFileName" ))
     competitions.writeTotalResults("./$dataFolder/results")
     competitions.writeTeamResults("./$dataFolder/results")
 }
+
+
 
 /*
 Примерный план работы программы с дополнительными идеями, помеченные как optional
