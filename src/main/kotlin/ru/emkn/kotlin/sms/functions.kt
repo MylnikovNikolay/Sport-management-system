@@ -41,6 +41,14 @@ fun stringToTimeOrNull(str: String): Time?{
     }
 }
 
+fun String.toTimeOrNull(): Time? {
+    return try {
+        Time.parse(this)
+    } catch (e : java.time.format.DateTimeParseException){
+        null
+    }
+}
+
 fun printWarning(string: String) {
     ErrorsAndWarningsLogger.log("Warning: $string")
 }

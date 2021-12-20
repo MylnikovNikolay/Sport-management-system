@@ -81,6 +81,36 @@ class GroupByCSV(name: String, distance: Distance, competition: Competitions): G
         return strBuilder.toString()
     }
 
+
+    override fun takeResultsProtocol(protocol: String) {
+        if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
+            printError("Ошибка в файле с результатами группы '$name': файл не является корректным csv")
+            return
+        }
+        val rows = CsvReader.read(protocol)!!
+        for (row in rows){
+            if (row.size != 7) {
+                printError("Ошибка в файле с результатами группы '$name': в этом файле в каждой строке " +
+                        "7 полей (место, номер, фамилия, имя, год рождения, разряд, время")
+                return
+            }
+            val number = row[1].toIntOrNull()
+            if (number == null || findSportsmanByNumber(number) == null) {
+                printError("Ошибка в файле с результатами группы '$name': не найден спортсмен по номеру " +
+                        "'${row[1]}'")
+                return
+            }
+            val sp = findSportsmanByNumber(number)!!
+            val time = row[6].toTimeOrNull()
+            if (time == null) {
+                printWarning(
+                    "Потенциальная ошибка в файле с результатами группы '$name': невозможное время '${row[6]}'"
+                )
+            }
+            sp.totalTimeByResults = time
+        }
+    }
+
     override fun getResultsProtocol(): String{
         val membersByResult = sportsmen.toMutableList()
         membersByResult.sortBy { if (it.totalTime == null) Time.of(23, 59, 59) else it.totalTime}

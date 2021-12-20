@@ -49,6 +49,8 @@ abstract class Competitions(val name: String, val date: String) {
 
     abstract fun takeStartProtocol(protocol: String)
 
+    abstract fun takeResultsProtocol(protocol: String)
+
     protected fun giveNumbersToSportsmenByGroups(){
         var number = 100
         for(group in groups){

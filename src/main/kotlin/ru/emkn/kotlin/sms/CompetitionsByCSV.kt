@@ -296,6 +296,11 @@ open class CompetitionsByCSV(
     }
 
 
+    override fun takeResultsProtocol(protocol: String) {
+
+    }
+
+
     override fun takeStartProtocol(protocol: String) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError(
