@@ -1,6 +1,6 @@
 package ru.emkn.kotlin.sms
 
-abstract class CompetitionsTeam(val name: String){
+class CompetitionsTeam(val name: String){
     init {
         UsualLogger.log(
             "Зарегистрирована команда '$name'"

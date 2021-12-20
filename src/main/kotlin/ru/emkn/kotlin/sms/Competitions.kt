@@ -24,6 +24,8 @@ abstract class Competitions(val name: String, val date: String) {
     fun findSportsmanByNumber(numberOfSportsman: Int) = sportsmen.find{it.number == numberOfSportsman}
     fun findDistanceByName (nameOfDistance: String) = distances.find {it.name == nameOfDistance}
 
+    fun teams() = teams
+
     fun getGroupsSet(): Set<Group> = groups.toSet()
 
     fun addTeam(team: CompetitionsTeam) = teams.add(team)
@@ -34,33 +36,13 @@ abstract class Competitions(val name: String, val date: String) {
     fun addCPs(cp: Collection<ControlPoint>) = controlPoints.addAll(cp)
 
     //Жеребьевка - присвоение номеров участникам и жеребьевка в каждой из групп
-    abstract fun makeADraw()
+    fun makeADraw() {
+        giveNumbersToSportsmenByGroups()
+        val time = Time.of(12,0,0)
+        groups.forEach { it.makeADraw(time) }
+    }
 
-    //Складывает результаты всех групп в единый протокол (results.csv)
-    abstract fun getTotalResults(): String
-
-    //Формирует протокол результатов для команд
-    abstract fun getTeamResults(): String
-
-    //Обработка заявления от команды (applications)
-    abstract fun takeTeamApplication(protocol: String)
-
-    //Создание дистанций и КП из конфигурационного протокола (courses.csv)
-    abstract fun takeDistancesAndCPs(protocol: String)
-
-    //Создание групп из конфигурационного протокола (classes.csv)
-    abstract fun takeGroupsAndDistances(protocol: String)
-
-    //Заполнение всех результатов из конфигурационного протокола (splits.csv)
-    abstract fun takeResultsFromSplits(protocol: String)
-
-    abstract fun takeResultsFromReverseSplits(protocol: String)
-
-    abstract fun takeStartProtocol(protocol: String)
-
-    abstract fun takeResultsProtocol(protocol: String)
-
-    protected fun giveNumbersToSportsmenByGroups(){
+    private fun giveNumbersToSportsmenByGroups(){
         var number = 100
         for(group in groups){
             for(member in group.sportsmen){
@@ -71,23 +53,6 @@ abstract class Competitions(val name: String, val date: String) {
             // чтобы в каждой группе с круглого числа начинать
         }
     }
+
+    abstract fun makeADrawAndWrite(folder: String)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

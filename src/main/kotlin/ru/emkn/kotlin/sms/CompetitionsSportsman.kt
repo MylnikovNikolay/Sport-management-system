@@ -2,7 +2,7 @@ package ru.emkn.kotlin.sms
 
 import java.util.*
 
-abstract class CompetitionsSportsman(
+class CompetitionsSportsman(
     sportsman: Sportsman,
     val team: CompetitionsTeam,
     val group: Group,
@@ -27,7 +27,15 @@ abstract class CompetitionsSportsman(
         group.sportsmen.add(this)
     }
 
-    abstract val points: Double
+    val points: Double
+        get() =
+            if (totalTime == null)
+                0.0
+            else
+                java.lang.Double.max(
+                    0.0,
+                    100 * (2 - totalTime!!.toSecondOfDay().toDouble() / group.bestTime.toSecondOfDay())
+                )
 
     //Информация о прохождении спортсменом контрольных пунктов, никак не отсортирована (уже видимо отсортирована? + dataWasChanged уже не нужно?)
     private val passingData: TreeSet<PassingCP> = TreeSet()
@@ -64,8 +72,5 @@ abstract class CompetitionsSportsman(
         get() = number != null && passingData.isNotEmpty() &&
                 (startTime ?: Time.of(23, 59,59)) <= passingData.first().time &&
                 passingList.map { it.CP } == route
-
-    //Протокол прохождения дистанции (README.md)
-    abstract fun getDistancePassingProtocol(): String
 }
 
