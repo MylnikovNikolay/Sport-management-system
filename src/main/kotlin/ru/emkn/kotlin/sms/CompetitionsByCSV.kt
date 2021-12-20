@@ -21,7 +21,7 @@ open class CompetitionsByCSV(
 
 
     companion object{
-        fun fromString(protocol: String): Competitions = csvProtocolManager.fromString(protocol)
+        fun fromString(protocol: String): Competitions = СsvProtocolManager.createCompetitions(protocol)
     }
 
 
@@ -35,7 +35,7 @@ open class CompetitionsByCSV(
     }
 
     //Все результаты складываются в единый протокол по типу results.csv
-    override fun getTotalResults(): String = csvProtocolManager.getTotalResults(this)
+    override fun getTotalResults(): String = СsvProtocolManager.makeResultsProtocol(this)
 
     override fun getTeamResults(): String {
         val strBuilder = StringBuilder("Протокол результатов для команд,\n")
@@ -50,7 +50,7 @@ open class CompetitionsByCSV(
      */
 
     //Прием заявления от команды
-    override fun takeTeamApplication(protocol: String) = csvProtocolManager.takeTeamApplication(protocol, this)
+    override fun takeTeamApplication(protocol: String) = СsvProtocolManager.processTeamApplication(protocol, this)
 
     fun takeAllApplicationsFromFolder(path: String) {
         File(path).walk().drop(1).forEach {
@@ -59,22 +59,22 @@ open class CompetitionsByCSV(
     }
 
     //Создание дистанций и КП - как из courses.csv
-    override fun takeDistancesAndCPs(protocol: String) = csvProtocolManager.takeDistancesAndCPs(protocol, this)
+    override fun takeDistancesAndCPs(protocol: String) = СsvProtocolManager.createDistancesAndCPs(protocol, this)
 
     //Создание групп по протоколу, как из файла classes.csv
-    override fun takeGroupsAndDistances(protocol: String) = csvProtocolManager.takeGroupsAndDistances(protocol, this)
+    override fun takeGroupsAndDistances(protocol: String) = СsvProtocolManager.createGroupsAndDistances(protocol, this)
 
     //Заполнение всех результатов - как из splits.csv
-    override fun takeResultsFromSplits(protocol: String) = csvProtocolManager.takeResultsFromSplits(protocol, this)
+    override fun takeResultsFromSplits(protocol: String) = СsvProtocolManager.fillResultsFromSplits(protocol, this)
 
 
-    override fun takeResultsFromReverseSplits(protocol: String) = csvProtocolManager.takeResultsFromReverseSplits(protocol,this)
+    override fun takeResultsFromReverseSplits(protocol: String) = СsvProtocolManager.fillResultsFromReverseSplits(protocol,this)
 
 
-    override fun takeResultsProtocol(protocol: String) = csvProtocolManager.takeResults(protocol, this)
+    override fun takeResultsProtocol(protocol: String) = СsvProtocolManager.fillAllResults(protocol, this)
 
 
-    override fun takeStartProtocol(protocol: String) = csvProtocolManager.takeStartProtocol(protocol, this)
+    override fun takeStartProtocol(protocol: String) = СsvProtocolManager.fillStarts(protocol, this)
     /*
     Функции, связанные с выводом
      */

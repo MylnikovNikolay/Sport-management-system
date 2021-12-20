@@ -21,7 +21,7 @@ class CompetitionsSportsmanByCSV(
                     100 * (2 - totalTime!!.toSecondOfDay().toDouble() / group.bestTime.toSecondOfDay())
                 )
 
-    override fun getDistancePassingProtocol(): String = csvProtocolManager.getDistancePassingProtocol(this)
+    override fun getDistancePassingProtocol(): String = СsvProtocolManager.makeDistancePassingProtocol(this)
 
     fun toProtocolRow(): String =
         "$number,$surname,$name,$birthYear,$level"
