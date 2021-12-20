@@ -344,12 +344,12 @@ object csvProtocolManager: ProtocolManager{
 
     override fun takeStartsProtocol(protocol: String, group: Group) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
-            printError("В файле со стартовым протоколм группы '${group.name}' ошибка: файл не является корректным csv")
+            printError("В файле со стартовым протоколом группы '${group.name}' ошибка: файл не является корректным csv")
             return
         }
         if (protocol.lines().isEmpty() || protocol.lines()[0] != "Номер,Фамилия,Имя,Г.р.,Разр.,Время старта"){
             printError(
-                "В файле со стартовым протоколм группы '${group.name}' ошибка: в файле отсутствует обязательная вторая" +
+                "В файле со стартовым протоколом группы '${group.name}' ошибка: в файле отсутствует обязательная вторая" +
                         " строчка 'Номер,Фамилия,Имя,Г.р.,Разр.,Время старта'"
             )
             return
@@ -359,15 +359,15 @@ object csvProtocolManager: ProtocolManager{
             val number = row["Номер"]!!.toIntOrNull()
             if (number == null) {
                 printError(
-                    "В файле со стартовым протоколм группы '${group.name}' ошибка: номер спортсмена (${row["Номер"]!!}) " +
+                    "В файле со стартовым протоколом группы '${group.name}' ошибка: номер спортсмена (${row["Номер"]!!}) " +
                             "должен быть целым числом"
                 )
                 continue@that
             }
             if (group.competition.findSportsmanByNumber(number) != null) {
                 printError(
-                    "В файле со стартовым протоколм группы '${group.name}' ошибка: на соревновании у разных спортсмена не " +
-                            "бывает одинаковых номеров ($number)"
+                    "В файле со стартовым протоколом группы '${group.name}' ошибка: на соревновании у разных " +
+                            "спортсменов не бывает одинаковых номеров ($number)"
                 )
                 continue@that
             }
@@ -377,15 +377,15 @@ object csvProtocolManager: ProtocolManager{
             val birthYear = row["Г.р."]!!.toIntOrNull()
             if (birthYear == null) {
                 printError(
-                    "В файле со стартовым протоколм группы '${group.name}' ошибка: год рождения (${row["Г.р."]}) должен быть" +
-                            " целым числом"
+                    "В файле со стартовым протоколм группы '${group.name}' ошибка: год рождения (${row["Г.р."]})" +
+                            " должен быть целым числом"
                 )
                 continue@that
             }
             val time = stringToTimeOrNull(row["Время старта"]!!)
             if (time == null) {
                 printError(
-                    "В файле со стартовым протоколм группы '${group.name}' ошибка: невозможное время ($time)"
+                    "В файле со стартовым протоколом группы '${group.name}' ошибка: невозможное время ($time)"
                 )
                 continue@that
             }
