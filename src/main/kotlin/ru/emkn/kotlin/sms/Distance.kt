@@ -1,6 +1,6 @@
 package ru.emkn.kotlin.sms
 
-abstract class Distance(val name: String, val controlPoints: List<ControlPoint>,){
+class Distance(val name: String, val controlPoints: List<ControlPoint>,){
     init {
         UsualLogger.log(
             "Добавлена дистанция '$name'"

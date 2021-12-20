@@ -36,9 +36,13 @@ abstract class Competitions(val name: String, val date: String) {
     fun addCPs(cp: Collection<ControlPoint>) = controlPoints.addAll(cp)
 
     //Жеребьевка - присвоение номеров участникам и жеребьевка в каждой из групп
-    abstract fun makeADraw()
+    fun makeADraw() {
+        giveNumbersToSportsmenByGroups()
+        val time = Time.of(12,0,0)
+        groups.forEach { it.makeADraw(time) }
+    }
 
-    protected fun giveNumbersToSportsmenByGroups(){
+    private fun giveNumbersToSportsmenByGroups(){
         var number = 100
         for(group in groups){
             for(member in group.sportsmen){
@@ -49,4 +53,6 @@ abstract class Competitions(val name: String, val date: String) {
             // чтобы в каждой группе с круглого числа начинать
         }
     }
+
+    abstract fun makeADrawAndWrite(folder: String)
 }

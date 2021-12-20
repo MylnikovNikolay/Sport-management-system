@@ -1,9 +1,10 @@
-import ru.emkn.kotlin.sms.CompetitionsByCSV
+import ru.emkn.kotlin.sms.Competitions
 import ru.emkn.kotlin.sms.Csv
+import ru.emkn.kotlin.sms.writeToFile
 
 //это наследник для тестов
 
-class TestCompetitions(comp: CompetitionsByCSV): CompetitionsByCSV(comp.name, comp.date) {
+class TestCompetitions(comp: Competitions): Competitions(comp.name, comp.date) {
     public override val distances
         get() = super.distances
     public override val groups
@@ -15,5 +16,13 @@ class TestCompetitions(comp: CompetitionsByCSV): CompetitionsByCSV(comp.name, co
     public override val teams
         get() = super.teams
 
-    companion object {fun  fromString(string: String) = TestCompetitions(Csv.fromString(string) as CompetitionsByCSV)}
+    override fun makeADrawAndWrite(folder: String) {
+        makeADraw()
+        groups.forEach {
+            val filepath = folder + "startProtocol%s.csv"
+            writeToFile(filepath.format(it.name), Csv.getStartProtocol(it))
+        }
+    }
+
+    companion object {fun  fromString(string: String) = TestCompetitions(Csv.fromString(string))}
 }

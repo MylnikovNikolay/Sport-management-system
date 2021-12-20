@@ -35,10 +35,10 @@ interface ProtocolManager {
 
 
     //Запись стартов из стартового протокола (README.md)
-    fun takeStartsProtocol(protocol: String, group: Group)
+    fun takeStartProtocol(protocol: String, group: Group)
 
     //Генерация стартового протокола (README.md)
-    fun getStartsProtocol(group: Group): String
+    fun getStartProtocol(group: Group): String
 
     //Генерация протокола результатов (README.md)
     fun getResultsProtocol(group: Group): String

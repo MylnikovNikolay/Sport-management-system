@@ -42,7 +42,7 @@ object CsvProtocolManager: ProtocolManager{
         val strBuilder = StringBuilder("Протокол результатов\n")
         val groups = comp.getGroupsSet()
         groups.forEach {
-            strBuilder.appendLine(it.getResultsProtocol())
+            strBuilder.appendLine(getResultsProtocol(it))
         }
         return strBuilder.toString()
     }
@@ -58,7 +58,7 @@ object CsvProtocolManager: ProtocolManager{
             return
         }
         val teamName = rows[0][0]
-        val team = CompetitionsTeamByCSV(teamName)
+        val team = CompetitionsTeam(teamName)
         comp.addTeam(team)
         if(rows.size == 1 || rows[1].joinToString(",") != "Группа,Фамилия,Имя,Г.р.,Разр.") {
             printError("В файле с заявкой команды ошибка: отсутствует обязательная вторая строка" +
@@ -85,7 +85,7 @@ object CsvProtocolManager: ProtocolManager{
             val sportsman = Sportsman(name=row[2], surname = row[1], birthYear = birthYear, level = row[4])
 
             //При создании CompSportsman автоматически добавляется в свою команду и группу
-            comp.addSportsman(CompetitionsSportsmanByCSV(sportsman, team, group))
+            comp.addSportsman(CompetitionsSportsman(sportsman, team, group))
         }
     }
 
@@ -108,7 +108,7 @@ object CsvProtocolManager: ProtocolManager{
             val CPList = mutableListOf<ControlPoint>()
             for(CPname in row.drop(1)){
                 if (CPname.isNotEmpty()) {
-                    val CP = comp.findCPByName(CPname) ?: ControlPointByCSV(CPname)
+                    val CP = comp.findCPByName(CPname) ?: ControlPoint(CPname)
                     CPList.add(CP)
                 }
             }
@@ -122,7 +122,7 @@ object CsvProtocolManager: ProtocolManager{
                         "названием")
                 continue
             }
-            comp.addDistance(DistanceByCSV(distName,CPList))
+            comp.addDistance(Distance(distName,CPList))
             comp.addCPs(CPList.toSet())
         }
     }
@@ -154,7 +154,7 @@ object CsvProtocolManager: ProtocolManager{
                 printError("В файле с соответствиями групп и дистанций ошибка: не найдена дистанция '${row[1]}'")
                 continue
             }
-            comp.addGroup(GroupByCSV(row[0],distance, comp))
+            comp.addGroup(Group(row[0],distance, comp))
         }
     }
 
@@ -178,8 +178,10 @@ object CsvProtocolManager: ProtocolManager{
             }'")
             return
         }
-        group.takeResultsProtocol(protocol.lines().drop(1).joinToString ("\n"))
+        takeResultsProtocol(protocol.lines().drop(1).joinToString ("\n"), group)
     }
+
+
 
     override fun takeResultsFromSplits(protocol: String, comp: Competitions){
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
@@ -295,10 +297,10 @@ object CsvProtocolManager: ProtocolManager{
             )
             return
         }
-        group.takeStartProtocol(protocol.lines().drop(1).joinToString("\n"))
+        Csv.takeStartProtocol(protocol.lines().drop(1).joinToString("\n"), group)
     }
 
-    override fun takeStartsProtocol(protocol: String, group: Group) {
+    override fun takeStartProtocol(protocol: String, group: Group) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле со стартовым протоколом группы '${group.name}' ошибка: файл не является корректным csv")
             return
@@ -359,7 +361,7 @@ object CsvProtocolManager: ProtocolManager{
 
     }
 
-    override fun getStartsProtocol(group: Group): String {
+    override fun getStartProtocol(group: Group): String {
         val strBuilder = StringBuilder("${group.name},,,,,\n")
         strBuilder.appendLine("Номер,Фамилия,Имя,Г.р.,Разр.,Время старта")
         group.sportsmen.forEach{

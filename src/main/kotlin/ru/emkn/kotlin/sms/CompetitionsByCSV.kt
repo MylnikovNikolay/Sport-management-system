@@ -1,6 +1,5 @@
 package ru.emkn.kotlin.sms
 import java.io.File
-import kotlin.text.StringBuilder
 
 
 open class CompetitionsByCSV(
@@ -23,19 +22,6 @@ open class CompetitionsByCSV(
     companion object{
         fun fromString(protocol: String): Competitions = CsvProtocolManager.fromString(protocol)
     }
-
-
-    /*
-    Переопределения
-     */
-    override fun makeADraw() {
-        giveNumbersToSportsmenByGroups()
-        val time = Time.of(12,0,0)
-        groups.forEach { it.makeADraw(time) }
-    }
-
-
-
     /*
     Концепция такова - всю некорректную информацию пропускаем
      */
@@ -48,11 +34,11 @@ open class CompetitionsByCSV(
     /*
     Функции, связанные с выводом
      */
-    fun makeADrawAndWrite(folder: String = "./data/start protocols/"){
+    override fun makeADrawAndWrite(folder: String){
         makeADraw()
         groups.forEach {
             val filepath = folder + "startProtocol%s.csv"
-            writeToFile(filepath.format(it.name), it.getStartsProtocol())
+            writeToFile(filepath.format(it.name), Csv.getStartProtocol(it))
         }
     }
 
