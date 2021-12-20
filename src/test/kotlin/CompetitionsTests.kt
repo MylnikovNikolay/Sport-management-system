@@ -2,9 +2,6 @@ import ru.emkn.kotlin.sms.*
 import ru.emkn.kotlin.sms.CompetitionsByCSV.Companion.fromString
 import kotlin.test.*
 
-
-
-
 internal class CompetitionsTests {
     @Test
     fun fromStringTest() {

@@ -44,9 +44,9 @@ interface ProtocolManager {
     fun takeResultsProtocol(protocol: String, group: Group)
 
     //Протокол прохождения КП (README.md)
-    fun getCPPassingProtocol(group: ControlPoint): String
+    fun getCPPassingProtocol(CP: ControlPoint): String
 
     //Протокол прохождения дистанции (README.md)
-    fun getDistancePassingProtocol(group: CompetitionsSportsman): String
+    fun getDistancePassingProtocol(sp: CompetitionsSportsman): String
 }
 
