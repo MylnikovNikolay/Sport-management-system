@@ -1,38 +1,13 @@
 package ru.emkn.kotlin.sms
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
-
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
-        }
-    }
-}
-
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
-    }
-}
-
-/*
 fun main(args: Array<String>) {
     UsualLogger.start()
     ErrorsAndWarningsLogger.start()
-    // Может быть название папки с данными лучше откуда-нибудь считывать
+    /*
+     * В папке test-data есть несколько наборов тестовых данных
+     * Можно указать как параметр командной строки test-data/data , test-data/data1 или test-data/small-test/data
+     * для проверки на одном из этих наборов
+     */
     val dataFolder = if (args.isNotEmpty()) args[0] else "data"
     val configPath = "./$dataFolder/config/%s"
     val eventFileName = "event.csv"
@@ -58,8 +33,6 @@ fun main(args: Array<String>) {
     competitions.writeTotalResults("./$dataFolder/results")
     competitions.writeTeamResults("./$dataFolder/results")
 }
-*/
-
 
 /*
 Примерный план работы программы с дополнительными идеями, помеченные как optional
