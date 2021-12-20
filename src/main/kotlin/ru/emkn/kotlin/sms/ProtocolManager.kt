@@ -1,5 +1,7 @@
 package ru.emkn.kotlin.sms
 
+
+val defaultProtocolManager: ProtocolManager = csvProtocolManager
 /*
 Менеджеры существуют для рутинной работы с бумажками
  */
@@ -21,6 +23,15 @@ interface ProtocolManager {
     //Заполнение всех результатов из конфигурационного протокола (splits.csv)
     fun takeResults(protocol: String, comp: Competitions)
 
+    //Заполнение всех результатов из конфигурационного протокола (splits.csv)
+    fun takeResultsFromSplits(protocol: String, comp: Competitions)
+
+    fun takeResultsFromReverseSplits(protocol: String, comp: Competitions)
+
+    fun takeStartProtocol(protocol: String, comp: Competitions)
+
+
+
     //Запись стартов из стартового протокола (README.md)
     fun takeStartsProtocol(protocol: String, group: Group)
 
@@ -30,6 +41,8 @@ interface ProtocolManager {
     //Генерация протокола результатов (README.md)
     fun getResultsProtocol(group: Group): String
 
+    fun takeResultsProtocol(protocol: String, group: Group)
+
     //Протокол прохождения КП (README.md)
     fun getCPPassingProtocol(group: ControlPoint): String
 
@@ -38,6 +51,7 @@ interface ProtocolManager {
 }
 
 object csvProtocolManager: ProtocolManager{
+
     override fun fromString(protocol: String): Competitions {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с общей информацией о соревновании ошибка: файл не является корректным csv")
@@ -188,6 +202,29 @@ object csvProtocolManager: ProtocolManager{
 
     override fun takeResults(protocol: String, comp: Competitions) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError(
+                "Ошибка в файле с результатами группы: файл не является корректным csv"
+            )
+            return
+        }
+        if (protocol.lines().isEmpty()) {
+            printError(
+                "Ошибка в файле с результатами группы: отсутствует обязательная строка с названием группы"
+            )
+            return
+        }
+        val group = comp.findGroupByName(CsvReader.readOneLine(protocol.lines()[0])!![0])
+        if (group == null) {
+            printError("Ошибка в файле с результатами группы: не найдена группа по названию '${
+                CsvReader.readOneLine(protocol.lines()[0])!![0]
+            }'")
+            return
+        }
+        group.takeResultsProtocol(protocol.lines().drop(1).joinToString ("\n"))
+    }
+
+    override fun takeResultsFromSplits(protocol: String, comp: Competitions){
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с данными пробега ошибка: файл не является корректным csv")
             return
         }
@@ -232,29 +269,227 @@ object csvProtocolManager: ProtocolManager{
         }
     }
 
+    override fun takeResultsFromReverseSplits(protocol: String, comp: Competitions){
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError("В файле с данными пробега ошибка: файл не является корректным csv")
+            return
+        }
+        val data = CsvReader.read(protocol)
+        val rows = data!!.map{it.filter{str -> str.isNotEmpty()}}
+        for(row in rows){
+            if(row.size % 2 != 1) {
+                printError("В файле с данными пробега ошибка: в этом файле должно быть нечетное количество непустых полей " +
+                        "в каждой строке")
+                continue
+            }
+            val cp = comp.findCPByName(row[0])
+            if (cp == null){
+                printError("В файле с данными пробега ошибка: КП ${row[0]} не найден" )
+                continue
+            }
+
+            that@for(i in 0 until row.size/2){
+                val spNumber = row[2*i+1].toIntOrNull()
+                if (spNumber == null){
+                    printWarning("В файле с данными пробега потенциальная ошибка: номер спортсмена должен быть целым" +
+                            " числом"
+                    )
+                    continue@that
+                }
+                val sportsman = comp.findSportsmanByNumber(spNumber)
+                if (sportsman == null) {
+                    printError("В файле с данными пробега ошибка: никакому спортсмену не присвоен номер $spNumber")
+                    continue@that
+                }
+                val time = stringToTimeOrNull(row[2*i+2])
+                if (time == null){
+                    printWarning("В файле с данными пробега потенциальная ошибка: невозможное время " +
+                            row[2*i+2]
+                    )
+                    continue@that
+                }
+
+                //Автоматически добавляется куда нужно в спортсмена и в КП
+                PassingCP(sportsman,cp,time)
+            }
+        }
+    }
+
+    override fun takeStartProtocol(protocol: String, comp: Competitions){
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError(
+                "В файле со стартовым протоколом группы ошибка: файл не является корректным csv"
+            )
+            return
+        }
+        if (protocol.lines().isEmpty()) {
+            printError(
+                "В файле со стартовым протоколом группы ошибка: в файле отсутствует обязательная первая строка " +
+                        "с названием группы"
+            )
+            return
+        }
+        val group = comp.findGroupByName(CsvReader.readOneLine(protocol.lines()[0])!![0])
+        if (group == null) {
+            printError(
+                "В файле со стартовым протоколом группы ошибка: группа по названию группы " +
+                        "'${CsvReader.readOneLine(protocol.lines()[0])!![0]}' не найдена"
+            )
+            return
+        }
+        group.takeStartProtocol(protocol.lines().drop(1).joinToString("\n"))
+    }
+
 
 
     override fun takeStartsProtocol(protocol: String, group: Group) {
-        TODO("Not yet implemented")
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError("В файле со стартовым протоколм группы '${group.name}' ошибка: файл не является корректным csv")
+            return
+        }
+        if (protocol.lines().isEmpty() || protocol.lines()[0] != "Номер,Фамилия,Имя,Г.р.,Разр.,Время старта"){
+            printError(
+                "В файле со стартовым протоколм группы '${group.name}' ошибка: в файле отсутствует обязательная вторая" +
+                        " строчка 'Номер,Фамилия,Имя,Г.р.,Разр.,Время старта'"
+            )
+            return
+        }
+        val rows = CsvReader.readWithHeader(protocol)
+        that@for (row in rows!!) {
+            val number = row["Номер"]!!.toIntOrNull()
+            if (number == null) {
+                printError(
+                    "В файле со стартовым протоколм группы '${group.name}' ошибка: номер спортсмена (${row["Номер"]!!}) " +
+                            "должен быть целым числом"
+                )
+                continue@that
+            }
+            if (group.competition.findSportsmanByNumber(number) != null) {
+                printError(
+                    "В файле со стартовым протоколм группы '${group.name}' ошибка: на соревновании у разных спортсмена не " +
+                            "бывает одинаковых номеров ($number)"
+                )
+                continue@that
+            }
+
+            val surname = row["Фамилия"]!!
+            val spName = row["Имя"]!!
+            val birthYear = row["Г.р."]!!.toIntOrNull()
+            if (birthYear == null) {
+                printError(
+                    "В файле со стартовым протоколм группы '${group.name}' ошибка: год рождения (${row["Г.р."]}) должен быть" +
+                            " целым числом"
+                )
+                continue@that
+            }
+            val time = stringToTimeOrNull(row["Время старта"]!!)
+            if (time == null) {
+                printError(
+                    "В файле со стартовым протоколм группы '${group.name}' ошибка: невозможное время ($time)"
+                )
+                continue@that
+            }
+            val sp = group.findSportsmanByNameSurnameBirthYear(spName, surname, birthYear)
+            if (sp == null) {
+                printError(
+                    "В файле со стартовым протоколом группы '${group.name}' ошибка: не найден спортсмен по строке " +
+                            "'${row.toList().joinToString(",")}'"
+                )
+                continue@that
+            }
+            sp.number = number
+            sp.startTime = time
+        }
+
     }
 
     override fun getStartsProtocol(group: Group): String {
-        TODO("Not yet implemented")
+        val strBuilder = StringBuilder("${group.name},,,,,\n")
+        strBuilder.appendLine("Номер,Фамилия,Имя,Г.р.,Разр.,Время старта")
+        group.sportsmen.forEach{
+            //it as CompetitionsSportsman
+            val info = if(it.startTime==null) "no information" else it.startTime.toString()
+            strBuilder.appendLine("${it.number},${it.surname},${it.name},${it.birthYear},${it.level},$info")
+        }
+        return strBuilder.toString()
     }
 
     override fun getResultsProtocol(group: Group): String {
-        TODO("Not yet implemented")
+        val membersByResult = group.sportsmen.toMutableList()
+        membersByResult.sortBy { if (it.totalTime == null) Time.of(23, 59, 59) else it.totalTime}
+        val strBuilder = StringBuilder("${group.name},,,,,,,,,\n")
+
+        strBuilder.appendLine("№ п/п,Номер,Фамилия,Имя,Г.р.,Разр.,Команда,Результат,Место,Отставание")
+        for (i in membersByResult.indices) {
+            val sp = membersByResult[i]
+            val totalTime = sp.totalTime
+            val line: String = "${i + 1},${sp.number},${sp.surname},${sp.name},${sp.birthYear},${sp.level},${sp.team.name}," +
+                    if (totalTime != null)
+                        "${sp.totalTime},${i + 1},${totalTime - group.bestTime}"
+                    else
+                        "снят с дистанции/неявка/некорректные данные,,"
+
+            strBuilder.appendLine(line)
+        }
+
+        return strBuilder.toString()
+    }
+
+    override fun takeResultsProtocol(protocol: String, group: Group){
+        if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
+            printError("Ошибка в файле с результатами группы '${group.name}': файл не является корректным csv")
+            return
+        }
+        val rows = CsvReader.read(protocol)!!
+        for (row in rows){
+            if (row.size != 7) {
+                printError("Ошибка в файле с результатами группы '${group.name}': в этом файле в каждой строке " +
+                        "7 полей (место, номер, фамилия, имя, год рождения, разряд, время)")
+                return
+            }
+            val number = row[1].toIntOrNull()
+            if (number == null || group.findSportsmanByNumber(number) == null) {
+                printError("Ошибка в файле с результатами группы '${group.name}': не найден спортсмен по номеру " +
+                        "'${row[1]}'")
+                return
+            }
+            val sp = group.findSportsmanByNumber(number)!!
+            val time = row[6].toTimeOrNull()
+            if (time == null) {
+                printWarning(
+                    "Потенциальная ошибка в файле с результатами группы '${group.name}': невозможное время '${row[6]}'"
+                )
+            }
+            sp.totalTimeByResults = time
+        }
     }
 
 
 
 
-    override fun getCPPassingProtocol(group: ControlPoint): String {
-        TODO("Not yet implemented")
+    override fun getCPPassingProtocol(CP: ControlPoint): String {
+        val strBuilder = StringBuilder(CP.name).append(",")
+        CP.passingList.forEach { passingCP ->
+            strBuilder.appendLine(passingCP.sportsman.number)
+            strBuilder.append(",")
+            strBuilder.append(passingCP.time)
+        }
+        return strBuilder.toString()
     }
 
-    override fun getDistancePassingProtocol(group: CompetitionsSportsman): String {
-        TODO("Not yet implemented")
+    override fun getDistancePassingProtocol(sp: CompetitionsSportsman): String {
+        val strBuilder = StringBuilder()
+        strBuilder.appendLine("${sp.number},")
+        val copyOfPassingList = sp.passingList.toMutableList()
+        sp.group.distance.controlPoints.forEach { point ->
+            val infoAboutPassing = copyOfPassingList.firstOrNull {it.CP == point}
+            if (infoAboutPassing == null)
+                strBuilder.appendLine("${point.name},-")
+            else {
+                strBuilder.appendLine("${point.name},${infoAboutPassing.time}")
+                copyOfPassingList.remove(infoAboutPassing) //убираем информацию о первом прохождении
+            }
+        }
+        return strBuilder.toString()
     }
-
 }

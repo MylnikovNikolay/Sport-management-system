@@ -14,5 +14,5 @@ class TestCompetitions(comp: CompetitionsByCSV): CompetitionsByCSV(comp.name, co
     public override val teams
         get() = super.teams
 
-    companion object {fun  fromString(string: String) = TestCompetitions(CompetitionsByCSV.fromString(string))}
+    companion object {fun  fromString(string: String) = TestCompetitions(CompetitionsByCSV.fromString(string) as CompetitionsByCSV)}
 }
