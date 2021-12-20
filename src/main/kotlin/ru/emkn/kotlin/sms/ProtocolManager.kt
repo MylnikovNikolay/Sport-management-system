@@ -1,5 +1,7 @@
 package ru.emkn.kotlin.sms
 
+
+val defaultProtocolManager: ProtocolManager = csvProtocolManager
 /*
 Менеджеры существуют для рутинной работы с бумажками
  */
@@ -21,6 +23,9 @@ interface ProtocolManager {
     //Заполнение всех результатов из конфигурационного протокола (splits.csv)
     fun takeResults(protocol: String, comp: Competitions)
 
+    //Заполнение всех результатов из конфигурационного протокола (splits.csv)
+    fun takeResultsFromSplits(protocol: String, comp: Competitions)
+
     fun takeResultsFromReverseSplits(protocol: String, comp: Competitions)
 
     fun takeStartProtocol(protocol: String, comp: Competitions)
@@ -35,6 +40,8 @@ interface ProtocolManager {
 
     //Генерация протокола результатов (README.md)
     fun getResultsProtocol(group: Group): String
+
+    fun takeResultsProtocol(protocol: String, group: Group)
 
     //Протокол прохождения КП (README.md)
     fun getCPPassingProtocol(group: ControlPoint): String
@@ -194,6 +201,29 @@ object csvProtocolManager: ProtocolManager{
     }
 
     override fun takeResults(protocol: String, comp: Competitions) {
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError(
+                "Ошибка в файле с результатами группы: файл не является корректным csv"
+            )
+            return
+        }
+        if (protocol.lines().isEmpty()) {
+            printError(
+                "Ошибка в файле с результатами группы: отсутствует обязательная строка с названием группы"
+            )
+            return
+        }
+        val group = comp.findGroupByName(CsvReader.readOneLine(protocol.lines()[0])!![0])
+        if (group == null) {
+            printError("Ошибка в файле с результатами группы: не найдена группа по названию '${
+                CsvReader.readOneLine(protocol.lines()[0])!![0]
+            }'")
+            return
+        }
+        group.takeResultsProtocol(protocol.lines().drop(1).joinToString ("\n"))
+    }
+
+    override fun takeResultsFromSplits(protocol: String, comp: Competitions){
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с данными пробега ошибка: файл не является корректным csv")
             return
@@ -403,6 +433,35 @@ object csvProtocolManager: ProtocolManager{
         }
 
         return strBuilder.toString()
+    }
+
+    override fun takeResultsProtocol(protocol: String, group: Group){
+        if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
+            printError("Ошибка в файле с результатами группы '${group.name}': файл не является корректным csv")
+            return
+        }
+        val rows = CsvReader.read(protocol)!!
+        for (row in rows){
+            if (row.size != 7) {
+                printError("Ошибка в файле с результатами группы '${group.name}': в этом файле в каждой строке " +
+                        "7 полей (место, номер, фамилия, имя, год рождения, разряд, время)")
+                return
+            }
+            val number = row[1].toIntOrNull()
+            if (number == null || group.findSportsmanByNumber(number) == null) {
+                printError("Ошибка в файле с результатами группы '${group.name}': не найден спортсмен по номеру " +
+                        "'${row[1]}'")
+                return
+            }
+            val sp = group.findSportsmanByNumber(number)!!
+            val time = row[6].toTimeOrNull()
+            if (time == null) {
+                printWarning(
+                    "Потенциальная ошибка в файле с результатами группы '${group.name}': невозможное время '${row[6]}'"
+                )
+            }
+            sp.totalTimeByResults = time
+        }
     }
 
 
