@@ -9,11 +9,11 @@ class GroupByCSV(name: String, distance: Distance, competition: Competitions): G
 
 
 
-    override fun takeStartProtocol(protocol: String) = csvProtocolManager.takeStartsProtocol(protocol,this)
+    override fun takeStartProtocol(protocol: String) = CsvProtocolManager.takeStartsProtocol(protocol,this)
 
-    override fun getStartsProtocol(): String=csvProtocolManager.getStartsProtocol(this)
+    override fun getStartsProtocol(): String=CsvProtocolManager.getStartsProtocol(this)
 
-    override fun takeResultsProtocol(protocol: String) = csvProtocolManager.takeResultsProtocol(protocol, this)
+    override fun takeResultsProtocol(protocol: String) = CsvProtocolManager.takeResultsProtocol(protocol, this)
 
-    override fun getResultsProtocol(): String = csvProtocolManager.getResultsProtocol(this)
+    override fun getResultsProtocol(): String = CsvProtocolManager.getResultsProtocol(this)
 }

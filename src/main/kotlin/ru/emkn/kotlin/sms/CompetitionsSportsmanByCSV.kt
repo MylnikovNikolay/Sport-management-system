@@ -2,9 +2,6 @@ package ru.emkn.kotlin.sms
 
 import java.lang.Double.max
 
-
-
-
 class CompetitionsSportsmanByCSV(
     sportsman: Sportsman,
     team: CompetitionsTeam,
@@ -21,7 +18,7 @@ class CompetitionsSportsmanByCSV(
                     100 * (2 - totalTime!!.toSecondOfDay().toDouble() / group.bestTime.toSecondOfDay())
                 )
 
-    override fun getDistancePassingProtocol(): String = csvProtocolManager.getDistancePassingProtocol(this)
+    override fun getDistancePassingProtocol(): String = CsvProtocolManager.getDistancePassingProtocol(this)
 
     fun toProtocolRow(): String =
         "$number,$surname,$name,$birthYear,$level"
