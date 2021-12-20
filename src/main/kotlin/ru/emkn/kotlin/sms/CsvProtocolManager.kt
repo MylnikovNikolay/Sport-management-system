@@ -2,6 +2,14 @@ package ru.emkn.kotlin.sms
 
 object CsvProtocolManager: ProtocolManager{
 
+    override fun getTeamResults(comp: Competitions): String {
+        val strBuilder = StringBuilder("Протокол результатов для команд,\n")
+        comp.teams().sortedBy{ -it.teamPoints }.forEach {
+            strBuilder.appendLine("${it.name}," + String.format("%.2f", it.teamPoints))
+        }
+        return strBuilder.toString()
+    }
+
     override fun fromString(protocol: String): Competitions {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с общей информацией о соревновании ошибка: файл не является корректным csv")

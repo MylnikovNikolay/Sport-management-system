@@ -6,6 +6,8 @@ package ru.emkn.kotlin.sms
 Менеджеры существуют для рутинной работы с бумажками
  */
 interface ProtocolManager {
+    fun getTeamResults(comp: Competitions): String
+
     fun fromString(protocol: String): Competitions
 
     //Складывает результаты всех групп в единый протокол (results.csv)

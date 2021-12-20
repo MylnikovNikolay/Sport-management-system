@@ -15,8 +15,8 @@ fun main(args: Array<String>) {
     val classesFileName = "classes.csv"
     val competitions = CompetitionsByCSV.fromString(readCSV( configPath.format(eventFileName) ))
     competitions as CompetitionsByCSV
-    competitions.takeDistancesAndCPs(readCSV( configPath.format(coursesFileName) ))
-    competitions.takeGroupsAndDistances(readCSV( configPath.format(classesFileName) ))
+    CsvProtocolManager.takeDistancesAndCPs(readCSV( configPath.format(coursesFileName) ), competitions)
+    Csv.takeGroupsAndDistances(readCSV( configPath.format(classesFileName) ), competitions)
 
     competitions.takeAllApplicationsFromFolder("./$dataFolder/applications/")
 
@@ -30,7 +30,7 @@ fun main(args: Array<String>) {
     // TODO(стоит сделать эту часть адекватнее, все равно файл со сплитами один всего)
     val splitsFileName = readLine()
 
-    competitions.takeResultsFromSplits(readCSV( "./$dataFolder/splits/$splitsFileName" ))
+    Csv.takeResultsFromSplits(readCSV( "./$dataFolder/splits/$splitsFileName" ), competitions)
     competitions.writeTotalResults("./$dataFolder/results")
     competitions.writeTeamResults("./$dataFolder/results")
 }
