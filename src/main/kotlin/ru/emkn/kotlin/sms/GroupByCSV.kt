@@ -11,12 +11,12 @@ class GroupByCSV(name: String, distance: Distance, competition: Competitions): G
 
     override fun takeStartProtocol(protocol: String) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
-            printError("В файле со стартовым протоколм группы '$name' ошибка: файл не является корректным csv")
+            printError("В файле со стартовым протоколом группы '$name' ошибка: файл не является корректным csv")
             return
         }
         if (protocol.lines().isEmpty() || protocol.lines()[0] != "Номер,Фамилия,Имя,Г.р.,Разр.,Время старта"){
             printError(
-                "В файле со стартовым протоколм группы '$name' ошибка: в файле отсутствует обязательная вторая" +
+                "В файле со стартовым протоколом группы '$name' ошибка: в файле отсутствует обязательная вторая" +
                         " строчка 'Номер,Фамилия,Имя,Г.р.,Разр.,Время старта'"
             )
             return
@@ -26,14 +26,14 @@ class GroupByCSV(name: String, distance: Distance, competition: Competitions): G
             val number = row["Номер"]!!.toIntOrNull()
             if (number == null) {
                 printError(
-                    "В файле со стартовым протоколм группы '$name' ошибка: номер спортсмена (${row["Номер"]!!}) " +
+                    "В файле со стартовым протоколом группы '$name' ошибка: номер спортсмена (${row["Номер"]!!}) " +
                             "должен быть целым числом"
                 )
                 continue@that
             }
             if (competition.findSportsmanByNumber(number) != null) {
                 printError(
-                    "В файле со стартовым протоколм группы '$name' ошибка: на соревновании у разных спортсмена не " +
+                    "В файле со стартовым протоколом группы '$name' ошибка: на соревновании у разных спортсменов не " +
                             "бывает одинаковых номеров ($number)"
                 )
                 continue@that
@@ -44,7 +44,7 @@ class GroupByCSV(name: String, distance: Distance, competition: Competitions): G
             val birthYear = row["Г.р."]!!.toIntOrNull()
             if (birthYear == null) {
                 printError(
-                    "В файле со стартовым протоколм группы '$name' ошибка: год рождения (${row["Г.р."]}) должен быть" +
+                    "В файле со стартовым протоколом группы '$name' ошибка: год рождения (${row["Г.р."]}) должен быть" +
                             " целым числом"
                 )
                 continue@that
@@ -52,7 +52,7 @@ class GroupByCSV(name: String, distance: Distance, competition: Competitions): G
             val time = stringToTimeOrNull(row["Время старта"]!!)
             if (time == null) {
                 printError(
-                    "В файле со стартовым протоколм группы '$name' ошибка: невозможное время ($time)"
+                    "В файле со стартовым протоколом группы '$name' ошибка: невозможное время ($time)"
                 )
                 continue@that
             }

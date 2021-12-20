@@ -347,7 +347,7 @@ open class CompetitionsByCSV(
     /*
     Функции, связанные с выводом
      */
-    fun makeADrawAndWrite(folder: String = "./data/start protocols"){
+    fun makeADrawAndWrite(folder: String = "./data/start protocols/"){
         makeADraw()
         groups.forEach {
             val filepath = folder + "startProtocol%s.csv"
