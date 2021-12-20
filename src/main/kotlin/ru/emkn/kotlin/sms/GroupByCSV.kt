@@ -91,7 +91,7 @@ class GroupByCSV(name: String, distance: Distance, competition: Competitions): G
         for (row in rows){
             if (row.size != 7) {
                 printError("Ошибка в файле с результатами группы '$name': в этом файле в каждой строке " +
-                        "7 полей (место, номер, фамилия, имя, год рождения, разряд, время")
+                        "7 полей (место, номер, фамилия, имя, год рождения, разряд, время)")
                 return
             }
             val number = row[1].toIntOrNull()

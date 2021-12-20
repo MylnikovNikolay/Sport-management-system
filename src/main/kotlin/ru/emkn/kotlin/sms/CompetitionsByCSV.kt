@@ -297,7 +297,26 @@ open class CompetitionsByCSV(
 
 
     override fun takeResultsProtocol(protocol: String) {
-
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError(
+                "Ошибка в файле с результатами группы: файл не является корректным csv"
+            )
+            return
+        }
+        if (protocol.lines().isEmpty()) {
+            printError(
+                "Ошибка в файле с результатами группы: отсутствует обязательная строка с названием группы"
+            )
+            return
+        }
+        val group = findGroupByName(CsvReader.readOneLine(protocol.lines()[0])!![0])
+        if (group == null) {
+            printError("Ошибка в файле с результатами группы: не найдена группа по названию '${
+                CsvReader.readOneLine(protocol.lines()[0])!![0]
+            }'")
+            return
+        }
+        group.takeResultsProtocol(protocol.lines().drop(1).joinToString ("\n"))
     }
 
 
