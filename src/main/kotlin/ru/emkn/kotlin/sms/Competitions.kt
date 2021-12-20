@@ -56,6 +56,8 @@ abstract class Competitions(val name: String, val date: String) {
 
     abstract fun takeResultsFromReverseSplits(protocol: String)
 
+    abstract fun takeStartProtocol(protocol: String)
+
     protected fun giveNumbersToSportsmenByGroups(){
         var number = 100
         for(group in groups){

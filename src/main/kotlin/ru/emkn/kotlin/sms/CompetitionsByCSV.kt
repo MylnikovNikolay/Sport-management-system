@@ -294,6 +294,32 @@ open class CompetitionsByCSV(
             }
         }
     }
+
+
+    override fun takeStartProtocol(protocol: String) {
+        if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
+            printError(
+                "В файле со стартовым протоколом группы ошибка: файл не является корректным csv"
+            )
+            return
+        }
+        if (protocol.lines().isEmpty()) {
+            printError(
+                "В файле со стартовым протоколом группы ошибка: в файле отсутствует обязательная первая строка " +
+                        "с названием группы"
+            )
+            return
+        }
+        val group = findGroupByName(CsvReader.readOneLine(protocol.lines()[0])!![0])
+        if (group == null) {
+            printError(
+                "В файле со стартовым протоколом группы ошибка: группа по названию группы " +
+                        "'${CsvReader.readOneLine(protocol.lines()[0])!![0]}' не найдена"
+            )
+            return
+        }
+        group.takeStartProtocol(protocol.lines().drop(1).joinToString("\n"))
+    }
     /*
     Функции, связанные с выводом
      */
