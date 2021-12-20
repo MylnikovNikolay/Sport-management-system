@@ -44,6 +44,7 @@ fun main(args: Array<String>) {
     val coursesFileName = "courses.csv"
     val classesFileName = "classes.csv"
     val competitions = CompetitionsByCSV.fromString(readCSV( configPath.format(eventFileName) ))
+    competitions as CompetitionsByCSV
     competitions.takeDistancesAndCPs(readCSV( configPath.format(coursesFileName) ))
     competitions.takeGroupsAndDistances(readCSV( configPath.format(classesFileName) ))
 

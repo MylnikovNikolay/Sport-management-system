@@ -49,8 +49,11 @@ abstract class CompetitionsSportsman(
     val totalTime: Time?
         get() = if(distanceWasPassed)
             passingData.last().time - passingData.first().time
+        else if (totalTimeByResults != null)
+            totalTimeByResults
         else null
 
+    var totalTimeByResults: Time? = null
 
     //События прохождения спортсменом КП в порядке времени.
     val passingList: List<PassingCP>

@@ -9,6 +9,8 @@ typealias Time = LocalTime
 operator fun Time.minus(other: Time): Time =
     Time.ofNanoOfDay(maxOf(this.toNanoOfDay()-other.toNanoOfDay(),0))
 
+val defaultProtocolManager: ProtocolManager = CsvProtocolManager
+
 
 
 fun readCSV(pathname: String): String {
@@ -36,6 +38,14 @@ fun writeToFile(filepath: String, str: String){
 fun stringToTimeOrNull(str: String): Time?{
     return try {
         Time.parse(str)
+    } catch (e : java.time.format.DateTimeParseException){
+        null
+    }
+}
+
+fun String.toTimeOrNull(): Time? {
+    return try {
+        Time.parse(this)
     } catch (e : java.time.format.DateTimeParseException){
         null
     }

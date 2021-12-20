@@ -112,9 +112,4 @@ internal class CompetitionsTests {
 
         assertEquals(1, comp.groups.count{it.name == "Ж28"})
     }
-
-
-
-
-
 }

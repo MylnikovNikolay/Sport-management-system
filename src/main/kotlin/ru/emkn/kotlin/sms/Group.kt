@@ -23,7 +23,7 @@ abstract class Group(val name: String, val distance: Distance, val competition: 
     }
 
     //Запись стартов из стартового протокола (README.md)
-    abstract fun takeStartsProtocol(protocol: String)
+    abstract fun takeStartProtocol(protocol: String)
 
     //Генерация стартового протокола (README.md)
     abstract fun getStartsProtocol(): String
@@ -33,6 +33,8 @@ abstract class Group(val name: String, val distance: Distance, val competition: 
 
     val bestTime: Time
         get() = sportsmen.minOf { it.totalTime?:Time.of(23,59,59) }
+
+    abstract fun takeResultsProtocol(protocol: String)
 
     fun findSportsmanByNumber(int: Int): CompetitionsSportsman?{
         return sportsmen.find{it.number == int}
