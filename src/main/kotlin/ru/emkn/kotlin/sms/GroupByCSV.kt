@@ -9,7 +9,7 @@ class GroupByCSV(name: String, distance: Distance, competition: Competitions): G
 
 
 
-    override fun takeStartsProtocol(protocol: String) {
+    override fun takeStartProtocol(protocol: String) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле со стартовым протоколм группы '$name' ошибка: файл не является корректным csv")
             return

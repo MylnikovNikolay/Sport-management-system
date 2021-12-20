@@ -23,7 +23,7 @@ abstract class Group(val name: String, val distance: Distance, val competition: 
     }
 
     //Запись стартов из стартового протокола (README.md)
-    abstract fun takeStartsProtocol(protocol: String)
+    abstract fun takeStartProtocol(protocol: String)
 
     //Генерация стартового протокола (README.md)
     abstract fun getStartsProtocol(): String
