@@ -1,33 +1,55 @@
 package ru.emkn.kotlin.sms
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.material.Text
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
 
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
+
+
+fun main() {
+    application {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "Sport Management System",
+            state = rememberWindowState(
+                position = WindowPosition(alignment = Alignment.Center),
+            ),
+        ) {
+            doSomething()
         }
     }
 }
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
+@Composable
+fun doSomething() {
+    val filepath = "./test-data/data/applications/Древние греки.csv"
+    val someData = CsvReader.read(readCSV(filepath))!!
+    Column {
+        TopAppBar(title = { Text(text = someData[0][0]) })
+
+        Row {
+            val size = someData[0].size
+            repeat(size) { id ->
+                Column {
+                    someData.drop(1).forEach {
+                        Text(text = it[id] + "  ")
+                    }
+                }
+            }
+        }
     }
 }
-
 
 /*
 fun main(args: Array<String>) {
