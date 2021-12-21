@@ -12,4 +12,6 @@ class Distance(val name: String, val controlPoints: List<ControlPoint>,){
         }
     }
     fun findCPByName(name: String) = controlPoints.find {it.name == name}
+
+    override fun toString() = this.name
 }

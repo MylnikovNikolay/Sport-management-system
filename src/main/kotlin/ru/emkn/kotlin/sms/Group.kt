@@ -10,6 +10,9 @@ class Group(val name: String, val distance: Distance, val competition: Competiti
     val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
 
     //fun addSportsman(sportsman: _CompetitionsSportsman) = sportsmen.add(sportsman)
+    override fun toString(): String {
+        return this.name
+    }
 
     //Жеребьевка в группе
     fun makeADraw(startTime: Time) {
@@ -23,7 +26,9 @@ class Group(val name: String, val distance: Distance, val competition: Competiti
     }
 
     val bestTime: Time
-        get() = sportsmen.minOf { it.totalTime?:Time.of(23,59,59) }
+        get() = sportsmen.minOfOrNull {
+            it.totalTime?:Time.of(23,59,59)
+        }?:Time.of(23,59,59)
 
     fun findSportsmanByNumber(int: Int): CompetitionsSportsman?{
         return sportsmen.find{it.number == int}

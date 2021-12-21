@@ -9,4 +9,8 @@ class CompetitionsTeam(val name: String){
     val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
     val teamPoints: Double
         get() = sportsmen.sumOf { it.points }
+
+    override fun toString(): String {
+        return this.name
+    }
 }

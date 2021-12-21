@@ -42,6 +42,13 @@ open class CompetitionsByCSV(
         }
     }
 
+    override fun writeSimpleResultsByGroups(folder: String) {
+        groups.forEach {
+            val filepath = folder + "resultProtocol%s.csv"
+            writeToFile(filepath.format(it.name), Csv.getResultsProtocolSimple(it))
+        }
+    }
+
     fun writeTotalResults(folder: String = "./data/results") {
         writeToFile("$folder/results.csv", CsvProtocolManager.getTotalResults(this))
     }
