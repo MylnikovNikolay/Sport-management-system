@@ -2,9 +2,6 @@ import ru.emkn.kotlin.sms.*
 import ru.emkn.kotlin.sms.CompetitionsByCSV.Companion.fromString
 import kotlin.test.*
 
-
-
-
 internal class CompetitionsTests {
     @Test
     fun fromStringTest() {
@@ -33,7 +30,8 @@ internal class CompetitionsTests {
         UsualLogger.start()
         ErrorsAndWarningsLogger.start()
         val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
-        comp.takeDistancesAndCPs(readCSV("test-data/sample-data/additional sample-data/takeDistancesAndCPsTest.csv"))
+        CsvProtocolManager.takeDistancesAndCPs(readCSV("test-data/sample-data/additional sample-data" +
+                "/takeDistancesAndCPsTest.csv"), comp)
         assertEquals(3, comp.distances.size)
 
         val distance1 = comp.findDistanceByName("distance1")
@@ -74,11 +72,13 @@ internal class CompetitionsTests {
         UsualLogger.start()
         ErrorsAndWarningsLogger.start()
         val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
-        comp.takeDistancesAndCPs(
-            readCSV("test-data/sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/distances.csv")
+        CsvProtocolManager.takeDistancesAndCPs(
+            readCSV("test-data/sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/distances.csv"),
+            comp
         )
-        comp.takeGroupsAndDistances(
-            readCSV("test-data/sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/groups-distances.csv")
+        Csv.takeGroupsAndDistances(
+            readCSV("test-data/sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/groups-distances.csv"),
+            comp
         )
         assertEquals(4, comp.groups.size)
         val group67 = comp.findGroupByName("М67")

@@ -6,6 +6,10 @@ package ru.emkn.kotlin.sms
 Менеджеры существуют для рутинной работы с бумажками
  */
 interface ProtocolManager {
+    fun getResultsProtocolSimple(group: Group): String
+
+    fun getTeamResults(comp: Competitions): String
+
     fun fromString(protocol: String): Competitions
 
     //Складывает результаты всех групп в единый протокол (results.csv)
@@ -33,10 +37,10 @@ interface ProtocolManager {
 
 
     //Запись стартов из стартового протокола (README.md)
-    fun takeStartsProtocol(protocol: String, group: Group)
+    fun takeStartProtocol(protocol: String, group: Group)
 
     //Генерация стартового протокола (README.md)
-    fun getStartsProtocol(group: Group): String
+    fun getStartProtocol(group: Group): String
 
     //Генерация протокола результатов (README.md)
     fun getResultsProtocol(group: Group): String
@@ -44,9 +48,9 @@ interface ProtocolManager {
     fun takeResultsProtocol(protocol: String, group: Group)
 
     //Протокол прохождения КП (README.md)
-    fun getCPPassingProtocol(group: ControlPoint): String
+    fun getCPPassingProtocol(CP: ControlPoint): String
 
     //Протокол прохождения дистанции (README.md)
-    fun getDistancePassingProtocol(group: CompetitionsSportsman): String
+    fun getDistancePassingProtocol(sp: CompetitionsSportsman): String
 }
 

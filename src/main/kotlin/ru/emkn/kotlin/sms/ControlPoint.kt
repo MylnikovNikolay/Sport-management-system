@@ -2,7 +2,7 @@ package ru.emkn.kotlin.sms
 
 import java.util.*
 
-abstract class ControlPoint(val name: String){
+class ControlPoint(val name: String){
     init {
         UsualLogger.log(
             "Добавлен КП '$name'"
@@ -17,7 +17,6 @@ abstract class ControlPoint(val name: String){
     fun addPassingCP(passingCP: PassingCP) = data.add(passingCP)
     fun removePassingCP(passingCP: PassingCP) = data.remove(passingCP)
 
-    //Протокол прохождения КП (README.md)
-    abstract fun getProtocol(): String
 
+    override fun toString() = this.name
 }

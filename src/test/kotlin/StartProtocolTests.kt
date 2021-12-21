@@ -1,5 +1,5 @@
+import TestCompetitions.Companion.testGeneration
 import ru.emkn.kotlin.sms.*
-import ru.emkn.kotlin.sms.CompetitionsByCSV.Companion.fromString
 import java.io.File
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -12,61 +12,20 @@ class StartProtocolTests {
     В первой части проверяется, что корректно считывается поданный файл стартовых протоколов
     Во второй - что сама программа умеет их составлять
      */
+
+
     @BeforeTest
-    fun StartProtocolTestGeneration() {
-        //одноразовая функция для генерации
-        val file1 = File("test-data/sample-data/additional sample-data/StartProtocolTest/courses.csv")
-        file1.writeText("")
-        file1.appendText("Название")
-        file1.appendText(",".repeat(10))
-        file1.appendText("\n")
-        repeat(10) {
-            val strbld = StringBuilder()
-            strbld.append("distance_$it")
-            repeat(10) {
-                val a = kotlin.math.abs(Random.nextInt()) % 31
-                if (a == 0)
-                    strbld.append(",")
-                else
-                    strbld.append(",cp$a")
-            }
-            strbld.append("\n")
-            file1.appendText(strbld.toString())
-        }
-        val file = File("test-data/sample-data/additional sample-data/StartProtocolTest/classes.csv")
-        file.writeText("")
-        file.appendText("Название,Дистанция")
-        file.appendText("\n")
-        repeat(15) {
-            val a = kotlin.math.abs(Random.nextInt()) % 10
-            file.appendText("group_$it,distance_$a\n")
-            if (!File("test-data/sample-data/additional sample-data/StartProtocolTest/protocols/group_$it.csv")
-                    .exists())
-                File("test-data/sample-data/additional sample-data/StartProtocolTest/protocols/group_$it.csv")
-                    .createNewFile()
-            File("test-data/sample-data/additional sample-data/StartProtocolTest/protocols/group_$it.csv").
-                    writeText("group_$it,,,,,\nНомер,Фамилия,Имя,Г.р.,Разр.,Время старта\n")
-        }
-
-        val file2 = File("test-data/sample-data/additional sample-data/StartProtocolTest/application.csv")
-        file2.writeText("")
-        file2.appendText("team,,,,\n")
-        file2.appendText("Группа,Фамилия,Имя,Г.р.,Разр.\n")
-        repeat(120) {
-            file2.appendText(
-                "group_${kotlin.math.abs(Random.nextInt()) % 15},surname_$it,name_$it,${Random.nextInt()},\n"
-            )
-        }
-
+    fun startProtocolTestGeneration() {
+        testGeneration()
     }
 
     @Test
     fun test1part1(){
         val folder = "test-data/sample-data/additional sample-data/StartProtocolTest/"
         val comp = TestCompetitions.fromString(readCSV(folder + "event.csv"))
-        comp.takeDistancesAndCPs(readCSV(folder + "courses.csv"))
-        comp.takeGroupsAndDistances(readCSV(folder + "classes.csv"))
-        comp.takeTeamApplication(readCSV(folder + "application.csv"))
+        CsvProtocolManager.takeDistancesAndCPs(readCSV(folder + "courses.csv"), comp)
+        Csv.takeGroupsAndDistances(readCSV(folder + "classes.csv"), comp)
+        CsvProtocolManager.takeTeamApplication(readCSV(folder + "application.csv"), comp)
     }
 
     @Test
@@ -75,9 +34,9 @@ class StartProtocolTests {
         ErrorsAndWarningsLogger.start()
         val folder = "test-data/sample-data/additional sample-data/StartProtocolTest/"
         val comp = TestCompetitions.fromString(readCSV(folder + "event.csv"))
-        comp.takeDistancesAndCPs(readCSV(folder + "courses.csv"))
-        comp.takeGroupsAndDistances(readCSV(folder + "classes.csv"))
-        comp.takeTeamApplication(readCSV(folder + "application.csv"))
+        CsvProtocolManager.takeDistancesAndCPs(readCSV(folder + "courses.csv"), comp)
+        Csv.takeGroupsAndDistances(readCSV(folder + "classes.csv"), comp)
+        CsvProtocolManager.takeTeamApplication(readCSV(folder + "application.csv"), comp)
 
         var number = 234
         comp.sportsmen.forEach { sp ->
@@ -88,7 +47,7 @@ class StartProtocolTests {
             )
         }
         comp.groups.forEach {
-            comp.takeStartProtocol(readCSV(folder + "protocols/${it.name}.csv"))
+            Csv.takeStartProtocol(readCSV(folder + "protocols/${it.name}.csv"), comp)
         }
         comp.sportsmen.forEach {
             assertNotNull(it.number)
@@ -104,9 +63,9 @@ class StartProtocolTests {
         ErrorsAndWarningsLogger.start()
         val folder = "test-data/sample-data/additional sample-data/StartProtocolTest/"
         val comp = TestCompetitions.fromString(readCSV(folder + "event.csv"))
-        comp.takeDistancesAndCPs(readCSV(folder + "courses.csv"))
-        comp.takeGroupsAndDistances(readCSV(folder + "classes.csv"))
-        comp.takeTeamApplication(readCSV(folder + "application.csv"))
+        CsvProtocolManager.takeDistancesAndCPs(readCSV(folder + "courses.csv"),comp)
+        Csv.takeGroupsAndDistances(readCSV(folder + "classes.csv"), comp)
+        CsvProtocolManager.takeTeamApplication(readCSV(folder + "application.csv"), comp)
 
 
         var number = 0
@@ -120,7 +79,7 @@ class StartProtocolTests {
         }
 
         comp.groups.forEach {
-            comp.takeStartProtocol(readCSV(folder + "protocols/${it.name}.csv"))
+            Csv.takeStartProtocol(readCSV(folder + "protocols/${it.name}.csv"), comp)
         }
 
         assertEquals(44, comp.sportsmen.filter{it.number != null}.size)
@@ -133,9 +92,9 @@ class StartProtocolTests {
         ErrorsAndWarningsLogger.start()
         val folder = "test-data/sample-data/additional sample-data/StartProtocolTest/"
         val comp = TestCompetitions.fromString(readCSV(folder + "event.csv"))
-        comp.takeDistancesAndCPs(readCSV(folder + "courses.csv"))
-        comp.takeGroupsAndDistances(readCSV(folder + "classes.csv"))
-        comp.takeTeamApplication(readCSV(folder + "application.csv"))
+        CsvProtocolManager.takeDistancesAndCPs(readCSV(folder + "courses.csv"), comp)
+        Csv.takeGroupsAndDistances(readCSV(folder + "classes.csv"), comp)
+        CsvProtocolManager.takeTeamApplication(readCSV(folder + "application.csv"), comp)
 
         var number = 0
         comp.sportsmen.forEach { sp ->
@@ -147,7 +106,7 @@ class StartProtocolTests {
             )
         }
         comp.groups.forEach {
-            comp.takeStartProtocol(readCSV(folder + "protocols/${it.name}.csv"))
+            Csv.takeStartProtocol(readCSV(folder + "protocols/${it.name}.csv"), comp)
         }
 
         assertEquals(117, comp.sportsmen.filter{it.number != null}.size)
@@ -159,9 +118,9 @@ class StartProtocolTests {
         ErrorsAndWarningsLogger.start()
         val folder = "test-data/sample-data/additional sample-data/StartProtocolTest/"
         val comp = TestCompetitions.fromString(readCSV(folder + "event.csv"))
-        comp.takeDistancesAndCPs(readCSV(folder + "courses.csv"))
-        comp.takeGroupsAndDistances(readCSV(folder + "classes.csv"))
-        comp.takeTeamApplication(readCSV(folder + "application.csv"))
+        CsvProtocolManager.takeDistancesAndCPs(readCSV(folder + "courses.csv"), comp)
+        Csv.takeGroupsAndDistances(readCSV(folder + "classes.csv"), comp)
+        CsvProtocolManager.takeTeamApplication(readCSV(folder + "application.csv"), comp)
 
         var number = 0
         comp.sportsmen.forEach { sp ->
@@ -174,7 +133,7 @@ class StartProtocolTests {
             )
         }
         comp.groups.forEach {
-            comp.takeStartProtocol(readCSV(folder + "protocols/${it.name}.csv"))
+            Csv.takeStartProtocol(readCSV(folder + "protocols/${it.name}.csv"), comp)
         }
 
         assertEquals(116, comp.sportsmen.filter{it.number != null}.size)
@@ -186,19 +145,19 @@ class StartProtocolTests {
         ErrorsAndWarningsLogger.start()
         val folder = "test-data/sample-data/additional sample-data/StartProtocolTest/"
         val comp = TestCompetitions.fromString(readCSV(folder + "event.csv"))
-        comp.takeDistancesAndCPs(readCSV(folder + "courses.csv"))
-        comp.takeGroupsAndDistances(readCSV(folder + "classes.csv"))
-        comp.takeTeamApplication(readCSV(folder + "application.csv"))
+        CsvProtocolManager.takeDistancesAndCPs(readCSV(folder + "courses.csv"), comp)
+        Csv.takeGroupsAndDistances(readCSV(folder + "classes.csv"), comp)
+        CsvProtocolManager.takeTeamApplication(readCSV(folder + "application.csv"), comp)
 
         comp.makeADrawAndWrite(folder + "my protocols/")
 
         val comp2 = TestCompetitions.fromString(readCSV(folder + "event.csv"))
-        comp2.takeDistancesAndCPs(readCSV(folder + "courses.csv"))
-        comp2.takeGroupsAndDistances(readCSV(folder + "classes.csv"))
-        comp2.takeTeamApplication(readCSV(folder + "application.csv"))
+        CsvProtocolManager.takeDistancesAndCPs(readCSV(folder + "courses.csv"), comp2)
+        Csv.takeGroupsAndDistances(readCSV(folder + "classes.csv"), comp2)
+        CsvProtocolManager.takeTeamApplication(readCSV(folder + "application.csv"), comp2)
 
         comp2.groups.forEach {
-            comp2.takeStartProtocol(readCSV(folder + "my protocols/startProtocol${it.name}.csv"))
+            Csv.takeStartProtocol(readCSV(folder + "my protocols/startProtocol${it.name}.csv"), comp2)
         }
         comp2.sportsmen.forEach {
             assertNotNull(it.number)

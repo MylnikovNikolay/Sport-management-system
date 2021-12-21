@@ -10,6 +10,7 @@ operator fun Time.minus(other: Time): Time =
     Time.ofNanoOfDay(maxOf(this.toNanoOfDay()-other.toNanoOfDay(),0))
 
 val defaultProtocolManager: ProtocolManager = CsvProtocolManager
+typealias Csv = CsvProtocolManager
 
 
 
