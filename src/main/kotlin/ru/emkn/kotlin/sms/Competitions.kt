@@ -24,7 +24,7 @@ abstract class Competitions(val name: String, val date: String) {
     fun findSportsmanByNumber(numberOfSportsman: Int) = sportsmen.find{it.number == numberOfSportsman}
     fun findDistanceByName (nameOfDistance: String) = distances.find {it.name == nameOfDistance}
 
-    fun teams() = teams
+    fun teams() = teams.toList()
 
     fun getGroupsSet(): Set<Group> = groups.toSet()
 
@@ -35,12 +35,15 @@ abstract class Competitions(val name: String, val date: String) {
     fun addCP(cp: ControlPoint) = controlPoints.add(cp)
     fun addCPs(cp: Collection<ControlPoint>) = controlPoints.addAll(cp)
 
+    override fun toString() = this.name
     //Жеребьевка - присвоение номеров участникам и жеребьевка в каждой из групп
     fun makeADraw() {
         giveNumbersToSportsmenByGroups()
         val time = Time.of(12,0,0)
         groups.forEach { it.makeADraw(time) }
     }
+
+    abstract fun writeSimpleResultsByGroups(folder: String)
 
     private fun giveNumbersToSportsmenByGroups(){
         var number = 100

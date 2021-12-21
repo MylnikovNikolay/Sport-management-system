@@ -1,5 +1,5 @@
+import TestCompetitions.Companion.testGeneration
 import ru.emkn.kotlin.sms.*
-import ru.emkn.kotlin.sms.CompetitionsByCSV.Companion.fromString
 import java.io.File
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -12,52 +12,11 @@ class StartProtocolTests {
     В первой части проверяется, что корректно считывается поданный файл стартовых протоколов
     Во второй - что сама программа умеет их составлять
      */
+
+
     @BeforeTest
-    fun StartProtocolTestGeneration() {
-        //одноразовая функция для генерации
-        val file1 = File("test-data/sample-data/additional sample-data/StartProtocolTest/courses.csv")
-        file1.writeText("")
-        file1.appendText("Название")
-        file1.appendText(",".repeat(10))
-        file1.appendText("\n")
-        repeat(10) {
-            val strbld = StringBuilder()
-            strbld.append("distance_$it")
-            repeat(10) {
-                val a = kotlin.math.abs(Random.nextInt()) % 31
-                if (a == 0)
-                    strbld.append(",")
-                else
-                    strbld.append(",cp$a")
-            }
-            strbld.append("\n")
-            file1.appendText(strbld.toString())
-        }
-        val file = File("test-data/sample-data/additional sample-data/StartProtocolTest/classes.csv")
-        file.writeText("")
-        file.appendText("Название,Дистанция")
-        file.appendText("\n")
-        repeat(15) {
-            val a = kotlin.math.abs(Random.nextInt()) % 10
-            file.appendText("group_$it,distance_$a\n")
-            if (!File("test-data/sample-data/additional sample-data/StartProtocolTest/protocols/group_$it.csv")
-                    .exists())
-                File("test-data/sample-data/additional sample-data/StartProtocolTest/protocols/group_$it.csv")
-                    .createNewFile()
-            File("test-data/sample-data/additional sample-data/StartProtocolTest/protocols/group_$it.csv").
-                    writeText("group_$it,,,,,\nНомер,Фамилия,Имя,Г.р.,Разр.,Время старта\n")
-        }
-
-        val file2 = File("test-data/sample-data/additional sample-data/StartProtocolTest/application.csv")
-        file2.writeText("")
-        file2.appendText("team,,,,\n")
-        file2.appendText("Группа,Фамилия,Имя,Г.р.,Разр.\n")
-        repeat(120) {
-            file2.appendText(
-                "group_${kotlin.math.abs(Random.nextInt()) % 15},surname_$it,name_$it,${Random.nextInt()},\n"
-            )
-        }
-
+    fun startProtocolTestGeneration() {
+        testGeneration()
     }
 
     @Test

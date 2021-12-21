@@ -3,11 +3,13 @@ package ru.emkn.kotlin.sms
 object CsvProtocolManager: ProtocolManager{
 
     override fun getTeamResults(comp: Competitions): String {
-        val strBuilder = StringBuilder("Протокол результатов для команд,\n")
-        comp.teams().sortedBy{ -it.teamPoints }.forEach {
-            strBuilder.appendLine("${it.name}," + String.format("%.2f", it.teamPoints))
-        }
-        return strBuilder.toString()
+        return "Протокол результатов для команд,\n" + comp.teams().sortedBy{ -it.teamPoints }
+            .joinToString("\n")
+            {
+                "$it,${String.format("%.2f",it.teamPoints).replace(',', '.')}"
+            }
+
+
     }
 
     override fun fromString(protocol: String): Competitions {
@@ -393,29 +395,52 @@ object CsvProtocolManager: ProtocolManager{
         return strBuilder.toString()
     }
 
+    override fun getResultsProtocolSimple(group: Group): String {
+        return group.name + ",,,,,,\n" + "Место,Номер,Фамилия,Имя,Г.р.,Разряд,Результат\n" +group.sportsmen.sortedWith {
+            sp1, sp2 ->
+            if (sp1.totalTime == null)
+                1
+            else if (sp2.totalTime == null)
+                -1
+            else if (sp1.totalTime!! > sp2.totalTime)
+                1
+            else
+                -1
+        }.mapIndexed { index, it ->
+                "${if (it.totalTime != null) index + 1 else "-"},${it.number},${it.surname},${it.name},${it.birthYear}," +
+                        "${it.level},${if (it.totalTime != null) it.totalTime.toString() else "-"}"
+        }.joinToString("\n")
+    }
+
     override fun takeResultsProtocol(protocol: String, group: Group){
         if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
             printError("Ошибка в файле с результатами группы '${group.name}': файл не является корректным csv")
             return
         }
-        val rows = CsvReader.read(protocol)!!
+        if (protocol.lines().isEmpty() || protocol.lines()[0] != "Место,Номер,Фамилия,Имя,Г.р.,Разряд,Результат"){
+            printError("Ошибка в файле с результатами группы '${group.name}': в файле отсутствует обязательная " +
+                    "первая строка 'Место,Номер,Фамилия,Имя,Г.р.,Разряд,Результат'")
+        }
+
+        val rows = CsvReader.readWithHeader(protocol)!!
         for (row in rows){
             if (row.size != 7) {
                 printError("Ошибка в файле с результатами группы '${group.name}': в этом файле в каждой строке " +
                         "7 полей (место, номер, фамилия, имя, год рождения, разряд, время)")
                 return
             }
-            val number = row[1].toIntOrNull()
+            val number = row["Номер"]!!.toIntOrNull()
             if (number == null || group.findSportsmanByNumber(number) == null) {
                 printError("Ошибка в файле с результатами группы '${group.name}': не найден спортсмен по номеру " +
-                        "'${row[1]}'")
+                        "'${row["Номер"]}'")
                 return
             }
             val sp = group.findSportsmanByNumber(number)!!
-            val time = row[6].toTimeOrNull()
+            val time = row["Результат"]!!.toTimeOrNull()
             if (time == null) {
                 printWarning(
-                    "Потенциальная ошибка в файле с результатами группы '${group.name}': невозможное время '${row[6]}'"
+                    "Потенциальная ошибка в файле с результатами группы '${group.name}': невозможное время " +
+                            "'${row["Результат"]}'"
                 )
             }
             sp.totalTimeByResults = time

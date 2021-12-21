@@ -17,4 +17,6 @@ class ControlPoint(val name: String){
     fun addPassingCP(passingCP: PassingCP) = data.add(passingCP)
     fun removePassingCP(passingCP: PassingCP) = data.remove(passingCP)
 
+
+    override fun toString() = this.name
 }
