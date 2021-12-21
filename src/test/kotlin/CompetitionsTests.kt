@@ -100,9 +100,7 @@ internal class CompetitionsTests {
         val group29 = comp.findGroupByName("Ж29")
         assertTrue(group29 == null)
 
-        assertFailsWith<NoSuchElementException> {
-            group25.bestTime
-        }
+        assertEquals(Time.of(23,59,59), group25.bestTime)
 
         val group28 = comp.findGroupByName("Ж28")
         assertTrue(group28 != null)
