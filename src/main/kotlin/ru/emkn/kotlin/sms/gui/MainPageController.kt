@@ -3,8 +3,10 @@ import ru.emkn.kotlin.sms.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 
@@ -22,8 +24,8 @@ class MainPageController(val comp: Competitions) {
     }
 
     //Рисует все детали внутри главного окна
-    @Composable fun content(){
-        MaterialTheme {
+    @Composable @Preview fun content(){
+        MaterialTheme(shapes = Shapes()) {
             Button(onClick = ::openGroupListPage) {
                 Text("Список групп")
             }
@@ -35,16 +37,16 @@ class MainPageController(val comp: Competitions) {
             }
         }
     }
-
-    @Composable fun openGroupListPage(){
+    //@Composable @Preview
+    fun openGroupListPage(){
         GroupListController()
     }
 
-    @Composable fun openTeamListPage(){
+    fun openTeamListPage(){
         TeamListController()
     }
 
-    @Composable fun openProtocolPage(){
+    fun openProtocolPage(){
         ProtocolPageController()
     }
 
