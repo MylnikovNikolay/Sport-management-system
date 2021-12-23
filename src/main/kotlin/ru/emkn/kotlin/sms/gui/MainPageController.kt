@@ -1,6 +1,7 @@
 package ru.emkn.kotlin.sms.gui
 import ru.emkn.kotlin.sms.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -26,26 +27,22 @@ class MainPageController(val comp: Competitions) {
     @Composable @Preview fun content(){
         MaterialTheme(shapes = Shapes()) {
             Surface {  }
-            Button(
-                onClick = ::openGroupListPage,
-                modifier = Modifier.graphicsLayer { translationX = 0.0f; translationY = 0.0f; }
-            ) {
-                Text("Список групп")
-                Modifier.graphicsLayer {  }
-            }
-            Button(
-                onClick = ::openTeamListPage ,
-                modifier = Modifier.graphicsLayer { translationX = 0.0f; translationY = 100.0f; }
-            ) {
-                Text("Список команд")
-                //modifier = Modifier.graphicsLayer { translationX = 50.0f; translationY = 0.0f; }
-            }
-            Button(
-                onClick = ::openProtocolPage,
-                modifier = Modifier.graphicsLayer { translationX = 0.0f; translationY = 200.0f; }
-            ) {
-                Text("Работа с протоколами")
-                Modifier.graphicsLayer { translationX = 0.0f; translationY = 50.0f; }
+            Column {
+                Button(
+                    onClick = ::openGroupListPage,
+                ) {
+                    Text("Список групп")
+                }
+                Button(
+                    onClick = ::openTeamListPage ,
+                ) {
+                    Text("Список команд")
+                }
+                Button(
+                    onClick = ::openProtocolPage,
+                ) {
+                    Text("Работа с протоколами")
+                }
             }
         }
     }
