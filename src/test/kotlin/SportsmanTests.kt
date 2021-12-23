@@ -9,9 +9,9 @@ internal class SportsmanTests {
         ErrorsAndWarningsLogger.start()
         val filepath = "./test-data/sample-data/applications/application1.csv"
         val comp = fromString("Название,Дата\n" + "test,test")
-        CsvProtocolManager.takeDistancesAndCPs(readCSV("./test-data/sample-data/courses.csv"), comp)
-        Csv.takeGroupsAndDistances(readCSV("./test-data/sample-data/classes.csv"), comp)
-        CsvProtocolManager.takeTeamApplication(readCSV(filepath), comp)
+        CsvProtocolManager.createDistancesAndCPs(readCSV("./test-data/sample-data/courses.csv"), comp)
+        Csv.createGroupsAndDistances(readCSV("./test-data/sample-data/classes.csv"), comp)
+        CsvProtocolManager.processTeamApplication(readCSV(filepath), comp)
         val team = comp.teams.first()
 
         assertEquals("\"ПСКОВ,РУСЬ\"", team.name)

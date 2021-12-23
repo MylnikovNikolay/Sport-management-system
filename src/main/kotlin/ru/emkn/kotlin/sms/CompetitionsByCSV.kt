@@ -20,7 +20,7 @@ open class CompetitionsByCSV(
 
 
     companion object{
-        fun fromString(protocol: String): Competitions = CsvProtocolManager.fromString(protocol)
+        fun fromString(protocol: String): Competitions = CsvProtocolManager.createCompetitions(protocol)
     }
     /*
     Концепция такова - всю некорректную информацию пропускаем
@@ -28,7 +28,7 @@ open class CompetitionsByCSV(
 
     fun takeAllApplicationsFromFolder(path: String) {
         File(path).walk().drop(1).forEach {
-            CsvProtocolManager.takeTeamApplication(readCSV(it.path), this)
+            CsvProtocolManager.processTeamApplication(readCSV(it.path), this)
         }
     }
     /*
@@ -38,22 +38,22 @@ open class CompetitionsByCSV(
         makeADraw()
         groups.forEach {
             val filepath = folder + "startProtocol%s.csv"
-            writeToFile(filepath.format(it.name), Csv.getStartProtocol(it))
+            writeToFile(filepath.format(it.name), Csv.makeStartsProtocol(it))
         }
     }
 
     override fun writeSimpleResultsByGroups(folder: String) {
         groups.forEach {
             val filepath = folder + "resultProtocol%s.csv"
-            writeToFile(filepath.format(it.name), Csv.getResultsProtocolSimple(it))
+            writeToFile(filepath.format(it.name), Csv.makeResultsProtocolSimple(it))
         }
     }
 
     fun writeTotalResults(folder: String = "./data/results") {
-        writeToFile("$folder/results.csv", CsvProtocolManager.getTotalResults(this))
+        writeToFile("$folder/results.csv", CsvProtocolManager.makeGroupResultsProtocol(this))
     }
 
     fun writeTeamResults(folder: String = "./data/results") {
-        writeToFile("$folder/teamResults.csv", Csv.getTeamResults(this))
+        writeToFile("$folder/teamResults.csv", Csv.makeTeamResultsProtocol(this))
     }
 }
