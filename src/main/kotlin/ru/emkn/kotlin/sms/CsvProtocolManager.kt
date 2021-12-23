@@ -2,7 +2,7 @@ package ru.emkn.kotlin.sms
 
 object CsvProtocolManager: ProtocolManager{
 
-    override fun getTeamResults(comp: Competitions): String {
+    override fun makeTeamResultsProtocol(comp: Competitions): String {
         return "Протокол результатов для команд,\n" + comp.teams().sortedBy{ -it.teamPoints }
             .joinToString("\n")
             {
@@ -12,7 +12,7 @@ object CsvProtocolManager: ProtocolManager{
 
     }
 
-    override fun fromString(protocol: String): Competitions {
+    override fun createCompetitions(protocol: String): Competitions {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с общей информацией о соревновании ошибка: файл не является корректным csv")
             throw Exception("Без корректного файла с общей информацией о соревновании дальнейшая работа невозможна")
@@ -40,16 +40,16 @@ object CsvProtocolManager: ProtocolManager{
         return CompetitionsByCSV(name, date)
     }
 
-    override fun getTotalResults(comp: Competitions): String {
+    override fun makeGroupResultsProtocol(comp: Competitions): String {
         val strBuilder = StringBuilder("Протокол результатов\n")
         val groups = comp.getGroupsSet()
         groups.forEach {
-            strBuilder.appendLine(getResultsProtocol(it))
+            strBuilder.appendLine(makeResultsProtocol(it))
         }
         return strBuilder.toString()
     }
 
-    override fun takeTeamApplication(protocol: String, comp: Competitions) {
+    override fun processTeamApplication(protocol: String, comp: Competitions) {
         if(!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с заявкой команды ошибка: файл не является корректным csv")
             return
@@ -91,7 +91,7 @@ object CsvProtocolManager: ProtocolManager{
         }
     }
 
-    override fun takeDistancesAndCPs(protocol: String, comp: Competitions) {
+    override fun createDistancesAndCPs(protocol: String, comp: Competitions) {
         if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
             printError("В файле с соответствиями дистанций и КП ошибка: файл не является корректным csv")
         }
@@ -129,7 +129,7 @@ object CsvProtocolManager: ProtocolManager{
         }
     }
 
-    override fun takeGroupsAndDistances(protocol: String, comp: Competitions) {
+    override fun createGroupsAndDistances(protocol: String, comp: Competitions) {
         if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
             printError("В файле с соответствиями групп и дистанций ошибка: файл не является корректным csv")
             return
@@ -160,7 +160,7 @@ object CsvProtocolManager: ProtocolManager{
         }
     }
 
-    override fun takeResults(protocol: String, comp: Competitions) {
+    override fun fillResultsByGroups(protocol: String, comp: Competitions) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError(
                 "Ошибка в файле с результатами группы: файл не является корректным csv"
@@ -180,12 +180,12 @@ object CsvProtocolManager: ProtocolManager{
             }'")
             return
         }
-        takeResultsProtocol(protocol.lines().drop(1).joinToString ("\n"), group)
+        fillResults(protocol.lines().drop(1).joinToString ("\n"), group)
     }
 
 
 
-    override fun takeResultsFromSplits(protocol: String, comp: Competitions){
+    override fun fillResultsBySportsmen(protocol: String, comp: Competitions){
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с данными пробега ошибка: файл не является корректным csv")
             return
@@ -231,7 +231,7 @@ object CsvProtocolManager: ProtocolManager{
         }
     }
 
-    override fun takeResultsFromReverseSplits(protocol: String, comp: Competitions){
+    override fun fillResultsByCPs(protocol: String, comp: Competitions){
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле с данными пробега ошибка: файл не является корректным csv")
             return
@@ -277,7 +277,7 @@ object CsvProtocolManager: ProtocolManager{
         }
     }
 
-    override fun takeStartProtocol(protocol: String, comp: Competitions){
+    override fun fillStarts(protocol: String, comp: Competitions){
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError(
                 "В файле со стартовым протоколом группы ошибка: файл не является корректным csv"
@@ -299,10 +299,10 @@ object CsvProtocolManager: ProtocolManager{
             )
             return
         }
-        Csv.takeStartProtocol(protocol.lines().drop(1).joinToString("\n"), group)
+        Csv.fillStarts(protocol.lines().drop(1).joinToString("\n"), group)
     }
 
-    override fun takeStartProtocol(protocol: String, group: Group) {
+    override fun fillStarts(protocol: String, group: Group) {
         if (!CsvReader.checkProtocolIsCorrectCSV(protocol)) {
             printError("В файле со стартовым протоколом группы '${group.name}' ошибка: файл не является корректным csv")
             return
@@ -363,7 +363,7 @@ object CsvProtocolManager: ProtocolManager{
 
     }
 
-    override fun getStartProtocol(group: Group): String {
+    override fun makeStartsProtocol(group: Group): String {
         val strBuilder = StringBuilder("${group.name},,,,,\n")
         strBuilder.appendLine("Номер,Фамилия,Имя,Г.р.,Разр.,Время старта")
         group.sportsmen.forEach{
@@ -374,7 +374,7 @@ object CsvProtocolManager: ProtocolManager{
         return strBuilder.toString()
     }
 
-    override fun getResultsProtocol(group: Group): String {
+    override fun makeResultsProtocol(group: Group): String {
         val membersByResult = group.sportsmen.toMutableList()
         membersByResult.sortBy { if (it.totalTime == null) Time.of(23, 59, 59) else it.totalTime}
         val strBuilder = StringBuilder("${group.name},,,,,,,,,\n")
@@ -395,7 +395,7 @@ object CsvProtocolManager: ProtocolManager{
         return strBuilder.toString()
     }
 
-    override fun getResultsProtocolSimple(group: Group): String {
+    override fun makeResultsProtocolSimple(group: Group): String {
         return group.name + ",,,,,,\n" + "Место,Номер,Фамилия,Имя,Г.р.,Разряд,Результат\n" +group.sportsmen.sortedWith {
             sp1, sp2 ->
             if (sp1.totalTime == null)
@@ -412,7 +412,7 @@ object CsvProtocolManager: ProtocolManager{
         }.joinToString("\n")
     }
 
-    override fun takeResultsProtocol(protocol: String, group: Group){
+    override fun fillResults(protocol: String, group: Group){
         if(!CsvReader.checkProtocolIsCorrectCSV(protocol)){
             printError("Ошибка в файле с результатами группы '${group.name}': файл не является корректным csv")
             return
@@ -447,7 +447,7 @@ object CsvProtocolManager: ProtocolManager{
         }
     }
 
-    override fun getCPPassingProtocol(CP: ControlPoint): String {
+    override fun makeCPPassingProtocol(CP: ControlPoint): String {
         val strBuilder = StringBuilder(CP.name).append(",")
         CP.passingList.forEach { passingCP ->
             strBuilder.appendLine(passingCP.sportsman.number)
@@ -457,7 +457,7 @@ object CsvProtocolManager: ProtocolManager{
         return strBuilder.toString()
     }
 
-    override fun getDistancePassingProtocol(sp: CompetitionsSportsman): String {
+    override fun makeDistancePassingProtocol(sp: CompetitionsSportsman): String {
         val strBuilder = StringBuilder()
         strBuilder.appendLine("${sp.number},")
         val copyOfPassingList = sp.passingList.toMutableList()

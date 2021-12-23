@@ -1,56 +1,37 @@
 package ru.emkn.kotlin.sms
-
+import ru.emkn.kotlin.sms.gui.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowPosition
-import androidx.compose.ui.window.application
-import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-
-
-
-
-fun main() {
-    application {
-        Window(
-            onCloseRequest = ::exitApplication,
-            title = "Sport Management System",
-            state = rememberWindowState(
-                position = WindowPosition(alignment = Alignment.Center),
-            ),
-        ) {
-            doSomething()
-        }
-    }
-}
+import androidx.compose.runtime.*
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
 
 @Composable
-fun doSomething() {
-    val filepath = "./test-data/data/applications/Древние греки.csv"
-    val someData = CsvReader.read(readCSV(filepath))!!
-    Column {
-        TopAppBar(title = { Text(text = someData[0][0]) })
+@Preview
+fun App() {
+    var text by remember { mutableStateOf("Hello, World!") }
 
-        Row {
-            val size = someData[0].size
-            repeat(size) { id ->
-                Column {
-                    someData.drop(1).forEach {
-                        Text(text = it[id] + "  ")
-                    }
-                }
-            }
+    MaterialTheme {
+        Button(onClick = {
+            text = "Hello, Desktop!"
+        }) {
+            Text(text)
         }
     }
 }
-
+/*
+fun main() = application {
+    Window(onCloseRequest = ::exitApplication) {
+        App()
+    }
+}
+*/
+fun main(){
+    val comp = CompetitionsByCSV("hukfy","eryx5w4x")
+    MainPageController(comp)
+}
 /*
 fun main(args: Array<String>) {
     UsualLogger.start()
@@ -67,8 +48,8 @@ fun main(args: Array<String>) {
     val classesFileName = "classes.csv"
     val competitions = CompetitionsByCSV.fromString(readCSV( configPath.format(eventFileName) ))
     competitions as CompetitionsByCSV
-    CsvProtocolManager.takeDistancesAndCPs(readCSV( configPath.format(coursesFileName) ), competitions)
-    Csv.takeGroupsAndDistances(readCSV( configPath.format(classesFileName) ), competitions)
+    CsvProtocolManager.createDistancesAndCPs(readCSV( configPath.format(coursesFileName) ), competitions)
+    Csv.createGroupsAndDistances(readCSV( configPath.format(classesFileName) ), competitions)
 
     competitions.takeAllApplicationsFromFolder("./$dataFolder/applications/")
 
@@ -82,7 +63,7 @@ fun main(args: Array<String>) {
     // TODO(стоит сделать эту часть адекватнее, все равно файл со сплитами один всего)
     val splitsFileName = readLine()
 
-    Csv.takeResultsFromSplits(readCSV( "./$dataFolder/splits/$splitsFileName" ), competitions)
+    Csv.fillResultsByGroups(readCSV( "./$dataFolder/splits/$splitsFileName" ), competitions)
     competitions.writeTotalResults("./$dataFolder/results")
     competitions.writeTeamResults("./$dataFolder/results")
 }

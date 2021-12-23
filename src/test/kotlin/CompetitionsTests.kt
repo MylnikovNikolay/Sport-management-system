@@ -30,7 +30,7 @@ internal class CompetitionsTests {
         UsualLogger.start()
         ErrorsAndWarningsLogger.start()
         val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
-        CsvProtocolManager.takeDistancesAndCPs(readCSV("test-data/sample-data/additional sample-data" +
+        CsvProtocolManager.createDistancesAndCPs(readCSV("test-data/sample-data/additional sample-data" +
                 "/takeDistancesAndCPsTest.csv"), comp)
         assertEquals(3, comp.distances.size)
 
@@ -72,11 +72,11 @@ internal class CompetitionsTests {
         UsualLogger.start()
         ErrorsAndWarningsLogger.start()
         val comp = TestCompetitions.fromString("Название,Дата\n" + "Первенство пятой бани,01.01.2022")
-        CsvProtocolManager.takeDistancesAndCPs(
+        CsvProtocolManager.createDistancesAndCPs(
             readCSV("test-data/sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/distances.csv"),
             comp
         )
-        Csv.takeGroupsAndDistances(
+        Csv.createGroupsAndDistances(
             readCSV("test-data/sample-data/additional sample-data/takeGroupsAndDistancesTest(SG)/groups-distances.csv"),
             comp
         )

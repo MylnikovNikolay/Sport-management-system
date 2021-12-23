@@ -16,9 +16,9 @@ class ResultProtocolTests {
     private fun makeADrawAndSoAndSo(): TestCompetitions {
         val folder = "test-data/sample-data/additional sample-data/StartProtocolTest/"
         val comp = TestCompetitions.fromString(readCSV(folder + "event.csv"))
-        CsvProtocolManager.takeDistancesAndCPs(readCSV(folder + "courses.csv"), comp)
-        Csv.takeGroupsAndDistances(readCSV(folder + "classes.csv"), comp)
-        CsvProtocolManager.takeTeamApplication(readCSV(folder + "application.csv"), comp)
+        CsvProtocolManager.createDistancesAndCPs(readCSV(folder + "courses.csv"), comp)
+        Csv.createGroupsAndDistances(readCSV(folder + "classes.csv"), comp)
+        CsvProtocolManager.processTeamApplication(readCSV(folder + "application.csv"), comp)
         comp.makeADrawAndWrite(folder + "my protocols/")
         return comp
     }
@@ -43,7 +43,7 @@ class ResultProtocolTests {
             )
         }
         comp.groups.forEach{
-            Csv.takeResults(readCSV(folder + "result_protocols/${it.name}.csv"), comp)
+            Csv.fillResultsByGroups(readCSV(folder + "result_protocols/${it.name}.csv"), comp)
         }
         comp.sportsmen.forEach{
             assertNotNull(it.totalTime)
@@ -65,7 +65,7 @@ class ResultProtocolTests {
             )
         }
         comp.groups.forEach{
-            Csv.takeResults(readCSV(folder + "result_protocols/${it.name}.csv"), comp)
+            Csv.fillResultsByGroups(readCSV(folder + "result_protocols/${it.name}.csv"), comp)
         }
         assertEquals(105, comp.sportsmen.count {it.totalTime != null})
     }
@@ -84,7 +84,7 @@ class ResultProtocolTests {
             )
         }
         comp.groups.forEach{
-            Csv.takeResults(readCSV(folder + "result_protocols/${it.name}.csv"), comp)
+            Csv.fillResultsByGroups(readCSV(folder + "result_protocols/${it.name}.csv"), comp)
         }
         assertEquals(59, comp.sportsmen.count {it.totalTime != null})
     }
@@ -160,7 +160,7 @@ class ResultProtocolTests {
         UsualLogger.start()
         ErrorsAndWarningsLogger.start()
         val comp = makeADrawAndSoAndSo()
-        Csv.takeTeamApplication(
+        Csv.processTeamApplication(
             "TEAM,,,,\nГруппа,Фамилия,Имя,Г.р.,Разр.\ngroup_0,SURNAME,NAME,2000,",
                     comp
         )
@@ -199,16 +199,16 @@ class ResultProtocolTests {
             comp.teams.find{it.name == "team"}!!.teamPoints
         )
         assertEquals(
-            Csv.getTeamResults(comp).lines().size,
+            Csv.makeTeamResultsProtocol(comp).lines().size,
             3
         )
-        UsualLogger.log(Csv.getTeamResults(comp))
+        UsualLogger.log(Csv.makeTeamResultsProtocol(comp))
         assertEquals(
-            CsvReader.read(Csv.getTeamResults(comp))!![2][0],
+            CsvReader.read(Csv.makeTeamResultsProtocol(comp))!![2][0],
             "TEAM"
         )
         assertEquals(
-            CsvReader.read(Csv.getTeamResults(comp))!![2][1],
+            CsvReader.read(Csv.makeTeamResultsProtocol(comp))!![2][1],
             "100.00"
         )
     }

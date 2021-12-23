@@ -22,19 +22,19 @@ class TestCompetitions(comp: Competitions): Competitions(comp.name, comp.date) {
         makeADraw()
         groups.forEach {
             val filepath = folder + "startProtocol%s.csv"
-            writeToFile(filepath.format(it.name), Csv.getStartProtocol(it))
+            writeToFile(filepath.format(it.name), Csv.makeStartsProtocol(it))
         }
     }
 
     override fun writeSimpleResultsByGroups(folder: String) {
         groups.forEach {
             val filepath = folder + "resultProtocol%s.csv"
-            writeToFile(filepath.format(it.name), Csv.getResultsProtocolSimple(it))
+            writeToFile(filepath.format(it.name), Csv.makeResultsProtocolSimple(it))
         }
     }
 
     companion object {
-        fun fromString(string: String) = TestCompetitions(Csv.fromString(string))
+        fun fromString(string: String) = TestCompetitions(Csv.createCompetitions(string))
         fun testGeneration() {
             val file1 = File("test-data/sample-data/additional sample-data/StartProtocolTest/courses.csv")
             file1.writeText("")

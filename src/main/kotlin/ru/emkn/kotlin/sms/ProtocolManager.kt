@@ -1,56 +1,69 @@
 package ru.emkn.kotlin.sms
 
-
-
 /*
 Менеджеры существуют для рутинной работы с бумажками
  */
+
+/*
+make = генерирует новый протокол данного вида
+fill = заполняет какие-то данные из протокола
+create = создает новые объекты, указанные в названии, и заполняет их данные
+process = обрабатывает протокол (так только с teamApplication)
+ */
 interface ProtocolManager {
-    fun getResultsProtocolSimple(group: Group): String
+    //???
+    fun makeResultsProtocolSimple(group: Group): String
 
-    fun getTeamResults(comp: Competitions): String
+    //Генерирует протокол результатов по командам (...)
+    fun makeTeamResultsProtocol(comp: Competitions): String
 
-    fun fromString(protocol: String): Competitions
+    //Создает соревнования (...)
+    fun createCompetitions(protocol: String): Competitions
 
     //Складывает результаты всех групп в единый протокол (results.csv)
-    fun getTotalResults(comp: Competitions): String
+    fun makeGroupResultsProtocol(comp: Competitions): String
 
-    //Обработка заявления от команды (applications)
-    fun takeTeamApplication(protocol: String, comp: Competitions)
+    //Обрабатывает заявление от команды (applications)
+    fun processTeamApplication(protocol: String, comp: Competitions)
 
-    //Создание дистанций и КП из конфигурационного протокола (courses.csv)
-    fun takeDistancesAndCPs(protocol: String, comp: Competitions)
+    //Создает дистанции и КП из конфигурационного протокола (courses.csv)
+    fun createDistancesAndCPs(protocol: String, comp: Competitions)
 
-    //Создание групп из конфигурационного протокола (classes.csv)
-    fun takeGroupsAndDistances(protocol: String, comp: Competitions)
+    //Создает группы из конфигурационного протокола (classes.csv)
+    fun createGroupsAndDistances(protocol: String, comp: Competitions)
 
-    //Заполнение всех результатов из конфигурационного протокола (splits.csv)
-    fun takeResults(protocol: String, comp: Competitions)
+    //Заполняет результаты из протокола результатов по группам (results.csv)
+    fun fillResultsByGroups(protocol: String, comp: Competitions)
 
-    //Заполнение всех результатов из конфигурационного протокола (splits.csv)
-    fun takeResultsFromSplits(protocol: String, comp: Competitions)
+    //Заполняет результаты из протокола результатов по спортсменам (splits.csv)
+    fun fillResultsBySportsmen(protocol: String, comp: Competitions)
 
-    fun takeResultsFromReverseSplits(protocol: String, comp: Competitions)
+    //Заполняет результаты из протокола результатов по КП (reverseSplits)
+    fun fillResultsByCPs(protocol: String, comp: Competitions)
 
-    fun takeStartProtocol(protocol: String, comp: Competitions)
+    //Заполняет время стартов (...)
+    fun fillStarts(protocol: String, comp: Competitions)
 
 
 
-    //Запись стартов из стартового протокола (README.md)
-    fun takeStartProtocol(protocol: String, group: Group)
+    //Заполняет старты из стартового протокола (README.md)
+    fun fillStarts(protocol: String, group: Group)
 
-    //Генерация стартового протокола (README.md)
-    fun getStartProtocol(group: Group): String
+    //Генерирует стартовый протокол (README.md)
+    fun makeStartsProtocol(group: Group): String
 
-    //Генерация протокола результатов (README.md)
-    fun getResultsProtocol(group: Group): String
+    //Генерирует протокол результатов (README.md)
+    fun makeResultsProtocol(group: Group): String
 
-    fun takeResultsProtocol(protocol: String, group: Group)
+    //Заполняет результаты группы из протокола результатов группы (README.md)
+    fun fillResults(protocol: String, group: Group)
 
-    //Протокол прохождения КП (README.md)
-    fun getCPPassingProtocol(CP: ControlPoint): String
 
-    //Протокол прохождения дистанции (README.md)
-    fun getDistancePassingProtocol(sp: CompetitionsSportsman): String
+
+    //Генерирует протокол прохождения КП участниками (README.md)
+    fun makeCPPassingProtocol(CP: ControlPoint): String
+
+    //Генерирует протокол прохождения дистанции участником (README.md)
+    fun makeDistancePassingProtocol(sp: CompetitionsSportsman): String
 }
 
