@@ -14,7 +14,9 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 
+
 fun main() {
+    /*
     application {
         Window(
             onCloseRequest = ::exitApplication,
@@ -30,7 +32,13 @@ fun main() {
             }
         }
     }
+    */
+
+     MainPageController(CompetitionsByCSV("yuob", "b7o"))
+     //application {  }
 }
+
+
 /*
 fun main(args: Array<String>) {
     UsualLogger.start()
