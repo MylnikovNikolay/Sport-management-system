@@ -1,36 +1,35 @@
 package ru.emkn.kotlin.sms
+
 import ru.emkn.kotlin.sms.gui.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
-
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
+fun main() {
+    application {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "Sport Management System",
+            state = rememberWindowState(
+                position = WindowPosition(alignment = Alignment.Center),
+            ),
+        ) {
+            MaterialTheme {
+                RootContent(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
-}
-/*
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
-    }
-}
-*/
-fun main(){
-    val comp = CompetitionsByCSV("hukfy","eryx5w4x")
-    MainPageController(comp)
 }
 /*
 fun main(args: Array<String>) {

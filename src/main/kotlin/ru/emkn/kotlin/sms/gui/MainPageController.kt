@@ -1,7 +1,9 @@
 package ru.emkn.kotlin.sms.gui
 import ru.emkn.kotlin.sms.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -34,7 +36,7 @@ class MainPageController(val comp: Competitions) {
                     Text("Список групп")
                 }
                 Button(
-                    onClick = ::openTeamListPage ,
+                    onClick = ::openTeamListPage,
                 ) {
                     Text("Список команд")
                 }
@@ -47,8 +49,8 @@ class MainPageController(val comp: Competitions) {
         }
     }
     //@Composable @Preview
-    fun openGroupListPage(){
-        GroupListController()
+    private fun openGroupListPage(){
+        //groupListController()
     }
 
     fun openTeamListPage(){
