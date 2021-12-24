@@ -13,12 +13,6 @@ internal class RootStore {
         setState { copy(editingItemId = id) }
     }
 
-    fun onItemDoneChanged(id: Long, isDone: Boolean) {
-        setState {
-            updateItem(id = id) { it.copy(isDone = isDone) }
-        }
-    }
-
     fun onItemDeleteClicked(id: Long) {
         setState { copy(items = items.filterNot { it.id == id }) }
     }
@@ -46,12 +40,6 @@ internal class RootStore {
     fun onEditorTextChanged(text: String) {
         setState {
             updateItem(id = requireNotNull(editingItemId)) { it.copy(text = text) }
-        }
-    }
-
-    fun onEditorDoneChanged(isDone: Boolean) {
-        setState {
-            updateItem(id = requireNotNull(editingItemId)) { it.copy(isDone = isDone) }
         }
     }
 

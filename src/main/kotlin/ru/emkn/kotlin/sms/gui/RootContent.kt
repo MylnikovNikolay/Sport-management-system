@@ -14,7 +14,6 @@ fun RootContent(modifier: Modifier = Modifier) {
         items = state.items,
         inputText = state.inputText,
         onItemClicked = model::onItemClicked,
-        onItemDoneChanged = model::onItemDoneChanged,
         onItemDeleteClicked = model::onItemDeleteClicked,
         onAddItemClicked = model::onAddItemClicked,
         onInputTextChanged = model::onInputTextChanged,
@@ -26,7 +25,6 @@ fun RootContent(modifier: Modifier = Modifier) {
             item = item,
             onCloseClicked = model::onEditorCloseClicked,
             onTextChanged = model::onEditorTextChanged,
-            onDoneChanged = model::onEditorDoneChanged,
         )
     }
 }

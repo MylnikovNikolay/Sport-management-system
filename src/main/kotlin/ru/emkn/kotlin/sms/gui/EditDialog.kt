@@ -16,7 +16,6 @@ internal fun EditDialog(
     item: Item,
     onCloseClicked: () -> Unit,
     onTextChanged: (String) -> Unit,
-    onDoneChanged: (Boolean) -> Unit,
 ) {
     Dialog(
         title = "Edit",
@@ -29,17 +28,6 @@ internal fun EditDialog(
                 label = { Text("Text") },
                 onValueChange = onTextChanged,
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row {
-                Text(text = "Completed", Modifier.padding(15.dp))
-
-                Checkbox(
-                    checked = item.isDone,
-                    onCheckedChange = onDoneChanged,
-                )
-            }
         }
     }
 }

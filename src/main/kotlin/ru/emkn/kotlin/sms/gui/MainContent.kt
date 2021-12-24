@@ -33,7 +33,6 @@ internal fun MainContent(
     items: List<Item>,
     inputText: String,
     onItemClicked: (id: Long) -> Unit,
-    onItemDoneChanged: (id: Long, isDone: Boolean) -> Unit,
     onItemDeleteClicked: (id: Long) -> Unit,
     onAddItemClicked: () -> Unit,
     onInputTextChanged: (String) -> Unit,
@@ -46,7 +45,6 @@ internal fun MainContent(
             ListContent(
                 items = items,
                 onItemClicked = onItemClicked,
-                onItemDoneChanged = onItemDoneChanged,
                 onItemDeleteClicked = onItemDeleteClicked,
             )
         }
@@ -64,7 +62,6 @@ internal fun MainContent(
 private fun ListContent(
     items: List<Item>,
     onItemClicked: (id: Long) -> Unit,
-    onItemDoneChanged: (id: Long, isDone: Boolean) -> Unit,
     onItemDeleteClicked: (id: Long) -> Unit,
 ) {
     Box {
@@ -75,7 +72,6 @@ private fun ListContent(
                 Item(
                     item = item,
                     onClicked = { onItemClicked(item.id) },
-                    onDoneChanged = { onItemDoneChanged(item.id, it) },
                     onDeleteClicked = { onItemDeleteClicked(item.id) }
                 )
 
@@ -94,7 +90,6 @@ private fun ListContent(
 private fun Item(
     item: Item,
     onClicked: () -> Unit,
-    onDoneChanged: (Boolean) -> Unit,
     onDeleteClicked: () -> Unit
 ) {
     Row(modifier = Modifier.clickable(onClick = onClicked)) {
