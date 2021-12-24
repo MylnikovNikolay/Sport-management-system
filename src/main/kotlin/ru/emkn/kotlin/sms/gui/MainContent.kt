@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,7 +40,13 @@ internal fun MainContent(
     onSortClicked: () -> Unit,
 ) {
     Column(modifier) {
-        Button(onClick = onSortClicked) { Text(text="Отсортировать") }
+        Row {
+            Button(onClick = onSortClicked) { Text(text="Загрузить") } // TODO(" Загрузка из файла ")
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(onClick = onSortClicked) { Text(text="Отсортировать") }
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(onClick = onSortClicked) { Text(text="Фильтр") } // TODO(" Подумать как сделать и реализовать ")
+        }
 
         Box(Modifier.weight(1F)) {
             ListContent(

@@ -4,8 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
-internal class RootStore {
-
+class RootStore {
     var state: RootState by mutableStateOf(initialState())
         private set
 
@@ -64,8 +63,9 @@ internal class RootStore {
         state = state.update()
     }
 
+
     data class RootState(
-        val items: List<Item> = emptyList(),
+        var items: List<Item> = emptyList(),
         val inputText: String = "",
         val editingItemId: Long? = null,
     )
