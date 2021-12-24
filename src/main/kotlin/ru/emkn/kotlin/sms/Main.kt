@@ -15,8 +15,26 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 
 
+fun main(){
+     val CPM = CsvProtocolManager
+     val dir = "test-data/sample-data/"
+     val comp = CompetitionsByCSV("Мои соревнования","24.12.2021")
+     CPM.createDistancesAndCPs(dir+"cources.csv",comp)
+     CPM.createGroupsAndDistances(dir+"classes.csv",comp)
+
+     //Везде нули
+     //println(comp.getDistancesSet().size)
+     //println(comp.getGroupsSet().size)
+     //println(comp.getDistancesSet().size)
+     val dist = Distance("GGG",listOf())
+     comp.addDistance(dist)
+     comp.addGroup(Group("M32",dist, comp))
+
+     MainPageController(comp)
+}
+
+/*
 fun main() {
-    /*
     application {
         Window(
             onCloseRequest = ::exitApplication,
@@ -32,11 +50,9 @@ fun main() {
             }
         }
     }
-    */
-
-     MainPageController(CompetitionsByCSV("yuob", "b7o"))
-     //application {  }
 }
+*/
+
 
 
 /*
@@ -76,30 +92,3 @@ fun main(args: Array<String>) {
 }
 */
 
-/*
-Примерный план работы программы с дополнительными идеями, помеченные как optional
-
-1. Создание соревнования
-    Загрузка из конфигурационных файлов:
-    - название соревнования и дата проведения
-    - дистанции
-    - список групп
-      (optional: возможность делать ограничение для группы, которое будет проверяться автоматически,
-       например: для М21 обязательное условие, что возраст участника - 21 год и мужской пол)
-
-2. Формирование списка участников
-    - приём заявок от команд с распределением по группам
-      (заявки хранятся в .csv файлах в отдельной папке)
-    - (optional: возможность исправить ошибки в заявках и подать дополнительные
-       например через консоль или как-нибудь еще)
-
-3. Соревнование
-    - жеребьёвка
-    - загрузка списков результатов
-      (нужно уметь считывать из файлов и через консольный ввод)
-
-4. Результаты
-    - список результатов для групп
-    - список результатов для команд
-
- */
