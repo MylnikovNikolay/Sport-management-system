@@ -27,6 +27,8 @@ abstract class Competitions(val name: String, val date: String) {
     fun teams() = teams.toList()
 
     fun getGroupsSet(): Set<Group> = groups.toSet()
+    fun getTeamsSet(): Set<CompetitionsTeam> = teams.toSet()
+    fun getDistancesSet(): Set<Distance> = distances.toSet()
 
     fun addTeam(team: CompetitionsTeam) = teams.add(team)
     fun addGroup(group: Group) = groups.add(group)
