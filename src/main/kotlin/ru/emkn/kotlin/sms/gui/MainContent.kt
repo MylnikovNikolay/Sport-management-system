@@ -37,17 +37,8 @@ internal fun MainContent(
     onItemDeleteClicked: (id: Long) -> Unit,
     onAddItemClicked: () -> Unit,
     onInputTextChanged: (String) -> Unit,
-    onSortClicked: () -> Unit,
 ) {
     Column(modifier) {
-        Row {
-            Button(onClick = onSortClicked) { Text(text="Загрузить") } // TODO(" Загрузка из файла ")
-            Spacer(modifier = Modifier.width(8.dp))
-            Button(onClick = onSortClicked) { Text(text="Отсортировать") }
-            Spacer(modifier = Modifier.width(8.dp))
-            Button(onClick = onSortClicked) { Text(text="Фильтр") } // TODO(" Подумать как сделать и реализовать ")
-        }
-
         Box(Modifier.weight(1F)) {
             ListContent(
                 items = items,

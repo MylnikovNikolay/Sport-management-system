@@ -25,7 +25,26 @@ internal fun EditDialog(
             TextField(
                 value = item.text,
                 modifier = Modifier.weight(1F).fillMaxWidth().sizeIn(minHeight = 192.dp),
-                label = { Text("Text") },
+                onValueChange = onTextChanged,
+            )
+        }
+    }
+}
+
+@Composable
+internal fun LoadDialog(
+    item: String,
+    onCloseClicked: () -> Unit,
+    onTextChanged: (String) -> Unit,
+) {
+    Dialog(
+        title = "Load",
+        onCloseRequest = onCloseClicked,
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            TextField(
+                value = item,
+                modifier = Modifier.weight(1F).fillMaxWidth().sizeIn(minHeight = 192.dp),
                 onValueChange = onTextChanged,
             )
         }

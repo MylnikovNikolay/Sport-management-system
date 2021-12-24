@@ -34,6 +34,9 @@ class RootStore {
 
     fun onEditorCloseClicked() {
         setState { copy(editingItemId = null) }
+        /*
+         * Здесь можно написать загрузку текущего списка в файл, из которого его загрузили (что бы сохранить изменения)
+         */
     }
 
     fun onEditorTextChanged(text: String) {
@@ -46,6 +49,23 @@ class RootStore {
         setState {
             copy(items = items.sortedBy { it.text })
         }
+    }
+
+    fun onLoadClicked() {
+        setState { copy(loadingFromFile = "") }
+    }
+
+    fun onLoaderTextChanged(text: String) {
+        setState {
+            copy(loadingFromFile = text)
+        }
+    }
+
+    fun onLoaderCloseClicked() {
+        setState { copy(
+            items = listOf(Item(0, loadingFromFile ?: "?")),
+            loadingFromFile = null
+        ) }
     }
 
     private fun RootState.updateItem(id: Long, transformer: (Item) -> Item): RootState =
@@ -68,5 +88,6 @@ class RootStore {
         var items: List<Item> = emptyList(),
         val inputText: String = "",
         val editingItemId: Long? = null,
+        val loadingFromFile: String? = null,
     )
 }
