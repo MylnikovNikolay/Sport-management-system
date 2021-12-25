@@ -18,7 +18,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.foundation.lazy.items
 import ru.emkn.kotlin.sms.*
 
-class TeamListController(val teams: List<CompetitionsTeam>, val isOpen: MutableState<Boolean>) {
+class TeamListController(val teams: MutableState<List<MutableState<CompetitionsTeam>>>, val isOpen: MutableState<Boolean>) {
 
     @Composable
     @Preview
@@ -36,12 +36,12 @@ class TeamListController(val teams: List<CompetitionsTeam>, val isOpen: MutableS
     @Composable
     @Preview
     fun content(){
-        val childWindowsState = teams.associateWith { mutableStateOf(false) }
+        val childWindowsState = teams.value.associateWith { mutableStateOf(false) }
         val listState = rememberLazyListState()
 
         LazyColumn(state = listState) {
-            items(teams){ team ->
-                Button(onClick = { childWindowsState[team]?.value = true }) { Text(team.name) }
+            items(teams.value){ team ->
+                Button(onClick = { childWindowsState[team]?.value = true }) { Text(team.value.name) }
             }
         }
 
@@ -54,7 +54,7 @@ class TeamListController(val teams: List<CompetitionsTeam>, val isOpen: MutableS
 
     @Composable
     @Preview
-    fun openChildWindows(CWS: Map<CompetitionsTeam, MSB>){
+    fun openChildWindows(CWS: Map<MutableState<CompetitionsTeam>, MSB>){
         //TODO("Открыть окна команд, которые нужно")
     }
 }

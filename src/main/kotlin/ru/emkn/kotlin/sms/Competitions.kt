@@ -1,12 +1,5 @@
 package ru.emkn.kotlin.sms
 
-import java.util.*
-
-/*
-В этом файле собраны абстрактные классы, определяющие работу программы.
-Они не зависят от формата протоколов - вся работа с протоколами должна быть определена в потомках.
-При этом большая часть внутренних вычислений уже реализована тут.
- */
 abstract class Competitions(val name: String, val date: String) {
     init {
         UsualLogger.log(

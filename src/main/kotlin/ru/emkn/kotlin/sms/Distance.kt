@@ -1,6 +1,6 @@
 package ru.emkn.kotlin.sms
 
-class Distance(
+data class Distance(
     val name: String,
     val controlPoints: List<ControlPoint>,
     val modeOfDistance: ModeOfDistance = ModeOfDistance.Strict,

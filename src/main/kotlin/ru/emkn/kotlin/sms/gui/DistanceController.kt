@@ -21,14 +21,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 
-class DistanceController(val distance: Distance, val isOpen: MutableState<Boolean>) {
+class DistanceController(val distance: MutableState<Distance>, val isOpen: MutableState<Boolean>) {
 
     @Composable
     @Preview
     fun createWindow() {
         Window(
             onCloseRequest = {isOpen.value=false},
-            title = "Дистанция " + distance.name,
+            title = "Дистанция " + distance.value.name,
         ) {
             MaterialTheme(shapes = Shapes()) {
                 content()
@@ -58,15 +58,11 @@ class DistanceController(val distance: Distance, val isOpen: MutableState<Boolea
 
             Box {
                 Column {
-                    Text(text = "Тип дистанции ${distance.modeOfDistance}, " +
-                            "пройти КП ${distance.numberOfCPtoPass}/${distance.controlPoints.size}")
+                    Text(text = "Тип дистанции ${distance.value.modeOfDistance}, " +
+                            "пройти КП ${distance.value.numberOfCPtoPass}/${distance.value.controlPoints.size}")
                     LazyColumn(state = listState) {
-                        items(distance.controlPoints) {
+                        items(distance.value.controlPoints) {
                             Row(modifier = Modifier.clickable(onClick = { /*TODO(Изменение названия)*/ })) {
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
                                 Text(
                                     text = AnnotatedString(it.name),
                                     modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
@@ -74,16 +70,15 @@ class DistanceController(val distance: Distance, val isOpen: MutableState<Boolea
                                     overflow = TextOverflow.Ellipsis
                                 )
 
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                IconButton(onClick = { /*TODO(Удаление дистанции)*/ }) {
+                                IconButton(onClick = {
+                                    distance.value =
+                                        distance.value.copy(controlPoints = distance.value.controlPoints.filter {t -> t.name != it.name})
+                                }) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = null
                                     )
                                 }
-
-                                Spacer(modifier = Modifier.width(MARGIN_SCROLLBAR))
                             }
                         }
                     }

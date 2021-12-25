@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import ru.emkn.kotlin.sms.*
 
-class GroupController(val group: Group, val isOpen: MutableState<Boolean>) {
+class GroupController(val group: MutableState<Group>, val isOpen: MutableState<Boolean>) {
 
     @Composable
     @Preview
     fun createWindow() {
         Window(
             onCloseRequest = {isOpen.value=false},
-            title = "Группа " + group.name,
+            title = "Группа " + group.value.name,
         ) {
             MaterialTheme(shapes = Shapes()) {
                 content()
@@ -58,7 +58,7 @@ class GroupController(val group: Group, val isOpen: MutableState<Boolean>) {
 
             Box {
                 LazyColumn(state = listState) {
-                    items(group.sportsmen.toList()) {
+                    items(group.value.sportsmen.toList()) {
                         Row(modifier = Modifier.clickable(onClick = { /*TODO(Изменение)*/ })) {
                             Spacer(modifier = Modifier.width(8.dp))
 

@@ -11,7 +11,13 @@ import androidx.compose.ui.window.application
 //Уж слишком часто нужно
 typealias MSB = MutableState<Boolean>
 
-class MainPageController(val comp: Competitions){
+class MainPageController{
+    var name: MutableState<String> = mutableStateOf("Название")
+    var date: MutableState<String> = mutableStateOf("Дата")
+    var groups: MutableState<List<MutableState<Group>>> = mutableStateOf(listOf())
+    var distances: MutableState<List<MutableState<Distance>>> = mutableStateOf(listOf())
+    var teams: MutableState<List<MutableState<CompetitionsTeam>>> = mutableStateOf(listOf())
+
     init{
         application(false) {
             Window(
@@ -30,12 +36,12 @@ class MainPageController(val comp: Competitions){
      */
     @Composable @Preview fun content(){
         //Эти переменные указывают на то, открыты ли окна-дети
-        val gr = remember { mutableStateOf(false) }
-        val ds = remember { mutableStateOf(false) }
-        val tm = remember { mutableStateOf(false) }
-        val sp = remember { mutableStateOf(false) }
-        val cp = remember { mutableStateOf(false) }
-        val pr = remember { mutableStateOf(false) }
+        val gr = mutableStateOf(false)
+        val ds = mutableStateOf(false)
+        val tm = mutableStateOf(false)
+        val sp = mutableStateOf(false)
+        val cp = mutableStateOf(false)
+        val pr = mutableStateOf(false)
 
         Row {
             Column {
@@ -47,8 +53,8 @@ class MainPageController(val comp: Competitions){
                 Button(onClick = { pr.value = true }) { Text("Работа с протоколами") }
             }
             Column {
-                Text(text = comp.name)
-                Text(text = comp.date)
+                Text(text = name.value)
+                Text(text = date.value)
             }
         }
         createChildWindows(gr, ds, tm, sp, cp, pr)
@@ -58,9 +64,8 @@ class MainPageController(val comp: Competitions){
     Открывает окна списков групп, команд, ...
      */
     @Composable @Preview fun createChildWindows(gr: MSB, ds: MSB, tm: MSB, sp: MSB, cp: MSB, pr: MSB){
-        if(gr.value)  GroupListController(comp.getGroupsSet().toList(), gr).createWindow()
-        if(ds.value)  DistanceListController(comp.getDistancesSet().toList(), ds).createWindow()
-        if(tm.value)  TeamListController(comp.getTeamsSet().toList(), tm).createWindow()
-
+        if(gr.value)  GroupListController(groups, gr).createWindow()
+        if(ds.value)  DistanceListController(distances, ds).createWindow()
+        if(tm.value)  TeamListController(teams, tm).createWindow()
     }
 }
