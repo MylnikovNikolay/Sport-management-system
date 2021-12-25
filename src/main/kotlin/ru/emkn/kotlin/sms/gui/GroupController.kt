@@ -40,56 +40,25 @@ class GroupController(val group: MutableState<Group>, val isOpen: MutableState<B
     @Preview
     fun content() {
         val listState = rememberLazyListState()
-        Row {
-            Column {
-                IconButton(onClick = { /*TODO(Загрузка из файла)*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.Edit, //Эта иконка не очень подходит, но лучше я не нашел
-                        contentDescription = null
-                    )
-                }
-                IconButton(onClick = { /*TODO(Добавление)*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null
-                    )
-                }
-            }
 
-            Box {
-                LazyColumn(state = listState) {
-                    items(group.value.sportsmen.toList()) {
-                        Row(modifier = Modifier.clickable(onClick = { /*TODO(Изменение)*/ })) {
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Text(
-                                text = AnnotatedString(formatToRow(listOf(it.surname, it.name, it.birthYear, it.level))),
-                                modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            IconButton(onClick = { /*TODO(Удаление)*/ }) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = null
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(MARGIN_SCROLLBAR))
-                        }
+        Box {
+            LazyColumn(state = listState) {
+                items(group.value.sportsmen.toList()) {
+                    Row {
+                        Text(
+                            text = AnnotatedString(formatToRow(listOf(it.surname, it.name, it.birthYear, it.level))),
+                            modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                     }
                 }
-
-                VerticalScrollbar(
-                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                    adapter = rememberScrollbarAdapter(scrollState = listState)
-                )
             }
+
+            VerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(scrollState = listState)
+            )
         }
     }
 }

@@ -68,7 +68,7 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
                     items(distances.value) { dist ->
                         Row(modifier = Modifier.clickable(onClick = { childWindowsState[dist]?.value = true })) {
                             Text(
-                                text = AnnotatedString("  " + dist.value.name),
+                                text = AnnotatedString(dist.value.name),
                                 modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
@@ -87,7 +87,7 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
                 }
 
                 VerticalScrollbar(
-                    modifier = Modifier.fillMaxHeight(),
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                     adapter = rememberScrollbarAdapter(scrollState = listState)
                 )
             }

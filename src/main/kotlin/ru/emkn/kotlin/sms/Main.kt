@@ -46,27 +46,6 @@ fun main(){
       */
 }
 
-/*
-fun main() {
-    application {
-        Window(
-            onCloseRequest = ::exitApplication,
-            title = "Sport Management System",
-            state = rememberWindowState(
-                position = WindowPosition(alignment = Alignment.Center),
-            ),
-        ) {
-            MaterialTheme {
-                RootContent(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
-    }
-}
-*/
-
-
 
 /*
 fun main(args: Array<String>) {

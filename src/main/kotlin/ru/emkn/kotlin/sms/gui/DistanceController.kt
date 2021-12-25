@@ -56,12 +56,6 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = { /*TODO(Загрузка из файла)*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.Email, //Эта иконка не очень подходит, но лучше я не нашел
-                        contentDescription = null
-                    )
-                }
                 IconButton(onClick = {
                     distance.value = distance.value.copy(
                         controlPoints = distance.value.controlPoints +
