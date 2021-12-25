@@ -1,15 +1,12 @@
 package ru.emkn.kotlin.sms.gui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ru.emkn.kotlin.sms.gui.todoList.Item
 
 @Composable
 internal fun EditDialog(

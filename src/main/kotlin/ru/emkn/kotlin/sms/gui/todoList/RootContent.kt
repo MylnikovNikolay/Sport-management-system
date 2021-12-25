@@ -13,6 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.emkn.kotlin.sms.gui.todoList.Item
+import ru.emkn.kotlin.sms.gui.todoList.RootStore
 
 @Composable
 fun RootContent(modifier: Modifier = Modifier) {

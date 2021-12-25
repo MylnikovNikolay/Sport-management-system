@@ -1,4 +1,4 @@
-package ru.emkn.kotlin.sms.gui
+package ru.emkn.kotlin.sms.gui.todoList
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
