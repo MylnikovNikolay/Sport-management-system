@@ -14,11 +14,11 @@ import kotlin.system.exitProcess
 typealias MSB = MutableState<Boolean>
 
 class MainPageController{
-    var name: MutableState<String> = mutableStateOf("Название")
-    var date: MutableState<String> = mutableStateOf("Дата")
-    var groups: MutableState<List<MutableState<Group>>> = mutableStateOf(listOf())
-    var distances: MutableState<List<MutableState<Distance>>> = mutableStateOf(listOf())
-    var teams: MutableState<List<MutableState<CompetitionsTeam>>> = mutableStateOf(listOf())
+    val name: MutableState<String> = mutableStateOf("Название")
+    val date: MutableState<String> = mutableStateOf("Дата")
+    val groups: MutableState<List<MutableState<Group>>> = mutableStateOf(listOf())
+    val distances: MutableState<List<MutableState<Distance>>> = mutableStateOf(listOf())
+    val teams: MutableState<List<MutableState<CompetitionsTeam>>> = mutableStateOf(listOf())
 
     init{
         application(false) {
