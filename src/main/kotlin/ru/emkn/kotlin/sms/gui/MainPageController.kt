@@ -53,5 +53,7 @@ class MainPageController(val comp: Competitions){
     @Composable @Preview fun createWindows(gr: MSB, ds: MSB, tm: MSB, sp: MSB, cp: MSB, pr: MSB){
         if(gr.value)  GroupListController(comp.getGroupsSet().toList(), gr).createWindow()
 
+        if(tm.value)  TeamListController(comp.getTeamsSet().toList(), tm).createWindow()
+
     }
 }
