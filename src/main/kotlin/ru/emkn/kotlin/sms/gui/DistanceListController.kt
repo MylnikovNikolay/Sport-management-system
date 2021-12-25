@@ -11,15 +11,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Window
@@ -57,7 +56,7 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
                 IconButton(onClick = {
                     distances.value = distances.value +
                             listOf(mutableStateOf(
-                                Distance(getEmptyName(distances.value), listOf())
+                                Distance(getName("empty", distances.value), listOf())
                             ))
                 }) {
                     Icon(
@@ -99,15 +98,6 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
         openChildWindows(childWindowsState)
     }
 
-    private fun getEmptyName(list: List<MutableState<Distance>>): String {
-        fun emptyName(id: Int) = if (id == 0) "empty" else "empty($id)"
-        var id = 0
-        while (list.any { it.value.name == emptyName(id) }) {
-            id++
-        }
-        return emptyName(id)
-    }
-
     @Composable
     @Preview
     fun openChildWindows(CWS: Map<MutableState<Distance>, MutableState<Boolean>>){
@@ -117,5 +107,14 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
                 DistanceController(entry.first, entry.second).createWindow()
             }
         }
+    }
+
+    private fun getName(name: String, list: List<MutableState<Distance>>): String {
+        fun name(id: Int) = if (id == 0) name else "$name($id)"
+        var id = 0
+        while (list.any { it.value.name == name(id) }) {
+            id++
+        }
+        return name(id)
     }
 }

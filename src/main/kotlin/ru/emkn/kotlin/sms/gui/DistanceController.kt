@@ -13,12 +13,11 @@ import androidx.compose.runtime.Composable
 import ru.emkn.kotlin.sms.*
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 
 class DistanceController(val distance: MutableState<Distance>, val isOpen: MutableState<Boolean>) {
@@ -36,6 +35,8 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
         }
     }
 
+    var editingDistance: MutableState<Boolean> = mutableStateOf(false)
+
     @Composable
     @Preview
     fun content() {
@@ -51,6 +52,14 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                 IconButton(onClick = { /*TODO(Добавление нового КП)*/ }) {
                     Icon(
                         imageVector = Icons.Default.Add,
+                        contentDescription = null
+                    )
+                }
+                IconButton(onClick = {
+                    editingDistance.value = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
                         contentDescription = null
                     )
                 }
@@ -88,6 +97,69 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                     modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
                     adapter = rememberScrollbarAdapter(scrollState = listState)
                 )
+
+                if (editingDistance.value) {
+                    EditDistanceDialog().dialog()
+                }
+            }
+        }
+    }
+
+    inner class EditDistanceDialog {
+        var name: MutableState<String> = mutableStateOf("")
+        var numberOfCP: MutableState<String> = mutableStateOf("")
+        var isStrict: MutableState<Boolean> = mutableStateOf(false)
+
+        @Composable
+        fun dialog() {
+            name.value = distance.value.name
+            numberOfCP.value = distance.value.numberOfCPtoPass.toString()
+            isStrict.value = (distance.value.modeOfDistance == ModeOfDistance.Strict)
+
+            Dialog(
+                title = "Изменение дистанции ${distance.value.name}",
+                onCloseRequest = { editingDistance.value = false },
+            ) {
+                Column {
+                    Column {
+                        Text(text="Имя:")
+                        TextField(
+                            value = name.value,
+                            onValueChange = { name.value = it }
+                        )
+                    }
+                    Column {
+                        Text(text="КП пройти:")
+                        TextField(
+                            value = numberOfCP.value,
+                            onValueChange = { numberOfCP.value = it }
+                        )
+                    }
+                    Row {
+                        Text(text="Важен порядок:  ")
+                        OutlinedButton(
+                            onClick = { isStrict.value = !isStrict.value },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = if (isStrict.value) Color.Green else Color.Red
+                            )
+                        ) {
+                            Icon(
+                                imageVector = if (isStrict.value) Icons.Default.Check else Icons.Default.Close,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                    Button(onClick = {
+                        distance.value = distance.value.copy(
+                            name = name.value,
+                            numberOfCPtoPass = numberOfCP.value.toIntOrNull() ?: distance.value.numberOfCPtoPass,
+                            modeOfDistance = if (isStrict.value) ModeOfDistance.Strict else ModeOfDistance.Lax
+                        )
+                        editingDistance.value = false
+                    }) {
+                        Text(text="Сохранить изменения и выйти")
+                    }
+                }
             }
         }
     }
