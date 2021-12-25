@@ -83,30 +83,31 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
             }
 
             Box {
-                Column {
-                    LazyColumn(state = listState) {
-                        items(distance.value.controlPoints) {
-                            Row(modifier = Modifier.clickable(onClick = { editingCP.value = it.name })) {
-                                Text(
-                                    text = AnnotatedString(it.name),
-                                    modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
+                LazyColumn(state = listState) {
+                    items(distance.value.controlPoints) {
+                        Row(modifier = Modifier.clickable(onClick = { editingCP.value = it.name })) {
+                            Text(
+                                text = AnnotatedString(it.name),
+                                modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
 
-                                IconButton(onClick = {
-                                    distance.value =
-                                        distance.value.copy(controlPoints = distance.value.controlPoints.filter {t -> t.name != it.name})
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = null
+                            IconButton(onClick = {
+                                distance.value =
+                                    distance.value.copy(
+                                        controlPoints = distance.value.controlPoints.filter {t -> t.name != it.name}
                                     )
-                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = null
+                                )
                             }
                         }
                     }
                 }
+
 
                 VerticalScrollbar(
                     modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
@@ -140,7 +141,8 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                 Column {
                     TextField(
                         value = name.value,
-                        onValueChange = { name.value = it }
+                        onValueChange = { name.value = it },
+                        label = { Text(text="название") }
                     )
 
                     Button(onClick = {
@@ -180,17 +182,17 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
             ) {
                 Column {
                     Column {
-                        Text(text="Название:")
                         TextField(
                             value = name.value,
-                            onValueChange = { name.value = it }
+                            onValueChange = { name.value = it },
+                            label = { Text(text="название") }
                         )
                     }
                     Column {
-                        Text(text="КП пройти:")
                         TextField(
                             value = numberOfCP.value,
-                            onValueChange = { numberOfCP.value = it }
+                            onValueChange = { numberOfCP.value = it },
+                            label = { Text(text="КП пройти") },
                         )
                     }
                     Row {
@@ -210,7 +212,7 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                     Button(onClick = {
                         distance.value = distance.value.copy(
                             name = name.value,
-                            numberOfCPtoPass = numberOfCP.value.toIntOrNull() ?: distance.value.numberOfCPtoPass,
+                            numberOfCPtoPass = numberOfCP.value.trim().toIntOrNull() ?: distance.value.numberOfCPtoPass,
                             modeOfDistance = if (isStrict.value) ModeOfDistance.Strict else ModeOfDistance.Lax
                         )
                         editingDistance.value = false

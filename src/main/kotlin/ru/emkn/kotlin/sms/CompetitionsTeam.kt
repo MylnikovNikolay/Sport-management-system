@@ -1,12 +1,11 @@
 package ru.emkn.kotlin.sms
 
-class CompetitionsTeam(val name: String){
+data class CompetitionsTeam(var name: String, val sportsmen: MutableList<CompetitionsSportsman> = mutableListOf()){
     init {
         UsualLogger.log(
             "Зарегистрирована команда '$name'"
         )
     }
-    val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
     val teamPoints: Double
         get() = sportsmen.sumOf { it.points }
 

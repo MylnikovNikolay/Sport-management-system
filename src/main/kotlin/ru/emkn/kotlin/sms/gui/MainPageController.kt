@@ -68,6 +68,6 @@ class MainPageController{
     @Composable @Preview fun createChildWindows(gr: MSB, ds: MSB, tm: MSB, sp: MSB, cp: MSB, pr: MSB){
         if(gr.value)  GroupListController(groups, gr).createWindow()
         if(ds.value)  DistanceListController(distances, ds).createWindow()
-        if(tm.value)  TeamListController(teams, tm).createWindow()
+        if(tm.value)  TeamListController(teams, tm, groups).createWindow()
     }
 }

@@ -20,6 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Window
+import ru.emkn.kotlin.sms.Competitions
+import ru.emkn.kotlin.sms.CompetitionsByCSV
+import ru.emkn.kotlin.sms.Distance
 import ru.emkn.kotlin.sms.Group
 
 //Окно, содержащее список групп, позволяет открывать окна групп @Composable @Preview
@@ -39,6 +42,7 @@ class GroupListController(val groups: MutableState<List<MutableState<Group>>>, v
 
     @Composable @Preview
     fun content(){
+        groups.value = listOf(mutableStateOf(Group("test", Distance("test", listOf()), CompetitionsByCSV("test", "test"))))
         val childWindowsState = groups.value.associateWith { mutableStateOf(false) }
         val listState = rememberLazyListState()
 
