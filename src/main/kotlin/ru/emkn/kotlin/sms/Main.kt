@@ -17,15 +17,15 @@ import androidx.compose.ui.window.rememberWindowState
 
 fun main(){
      val CPM = CsvProtocolManager
-     val dir = "test-data/sample-data/"
+     val dir = "./test-data/sample-data/"
      val comp = CompetitionsByCSV("Мои соревнования","24.12.2021")
-     CPM.createDistancesAndCPs(dir+"cources.csv",comp)
-     CPM.createGroupsAndDistances(dir+"classes.csv",comp)
+     CPM.createDistancesAndCPs(readCSV(dir+"courses.csv"),comp)
+     CPM.createGroupsAndDistances(readCSV(dir+"classes.csv"),comp)
 
      //Везде нули
-     //println(comp.getDistancesSet().size)
-     //println(comp.getGroupsSet().size)
-     //println(comp.getDistancesSet().size)
+     println(comp.getDistancesSet().size)
+     println(comp.getGroupsSet().size)
+     println(comp.getDistancesSet().size)
      val dist = Distance("GGG",listOf())
      comp.addDistance(dist)
      comp.addGroup(Group("M32",dist, comp))
