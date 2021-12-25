@@ -53,7 +53,12 @@ class GroupListController(val groups: List<Group>, val isOpen: MutableState<Bool
 
     @Composable @Preview
     fun openChildWindows(CWS: Map<Group, MutableState<Boolean>>){
-        //TODO("Открыть окна групп, которые нужно")
+        val toOpen = CWS.filterValues { it.value }.toList()
+        LazyColumn {
+            items(toOpen) { entry ->
+                GroupController(entry.first, entry.second).createWindow()
+            }
+        }
     }
 
 }

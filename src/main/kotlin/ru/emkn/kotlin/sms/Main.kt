@@ -21,6 +21,19 @@ fun main(){
      val comp = CompetitionsByCSV("Мои соревнования","24.12.2021")
      CPM.createDistancesAndCPs(readCSV(dir+"courses.csv"),comp)
      CPM.createGroupsAndDistances(readCSV(dir+"classes.csv"),comp)
+
+     val dist = Distance("GGG", mutableListOf())
+     comp.addDistance(dist)
+     val group = Group("M32",dist, comp)
+     comp.addGroup(group)
+     val team = CompetitionsTeam("Дивизия Красной Армии")
+     comp.addTeam(team)
+     val chapaev = Sportsman("Василий", "Чапаев", 1887,"начальник дивизии")
+     val anka = Sportsman("Варвара", "Мясникова", 1892,"пулемётчица")
+     comp.addSportsman(CompSportsman(chapaev, team, group))
+     comp.addSportsman(CompSportsman(anka, team, group))
+
+     MainPageController(comp)
 }
 
 /*
