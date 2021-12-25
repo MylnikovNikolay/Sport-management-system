@@ -61,3 +61,28 @@ fun printError(string: String) {
 }
 
 typealias CompSportsman = CompetitionsSportsman
+
+fun <T> List<T>.MCSsize(other: List<T>): Int {
+
+    //ищем НОП, точнее его размер, тут нельзя совсем неэффективно делать - так что решение за O(n * m)
+    val size1 = this.size
+    val size2 = other.size
+    val listOfAnswersForPreviousSize = (0..size1).toList().map{0}.toMutableList()
+    val listOfAnswersForCurrentSize = (0..size1).toList().map{0}.toMutableList()
+    for (i in 1..size2) {
+        for (j in 0..size1) {
+            if (j == 0) {
+                listOfAnswersForCurrentSize[j] = 0
+            }
+            else {
+                listOfAnswersForCurrentSize[j] = kotlin.math.max(
+                    listOfAnswersForPreviousSize[j-1] + if(this[j - 1] == other[i - 1]) 1 else 0,
+                    kotlin.math.max(listOfAnswersForCurrentSize[j - 1], listOfAnswersForPreviousSize[j])
+                )
+            }
+        }
+        for (j in 0..size1)
+            listOfAnswersForPreviousSize[j] = listOfAnswersForCurrentSize[j]
+    }
+    return listOfAnswersForPreviousSize[size1]
+}

@@ -98,17 +98,17 @@ object CsvProtocolManager: ProtocolManager{
         val rows = CsvReader.read(protocol)!!.drop(1)
         for(row in rows){
             val distName = row.firstOrNull()
-            if (distName == null) {
+            if (row.size <= 4) {
                 printError("В файле с соответствиями дистанций и КП ошибка: строчка с дистанцией должна " +
-                        "содержать хотя бы три непустых поля (название, старт и финиш)")
+                        "содержать хотя бы четыре поля (название, режим дистанции, старт и финиш)")
                 continue
             }
-            if (distName.isEmpty()) {
+            if (distName!!.isEmpty()) {
                 printError("В файле с соответствиями дистанций и КП ошибка: название дистанции не может быть пустым")
                 continue
             }
             val CPList = mutableListOf<ControlPoint>()
-            for(CPname in row.drop(1)){
+            for(CPname in row.drop(2)){
                 if (CPname.isNotEmpty()) {
                     val CP = comp.findCPByName(CPname) ?: ControlPoint(CPname)
                     CPList.add(CP)
@@ -116,7 +116,7 @@ object CsvProtocolManager: ProtocolManager{
             }
             if (CPList.size < 2){
                 printError("В файле с соответствиями дистанций и КП ошибка: строчка с дистанцией должна " +
-                        "содержать хотя бы три непустых поля (название, старт и финиш)")
+                        "содержать хотя бы два КП (название, старт и финиш)")
                 continue
             }
             if (comp.findDistanceByName(distName) != null) {
@@ -124,7 +124,35 @@ object CsvProtocolManager: ProtocolManager{
                         "названием")
                 continue
             }
-            comp.addDistance(Distance(distName,CPList))
+            val modeString = row[1]
+            if (modeString == "") {
+                comp.addDistance(Distance(distName,CPList, ModeOfDistance.Strict, CPList.size))
+            }
+            else {
+                val mode = modeString.split(" ")
+                if (mode.size != 2 ||
+                        (mode[0] != "строгий" && mode[0] != "нестрогий") ||
+                        mode[1].toIntOrNull() == null) {
+                    printError(
+                        "В файле с соответствиями дистанций и КП ошибка: формат поля с описанием режима дистанции" +
+                                "следующий: 'x y', где x - это 'строгий' или 'нестрогий', a y - целое число"
+                    )
+                    continue
+                }
+                val modeOfDistance = when(mode[0]) {
+                    "строгий" -> ModeOfDistance.Strict
+                    else -> ModeOfDistance.Lax
+                }
+                val numberOfCP = mode[1].toInt()
+                if (numberOfCP > CPList.size) {
+                    printError(
+                        "В файле с соответствиями дистанций и КП ошибка: необходимое число пройденных КП не может" +
+                                " быть больше числа доступных КП"
+                    )
+                    continue
+                }
+                comp.addDistance(Distance(distName, CPList, modeOfDistance, numberOfCP))
+            }
             comp.addCPs(CPList.toSet())
         }
     }

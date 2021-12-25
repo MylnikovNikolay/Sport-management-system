@@ -83,9 +83,36 @@ class CompetitionsSportsman(
         get() = passingData.toList()
 
     //Была ли дистанция корректно пройдена
-    val distanceWasPassed: Boolean
-        get() = number != null && passingData.isNotEmpty() &&
-                (startTime ?: Time.of(23, 59,59)) <= passingData.first().time &&
-                passingList.map { it.CP } == route
+    private val distanceWasPassed: Boolean
+        get() {
+            if (number == null)
+                return false
+            if (startTime == null)
+                return false
+            //общее условие для обоих режимов - надо чтобы первым был пройден старт, а последним финиш
+            if (passingList.size <= 2 || passingList.first().CP != distance.controlPoints.first())
+                return false
+            if (passingList.last().CP != distance.controlPoints.last())
+                return false
+
+            if (distance.modeOfDistance == ModeOfDistance.Strict) {
+                val list1 = passingList.map{it.CP}.drop(1).dropLast(1)
+                val list2 = distance.controlPoints.drop(1).dropLast(1)
+                return list1.MCSsize(list2) >= distance.numberOfCPtoPass - 2
+            }
+
+            else {
+                val map1 = passingList.map{it.CP}.drop(1).dropLast(1).groupBy {it}.toMutableMap().mapValues {
+                        entry -> entry.value.size
+                }
+                val map2 = distance.controlPoints.drop(1).dropLast(1).groupBy {it}.toMutableMap().mapValues {
+                        entry -> entry.value.size
+                }
+                val CPpassed = map1.mapValues {
+                    entry -> kotlin.math.min(entry.value, map2[entry.key]?:0)
+                }.map { it.value }.sumOf { it }
+                return CPpassed >= distance.numberOfCPtoPass - 2
+            }
+        }
 }
 

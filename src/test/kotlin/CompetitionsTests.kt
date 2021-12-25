@@ -43,10 +43,16 @@ internal class CompetitionsTests {
         assertEquals(2, distance3.controlPoints.size)
 
         val distance2 = comp.findDistanceByName("distance2")
-        assertTrue(distance2 != null)
+        assertNotNull(distance2)
+
+        assertEquals(distance2.modeOfDistance, ModeOfDistance.Lax)
+        assertEquals(distance2.numberOfCPtoPass, 3)
 
         val distance4 = comp.findDistanceByName("distance4")
         assertTrue(distance4 == null)
+
+        val distance5 = comp.findDistanceByName("distance5")
+        assertNull(distance5)
 
         val cp100 = comp.findCPByName("100")
         assertTrue(cp100 != null)

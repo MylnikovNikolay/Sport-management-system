@@ -1,6 +1,11 @@
 package ru.emkn.kotlin.sms
 
-class Distance(val name: String, val controlPoints: List<ControlPoint>,){
+class Distance(
+    val name: String,
+    val controlPoints: List<ControlPoint>,
+    val modeOfDistance: ModeOfDistance = ModeOfDistance.Strict,
+    val numberOfCPtoPass: Int = controlPoints.size
+){
     init {
         UsualLogger.log(
             "Добавлена дистанция '$name'"

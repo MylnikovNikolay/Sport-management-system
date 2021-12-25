@@ -1,7 +1,8 @@
-Название,1,2,3,4
-distance1,45,57,84,100
-distance2,45,84,57,100
-distance3,start0,finish,,
-distance2,finish,finish,finish,
-distance4,start,,,
-,,start,,
+Название,Режим,1,2,3,4
+distance1,,45,57,84,100
+distance2,нестрогий 3,45,84,57,100
+distance3,,start0,finish,,
+distance2,,finish,finish,finish,
+distance4,,start,,,
+,,,start,,
+distance5,строгий 6,45,57,84,100

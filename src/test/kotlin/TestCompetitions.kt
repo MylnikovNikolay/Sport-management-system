@@ -38,12 +38,12 @@ class TestCompetitions(comp: Competitions): Competitions(comp.name, comp.date) {
         fun testGeneration() {
             val file1 = File("test-data/sample-data/additional sample-data/StartProtocolTest/courses.csv")
             file1.writeText("")
-            file1.appendText("Название")
+            file1.appendText("Название,Режим")
             file1.appendText(",".repeat(10))
             file1.appendText("\n")
             repeat(10) {
                 val strbld = StringBuilder()
-                strbld.append("distance_$it")
+                strbld.append("distance_$it,")
                 repeat(10) {
                     val a = kotlin.math.abs(Random.nextInt()) % 31
                     if (a == 0)

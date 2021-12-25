@@ -21,16 +21,6 @@ fun main(){
      val comp = CompetitionsByCSV("Мои соревнования","24.12.2021")
      CPM.createDistancesAndCPs(readCSV(dir+"courses.csv"),comp)
      CPM.createGroupsAndDistances(readCSV(dir+"classes.csv"),comp)
-
-     //Везде нули
-     println(comp.getDistancesSet().size)
-     println(comp.getGroupsSet().size)
-     println(comp.getTeamsSet().size)
-     val dist = Distance("GGG",listOf())
-     comp.addDistance(dist)
-     comp.addGroup(Group("M32",dist, comp))
-
-     MainPageController(comp)
 }
 
 /*
