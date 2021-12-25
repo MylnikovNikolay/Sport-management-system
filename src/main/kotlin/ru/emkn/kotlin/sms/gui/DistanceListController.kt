@@ -91,6 +91,7 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
                     adapter = rememberScrollbarAdapter(scrollState = listState)
                 )
             }
+
         }
 
         openChildWindows(childWindowsState)

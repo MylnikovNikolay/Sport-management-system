@@ -1,4 +1,5 @@
 package ru.emkn.kotlin.sms.gui
+
 import ru.emkn.kotlin.sms.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import kotlin.system.exitProcess
 
 //Уж слишком часто нужно
 typealias MSB = MutableState<Boolean>

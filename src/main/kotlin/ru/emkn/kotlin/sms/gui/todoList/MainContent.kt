@@ -114,7 +114,7 @@ private fun Item(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun Input(
+fun Input(
     text: String,
     onTextChanged: (String) -> Unit,
     onAddClicked: () -> Unit

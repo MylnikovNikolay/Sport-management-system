@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Window
 
@@ -47,6 +48,18 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                     (if(distance.value.modeOfDistance == ModeOfDistance.Strict) "" else "не") +
                     " важен, " +
                     "пройти КП ${distance.value.numberOfCPtoPass} из ${distance.value.controlPoints.size}")
+            Text(
+                if (distance.value.controlPoints.size < distance.value.numberOfCPtoPass
+                    || distance.value.numberOfCPtoPass < 2)
+                "Поправьте нужное для прохождения количество кп" else "",
+                color = Color.Red,
+                fontStyle = FontStyle(9)
+            )
+            Text(
+                if (distance.value.name == "") "Пустое название дистанции" else "",
+                color = Color.Red,
+                fontStyle = FontStyle(9)
+            )
             Row {
                 IconButton(onClick = {
                     editingDistance.value = true
@@ -114,6 +127,8 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                     EditCPDialog().dialog(it)
                 }
             }
+
+
         }
     }
 
