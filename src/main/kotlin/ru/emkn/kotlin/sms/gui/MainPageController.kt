@@ -109,7 +109,7 @@ class MainPageController{
     ){
         if(gr.value)  GroupListController(groups, gr).createWindow()
         if(ds.value)  DistanceListController(distances, ds).createWindow()
-        if(tm.value)  TeamListController(teams, tm).createWindow()
+        if(tm.value)  TeamListController(teams, tm, groups).createWindow()
         if(cn.value) ChangingName(cn).createWindow()
         if(cd.value) ChangingDate(cd).createWindow()
         if(fp.value) FromProtocols(fp).createWindow()
