@@ -28,7 +28,7 @@ class GroupController(val group: Group, val isOpen: MutableState<Boolean>) {
     fun createWindow() {
         Window(
             onCloseRequest = {isOpen.value=false},
-            title = "Дистанция " + group.name,
+            title = "Группа " + group.name,
         ) {
             MaterialTheme(shapes = Shapes()) {
                 content()
