@@ -29,6 +29,7 @@ class MainPageController(val comp: Competitions){
     Рисует все детали внутри главного окна
      */
     @Composable @Preview fun content(){
+        //Эти переменные указывают на то, открыты ли окна-дети
         val gr = remember { mutableStateOf(false) }
         val ds = remember { mutableStateOf(false) }
         val tm = remember { mutableStateOf(false) }
@@ -44,15 +45,15 @@ class MainPageController(val comp: Competitions){
             Button(onClick = { cp.value = true }) { Text("Все КП") }
             Button(onClick = { pr.value = true }) { Text("Работа с протоколами") }
         }
-        createWindows(gr, ds, tm, sp, cp, pr)
+        createChildWindows(gr, ds, tm, sp, cp, pr)
     }
 
     /*
     Открывает окна списков групп, команд, ...
      */
-    @Composable @Preview fun createWindows(gr: MSB, ds: MSB, tm: MSB, sp: MSB, cp: MSB, pr: MSB){
+    @Composable @Preview fun createChildWindows(gr: MSB, ds: MSB, tm: MSB, sp: MSB, cp: MSB, pr: MSB){
         if(gr.value)  GroupListController(comp.getGroupsSet().toList(), gr).createWindow()
-
+        if(ds.value)  DistanceListController(comp.getDistancesSet().toList(), ds).createWindow()
         if(tm.value)  TeamListController(comp.getTeamsSet().toList(), tm).createWindow()
 
     }
