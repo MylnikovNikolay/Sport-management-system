@@ -2,6 +2,10 @@ package ru.emkn.kotlin.sms.gui
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes
@@ -9,7 +13,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
+import androidx.compose.foundation.lazy.items
 import ru.emkn.kotlin.sms.*
 
 class TeamListController(val teams: List<CompetitionsTeam>, val isOpen: MutableState<Boolean>) {
@@ -31,11 +37,18 @@ class TeamListController(val teams: List<CompetitionsTeam>, val isOpen: MutableS
     @Preview
     fun content(){
         val childWindowsState = teams.associateWith { mutableStateOf(false) }
-        Column {
-            for(team in teams){
+        val listState = rememberLazyListState()
+
+        LazyColumn(state = listState) {
+            items(teams){ team ->
                 Button(onClick = { childWindowsState[team]?.value = true }) { Text(team.name) }
             }
         }
+
+        VerticalScrollbar(
+            modifier = Modifier.fillMaxHeight(),
+            adapter = rememberScrollbarAdapter(scrollState = listState)
+        )
         openChildWindows(childWindowsState)
     }
 

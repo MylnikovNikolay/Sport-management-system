@@ -25,7 +25,7 @@ fun main(){
      //Везде нули
      println(comp.getDistancesSet().size)
      println(comp.getGroupsSet().size)
-     println(comp.getDistancesSet().size)
+     println(comp.getTeamsSet().size)
      val dist = Distance("GGG",listOf())
      comp.addDistance(dist)
      comp.addGroup(Group("M32",dist, comp))
