@@ -43,11 +43,11 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
         val childWindowsState = distances.value.associateWith { mutableStateOf(false) }
         val listState = rememberLazyListState()
 
-        Row {
-            Column {
+        Column {
+            Row {
                 IconButton(onClick = { /*TODO(Загрузка из файла)*/ }) {
                     Icon(
-                        imageVector = Icons.Default.Edit, //Эта иконка не очень подходит, но лучше я не нашел
+                        imageVector = Icons.Default.Email,
                         contentDescription = null
                     )
                 }
@@ -68,7 +68,7 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
                     items(distances.value) { dist ->
                         Row(modifier = Modifier.clickable(onClick = { childWindowsState[dist]?.value = true })) {
                             Text(
-                                text = AnnotatedString(dist.value.name),
+                                text = AnnotatedString("  " + dist.value.name),
                                 modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis

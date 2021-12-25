@@ -42,11 +42,23 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
     @Preview
     fun content() {
         val listState = rememberLazyListState()
-        Row {
-            Column {
+        Column {
+            Text(text = "Порядок " +
+                    (if(distance.value.modeOfDistance == ModeOfDistance.Strict) "" else "не") +
+                    " важен, " +
+                    "пройти КП ${distance.value.numberOfCPtoPass} из ${distance.value.controlPoints.size}")
+            Row {
+                IconButton(onClick = {
+                    editingDistance.value = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = null
+                    )
+                }
                 IconButton(onClick = { /*TODO(Загрузка из файла)*/ }) {
                     Icon(
-                        imageVector = Icons.Default.Edit, //Эта иконка не очень подходит, но лучше я не нашел
+                        imageVector = Icons.Default.Email, //Эта иконка не очень подходит, но лучше я не нашел
                         contentDescription = null
                     )
                 }
@@ -61,20 +73,10 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = {
-                    editingDistance.value = true
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = null
-                    )
-                }
             }
 
             Box {
                 Column {
-                    Text(text = "Порядок " + (if(distance.value.modeOfDistance == ModeOfDistance.Strict) "" else "не") + " важен, " +
-                            "пройти КП ${distance.value.numberOfCPtoPass}/${distance.value.controlPoints.size}")
                     LazyColumn(state = listState) {
                         items(distance.value.controlPoints) {
                             Row(modifier = Modifier.clickable(onClick = { editingCP.value = it.name })) {
