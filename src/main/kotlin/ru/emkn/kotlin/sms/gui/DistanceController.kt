@@ -36,6 +36,7 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
     }
 
     var editingDistance: MutableState<Boolean> = mutableStateOf(false)
+    var editingCP: MutableState<String?> = mutableStateOf(null)
 
     @Composable
     @Preview
@@ -49,7 +50,12 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = { /*TODO(Добавление нового КП)*/ }) {
+                IconButton(onClick = {
+                    distance.value = distance.value.copy(
+                        controlPoints = distance.value.controlPoints +
+                                listOf(ControlPoint(getNameForCP("CP", distance.value.controlPoints)))
+                    )
+                }) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = null
@@ -67,11 +73,11 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
 
             Box {
                 Column {
-                    Text(text = "Тип дистанции ${distance.value.modeOfDistance}, " +
+                    Text(text = "Порядок " + (if(distance.value.modeOfDistance == ModeOfDistance.Strict) "" else "не") + " важен, " +
                             "пройти КП ${distance.value.numberOfCPtoPass}/${distance.value.controlPoints.size}")
                     LazyColumn(state = listState) {
                         items(distance.value.controlPoints) {
-                            Row(modifier = Modifier.clickable(onClick = { /*TODO(Изменение названия)*/ })) {
+                            Row(modifier = Modifier.clickable(onClick = { editingCP.value = it.name })) {
                                 Text(
                                     text = AnnotatedString(it.name),
                                     modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
@@ -101,6 +107,47 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                 if (editingDistance.value) {
                     EditDistanceDialog().dialog()
                 }
+
+                distance.value.controlPoints.find {it.name == editingCP.value}?.also {
+                    EditCPDialog().dialog(it)
+                }
+            }
+        }
+    }
+
+    inner class EditCPDialog {
+        var name: MutableState<String> = mutableStateOf("")
+
+        @Composable
+        fun dialog(cp: ControlPoint) {
+            name.value = cp.name
+
+            Dialog(
+                title = "Изменение КП ${cp.name}",
+                onCloseRequest = { editingCP.value = null },
+            ) {
+                Column {
+                    TextField(
+                        value = name.value,
+                        onValueChange = { name.value = it }
+                    )
+
+                    Button(onClick = {
+                        distance.value = distance.value.copy(
+                            controlPoints = distance.value.controlPoints.map {
+                                if (it.name == cp.name)
+                                    ControlPoint(
+                                        getNameForCP(name.value, distance.value.controlPoints.filter {t -> t.name != cp.name})
+                                    )
+                                else
+                                    it
+                            }
+                        )
+                        editingCP.value = null
+                    }) {
+                        Text(text="Сохранить изменения и выйти")
+                    }
+                }
             }
         }
     }
@@ -122,7 +169,7 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
             ) {
                 Column {
                     Column {
-                        Text(text="Имя:")
+                        Text(text="Название:")
                         TextField(
                             value = name.value,
                             onValueChange = { name.value = it }
@@ -162,5 +209,13 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                 }
             }
         }
+    }
+
+    private fun getNameForCP(name: String, list: List<ControlPoint>): String {
+        var id = 0
+        while (list.any { it.name == getNewName(name, id) }) {
+            id++
+        }
+        return getNewName(name, id)
     }
 }

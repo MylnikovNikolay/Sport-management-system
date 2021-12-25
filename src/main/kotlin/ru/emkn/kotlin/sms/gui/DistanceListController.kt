@@ -15,10 +15,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Window
@@ -56,7 +54,7 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
                 IconButton(onClick = {
                     distances.value = distances.value +
                             listOf(mutableStateOf(
-                                Distance(getName("empty", distances.value), listOf())
+                                Distance(getNameForDistance("empty", distances.value), listOf())
                             ))
                 }) {
                     Icon(
@@ -109,12 +107,11 @@ class DistanceListController(val distances: MutableState<List< MutableState<Dist
         }
     }
 
-    private fun getName(name: String, list: List<MutableState<Distance>>): String {
-        fun name(id: Int) = if (id == 0) name else "$name($id)"
+    private fun getNameForDistance(name: String, list: List<MutableState<Distance>>): String {
         var id = 0
-        while (list.any { it.value.name == name(id) }) {
+        while (list.any { it.value.name == getNewName(name, id) }) {
             id++
         }
-        return name(id)
+        return getNewName(name, id)
     }
 }
