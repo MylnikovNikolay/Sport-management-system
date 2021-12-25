@@ -57,30 +57,34 @@ class DistanceController(val distance: Distance, val isOpen: MutableState<Boolea
             }
 
             Box {
-                LazyColumn(state = listState) {
-                    items(distance.controlPoints) {
-                        Row(modifier = Modifier.clickable(onClick = { /*TODO(Изменение названия)*/ })) {
-                            Spacer(modifier = Modifier.width(8.dp))
+                Column {
+                    Text(text = "Тип дистанции ${distance.modeOfDistance}, " +
+                            "пройти КП ${distance.numberOfCPtoPass}/${distance.controlPoints.size}")
+                    LazyColumn(state = listState) {
+                        items(distance.controlPoints) {
+                            Row(modifier = Modifier.clickable(onClick = { /*TODO(Изменение названия)*/ })) {
+                                Spacer(modifier = Modifier.width(8.dp))
 
-                            Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
 
-                            Text(
-                                text = AnnotatedString(it.name),
-                                modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            IconButton(onClick = { /*TODO(Удаление дистанции)*/ }) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = null
+                                Text(
+                                    text = AnnotatedString(it.name),
+                                    modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
-                            }
 
-                            Spacer(modifier = Modifier.width(MARGIN_SCROLLBAR))
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                IconButton(onClick = { /*TODO(Удаление дистанции)*/ }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = null
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(MARGIN_SCROLLBAR))
+                            }
                         }
                     }
                 }
