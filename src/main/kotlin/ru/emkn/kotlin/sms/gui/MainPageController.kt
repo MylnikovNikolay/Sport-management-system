@@ -2,11 +2,11 @@ package ru.emkn.kotlin.sms.gui
 import ru.emkn.kotlin.sms.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-
 
 //Уж слишком часто нужно
 typealias MSB = MutableState<Boolean>
@@ -37,13 +37,19 @@ class MainPageController(val comp: Competitions){
         val cp = remember { mutableStateOf(false) }
         val pr = remember { mutableStateOf(false) }
 
-        Column {
-            Button(onClick = { gr.value = true }) { Text("Список групп") }
-            Button(onClick = { ds.value = true }) { Text("Список дистанций") }
-            Button(onClick = { tm.value = true }) { Text("Список команд") }
-            Button(onClick = { sp.value = true }) { Text("Все участники") }
-            Button(onClick = { cp.value = true }) { Text("Все КП") }
-            Button(onClick = { pr.value = true }) { Text("Работа с протоколами") }
+        Row {
+            Column {
+                Button(onClick = { gr.value = true }) { Text("Список групп") }
+                Button(onClick = { ds.value = true }) { Text("Список дистанций") }
+                Button(onClick = { tm.value = true }) { Text("Список команд") }
+                Button(onClick = { sp.value = true }) { Text("Все участники") }
+                Button(onClick = { cp.value = true }) { Text("Все КП") }
+                Button(onClick = { pr.value = true }) { Text("Работа с протоколами") }
+            }
+            Column {
+                Text(text = comp.name)
+                Text(text = comp.date)
+            }
         }
         createChildWindows(gr, ds, tm, sp, cp, pr)
     }
