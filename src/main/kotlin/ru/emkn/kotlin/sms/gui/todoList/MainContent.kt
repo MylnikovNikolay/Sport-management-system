@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -117,7 +118,8 @@ private fun Item(
 fun Input(
     text: String,
     onTextChanged: (String) -> Unit,
-    onAddClicked: () -> Unit
+    onAddClicked: () -> Unit,
+    imageVector: ImageVector = Icons.Default.Add
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
         OutlinedTextField(
@@ -133,7 +135,7 @@ fun Input(
 
         IconButton(onClick = onAddClicked) {
             Icon(
-                imageVector = Icons.Default.Add,
+                imageVector = imageVector,
                 contentDescription = null
             )
         }
