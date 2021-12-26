@@ -8,9 +8,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Shapes
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -71,28 +72,34 @@ class ShowResultsController(val groups: MutableState<List<MutableState<Group>>>,
         val toOpen = CWS.filterValues { it.value }.toList()
         LazyColumn {
             items(toOpen) { entry ->
-                createWindowForGroup(entry.first, entry.second)
+                createWindowForGroup(entry.first.value, entry.second)
             }
         }
     }
 
     @Composable
-    fun createWindowForGroup(group: MutableState<Group>, isOpen: MSB) {
+    fun createWindowForGroup(group: Group, isOpen: MSB) {
         Window(
-            title = "Результаты группы ${group.value.name}",
+            title = "Результаты группы ${group.name}",
             onCloseRequest = { isOpen.value = false },
         ) {
             val listState = rememberLazyListState()
+            val sportsmen = mutableStateOf(group.sportsmen.toList().sortedBy { getResult(it) })
+            val sportsmenWithHeader = mutableStateOf(createMapFromSportsmen(sportsmen.value))
             Box {
-                LazyColumn(state = listState) {
-                    items(group.value.sportsmen.toList().sortedBy { getResult(it) }) { sp ->
-                        Row {
-                            Text(
-                                text = AnnotatedString("${sp.number} " + formatToRow(sp) + " ${ getResultOrNull(sp)}"),
-                                modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                Row {
+                    sportsmenWithHeader.value.forEach {entry ->
+                        Column {
+                            Text(text = entry.key + "  ")
+                            LazyColumn(state = listState) {
+                                items(entry.value) {
+                                    Text(
+                                        text = AnnotatedString(it.toString()),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -113,4 +120,13 @@ class ShowResultsController(val groups: MutableState<List<MutableState<Group>>>,
         } else {
             sp.totalTimeByResults!!.minus(sp.startTime!!)
         }
+
+    private fun createMapFromSportsmen(list: List<CompetitionsSportsman>) = mapOf(
+        "Номер" to list.map { it.number },
+        "Фамилия" to list.map { it.surname },
+        "Имя" to list.map { it.name },
+        "Г.р." to list.map { it.birthYear },
+        "Разряд" to list.map { it.level },
+        "Результат" to list.map { getResultOrNull(it) },
+    )
 }
