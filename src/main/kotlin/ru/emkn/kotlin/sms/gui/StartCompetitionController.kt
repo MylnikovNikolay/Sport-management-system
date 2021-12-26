@@ -55,6 +55,8 @@ class StartCompetitionController(val groups: MutableState<List<MutableState<Grou
                 Text(text = "Раздать номера и провести жеребьевку")
             }
 
+            Text(text="Группы:")
+
             Box {
                 LazyColumn(state = listState) {
                     items(groups.value) { group ->

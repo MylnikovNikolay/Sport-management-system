@@ -109,7 +109,7 @@ class MainPageController{
         if(tm.value)  TeamListController(teams, tm, groups).createWindow()
         if(sp.value)  StartCompetitionController(groups, sp).createWindow()
         if(cp.value)  LoadSplitsController(groups, cp).createWindow()
-        //if(pr.value)  ShowResultsController(groups, pr).createWindow()
+        if(pr.value)  ShowResultsController(groups, pr).createWindow()
         if(cn.value)  ChangingName(cn).createWindow()
         if(cd.value)  ChangingDate(cd).createWindow()
         if(fp.value)  FromProtocols(fp).createWindow()
