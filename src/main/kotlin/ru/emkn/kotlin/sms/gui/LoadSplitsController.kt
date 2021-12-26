@@ -149,6 +149,7 @@ class LoadSplitsController(val groups: MutableState<List<MutableState<Group>>>, 
                     Button(
                         onClick =
                         {
+                            editingTimeForSP.value!!.startTime = stringToTimeOrNull(timeStart.value) ?: return@Button
                             editingTimeForSP.value!!.totalTimeByResults = stringToTimeOrNull(timeFinish.value) ?: return@Button
                             editingTimeForSP.value = null
                         },
