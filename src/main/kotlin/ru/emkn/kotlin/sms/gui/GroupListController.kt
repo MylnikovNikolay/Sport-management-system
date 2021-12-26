@@ -25,7 +25,11 @@ import androidx.compose.ui.window.Window
 import ru.emkn.kotlin.sms.*
 
 //Окно, содержащее список групп, позволяет открывать окна групп @Composable @Preview
-class GroupListController(val groups: MutableState<List<MutableState<Group>>>, val isOpen: MutableState<Boolean>) {
+class GroupListController(
+    val groups: MutableState<List<MutableState<Group>>>,
+    val isOpen: MutableState<Boolean>,
+    val distances: MutableState<List<MutableState<Distance>>>,
+) {
 
     @Composable @Preview
     fun createWindow(){
@@ -69,7 +73,7 @@ class GroupListController(val groups: MutableState<List<MutableState<Group>>>, v
                     items(groups.value) { group ->
                         Row(modifier = Modifier.clickable(onClick = { childWindowsState[group]?.value = true })) {
                             Text(
-                                text = AnnotatedString(group.value.name + " -> " + group.value.distance.name),
+                                text = AnnotatedString(group.value.name + " --> " + group.value.distance.name),
                                 modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
@@ -93,7 +97,7 @@ class GroupListController(val groups: MutableState<List<MutableState<Group>>>, v
         val toOpen = CWS.filterValues { it.value }.toList()
         LazyColumn {
             items(toOpen) { entry ->
-                GroupController(entry.first, entry.second).createWindow()
+                GroupController(entry.first, entry.second, distances).createWindow()
             }
         }
     }

@@ -107,7 +107,8 @@ class MainPageController{
         cd:MSB,
         fp:MSB
     ){
-        if(gr.value)  GroupListController(groups, gr).createWindow()
+        println(distances.value.size)
+        if(gr.value)  GroupListController(groups, gr, distances).createWindow()
         if(ds.value)  DistanceListController(distances, ds).createWindow()
         if(tm.value)  TeamListController(teams, tm, groups).createWindow()
         if(cn.value) ChangingName(cn).createWindow()
