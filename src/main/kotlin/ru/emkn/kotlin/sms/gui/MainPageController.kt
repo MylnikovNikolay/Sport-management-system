@@ -60,7 +60,7 @@ class MainPageController{
                 Button(onClick = { gr.value = true }) { Text("Список групп") }
                 Button(onClick = { ds.value = true }) { Text("Список дистанций") }
                 Button(onClick = { tm.value = true }) { Text("Список команд") }
-                Button(onClick = { sp.value = true }) { Text("Все участники") }
+                Button(onClick = { sp.value = true }) { Text("Начать соревнование") }
                 Button(onClick = { cp.value = true }) { Text("Все КП") }
                 Button(onClick = { pr.value = true }) { Text("Работа с протоколами") }
             }
@@ -107,13 +107,13 @@ class MainPageController{
         cd:MSB,
         fp:MSB
     ){
-        println(distances.value.size)
         if(gr.value)  GroupListController(groups, gr, distances).createWindow()
         if(ds.value)  DistanceListController(distances, ds).createWindow()
         if(tm.value)  TeamListController(teams, tm, groups).createWindow()
-        if(cn.value) ChangingName(cn).createWindow()
-        if(cd.value) ChangingDate(cd).createWindow()
-        if(fp.value) FromProtocols(fp).createWindow()
+        if(sp.value)  SportsmanController(groups, sp).createWindow()
+        if(cn.value)  ChangingName(cn).createWindow()
+        if(cd.value)  ChangingDate(cd).createWindow()
+        if(fp.value)  FromProtocols(fp).createWindow()
     }
 
     inner class ChangingDate(cd: MSB){
