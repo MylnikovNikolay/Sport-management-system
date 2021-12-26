@@ -96,7 +96,7 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                             IconButton(onClick = {
                                 distance.value =
                                     distance.value.copy(
-                                        controlPoints = distance.value.controlPoints.filter {t -> t.name != it.name}
+                                        controlPoints = distance.value.controlPoints.filter {t -> t.hashCode() != it.hashCode()}
                                     )
                             }) {
                                 Icon(
@@ -149,9 +149,7 @@ class DistanceController(val distance: MutableState<Distance>, val isOpen: Mutab
                         distance.value = distance.value.copy(
                             controlPoints = distance.value.controlPoints.map {
                                 if (it.name == cp.name)
-                                    ControlPoint(
-                                        getNameForCP(name.value, distance.value.controlPoints.filter {t -> t.name != cp.name})
-                                    )
+                                    ControlPoint(name.value)
                                 else
                                     it
                             }

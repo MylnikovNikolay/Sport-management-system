@@ -43,4 +43,5 @@ class Group(val name: String, val distance: Distance, val competition: Competiti
             it.birthYear == birthYear && it.name == name && it.surname == surname
         }
     }
+
 }

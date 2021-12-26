@@ -46,7 +46,7 @@ class GroupController(val group: MutableState<Group>, val isOpen: MutableState<B
                 items(group.value.sportsmen.toList()) {
                     Row {
                         Text(
-                            text = AnnotatedString(formatToRow(listOf(it.surname, it.name, it.birthYear, it.level))),
+                            text = AnnotatedString(formatToRow(it)),
                             modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -61,8 +61,4 @@ class GroupController(val group: MutableState<Group>, val isOpen: MutableState<B
             )
         }
     }
-}
-
-private fun formatToRow(list: List<Any>): String {
-    return list.joinToString(" ") { it.toString().padEnd(15, ' ') }
 }

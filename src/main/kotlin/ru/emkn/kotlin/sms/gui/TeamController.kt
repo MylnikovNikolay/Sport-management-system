@@ -74,7 +74,7 @@ class TeamController(
                     items(team.value.sportsmen.toList()) {
                         Row(modifier = Modifier.clickable(onClick = { editingSportsman.value = it.hashCode() })) {
                             Text(
-                                text = AnnotatedString(it.name),
+                                text = AnnotatedString(formatToRow(it)),
                                 modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
@@ -83,9 +83,15 @@ class TeamController(
                             IconButton(onClick = {
                                 team.value =
                                     team.value.copy(
-                                        sportsmen = team.value.sportsmen.filter {t -> t.name != it.name}
+                                        sportsmen = team.value.sportsmen.filter {t -> t.hashCode() != it.hashCode()}
                                                 as MutableList<CompetitionsSportsman>
                                     )
+                                groups.value = groups.value.map { group ->
+                                    if (group.value.hashCode() == it.group.hashCode()) {
+                                        group.value.sportsmen.remove(it)
+                                    }
+                                    group
+                                }
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
@@ -163,20 +169,27 @@ class TeamController(
                         onValueChange = { name.value = it },
                         label = { Text(text="имя") }
                     )
-                    TextField(
-                        value = birthYear.value,
-                        onValueChange = { birthYear.value = it },
-                        label = { Text(text="год рождения") }
-                    )
-                    TextField(
-                        value = level.value,
-                        onValueChange = { level.value = it },
-                        label = { Text(text="разряд") }
-                    )
+                    Row {
+                        TextField(
+                            value = birthYear.value,
+                            onValueChange = { birthYear.value = it },
+                            label = { Text(text="год рождения") }
+                        )
+                        TextField(
+                            value = level.value,
+                            onValueChange = { level.value = it },
+                            label = { Text(text="разряд") }
+                        )
+                    }
 
                     Box {
-                        Button(onClick = {expanded.value = true}) {
-                            Text(text = group?.value?.name ?: "")
+                        Button(
+                            onClick = {expanded.value = true},
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = if (group == null) Color.Red else Color.LightGray
+                            )
+                        ) {
+                            Text(text = group?.value?.name ?: "--выберите группу--")
                         }
                         DropdownMenu(
                             expanded = expanded.value,

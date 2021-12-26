@@ -82,7 +82,7 @@ class TeamListController(
                             )
 
                             IconButton(onClick = {
-                                teams.value = teams.value.filter {team.value != it.value}
+                                teams.value = teams.value.filter { team.value.hashCode() != it.value.hashCode() }
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
