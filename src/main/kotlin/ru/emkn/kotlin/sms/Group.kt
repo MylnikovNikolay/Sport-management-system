@@ -1,13 +1,13 @@
 package ru.emkn.kotlin.sms
 
-class Group(val name: String, val distance: Distance, val competition: Competitions){
+open class Group(open val name: String, open val distance: Distance, open val competition: Competitions){
     init {
         UsualLogger.log(
             "Группа с названием '$name' создана и привязана к дистанции '${distance.name}'"
         )
     }
 
-    val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
+    open val sportsmen: MutableSet<out CompetitionsSportsman> = mutableSetOf()
 
     //fun addSportsman(sportsman: _CompetitionsSportsman) = sportsmen.add(sportsman)
     override fun toString(): String {

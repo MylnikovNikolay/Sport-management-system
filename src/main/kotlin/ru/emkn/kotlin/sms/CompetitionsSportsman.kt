@@ -2,10 +2,10 @@ package ru.emkn.kotlin.sms
 
 import java.util.*
 
-class CompetitionsSportsman(
+open class CompetitionsSportsman(
     sportsman: Sportsman,
-    val team: CompetitionsTeam,
-    val group: Group,
+    open val team: CompetitionsTeam,
+    open val group: Group,
 ): Sportsman(sportsman){
     var number: Int? = null
         set(value) {
