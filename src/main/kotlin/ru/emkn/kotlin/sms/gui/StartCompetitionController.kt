@@ -25,7 +25,7 @@ import ru.emkn.kotlin.sms.CompetitionsByCSV
 import ru.emkn.kotlin.sms.CompetitionsSportsman
 import ru.emkn.kotlin.sms.Group
 
-class SportsmanController(val groups: MutableState<List<MutableState<Group>>>, val isOpen: MSB) {
+class StartCompetitionController(val groups: MutableState<List<MutableState<Group>>>, val isOpen: MSB) {
 
     @Composable @Preview
     fun createWindow(){

@@ -2,21 +2,17 @@ package ru.emkn.kotlin.sms.gui
 
 import ru.emkn.kotlin.sms.*
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import java.io.File
-import kotlin.system.exitProcess
 
 //Уж слишком часто нужно
 typealias MSB = MutableState<Boolean>
@@ -61,8 +57,8 @@ class MainPageController{
                 Button(onClick = { ds.value = true }) { Text("Список дистанций") }
                 Button(onClick = { tm.value = true }) { Text("Список команд") }
                 Button(onClick = { sp.value = true }) { Text("Начать соревнование") }
-                Button(onClick = { cp.value = true }) { Text("Все КП") }
-                Button(onClick = { pr.value = true }) { Text("Работа с протоколами") }
+                Button(onClick = { cp.value = true }) { Text("Загрузить результаты") }
+                Button(onClick = { pr.value = true }) { Text("Таблицы результатов") }
             }
             Column {
                 Row {
@@ -90,6 +86,7 @@ class MainPageController{
                 }
             }
         }
+
         createChildWindows(gr, ds, tm, sp, cp, pr, cn, cd, fp)
     }
 
@@ -110,7 +107,9 @@ class MainPageController{
         if(gr.value)  GroupListController(groups, gr, distances).createWindow()
         if(ds.value)  DistanceListController(distances, ds).createWindow()
         if(tm.value)  TeamListController(teams, tm, groups).createWindow()
-        if(sp.value)  SportsmanController(groups, sp).createWindow()
+        if(sp.value)  StartCompetitionController(groups, sp).createWindow()
+        if(cp.value)  LoadSplitsController(groups, cp).createWindow()
+        //if(pr.value)  ShowResultsController(groups, pr).createWindow()
         if(cn.value)  ChangingName(cn).createWindow()
         if(cd.value)  ChangingDate(cd).createWindow()
         if(fp.value)  FromProtocols(fp).createWindow()

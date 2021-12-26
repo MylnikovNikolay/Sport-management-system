@@ -16,34 +16,7 @@ import androidx.compose.ui.window.rememberWindowState
 
 
 fun main(){
-     /*
-     val CPM = CsvProtocolManager
-     val dir = "./test-data/sample-data/"
-     val comp = CompetitionsByCSV("Мои соревнования","24.12.2021")
-     CPM.createDistancesAndCPs(readCSV(dir+"courses.csv"),comp)
-     CPM.createGroupsAndDistances(readCSV(dir+"classes.csv"),comp)
-
-     val dist = Distance("GGG", mutableListOf())
-     comp.addDistance(dist)
-     val group = Group("M32",dist, comp)
-     comp.addGroup(group)
-     val team = CompetitionsTeam("Дивизия Красной Армии")
-     comp.addTeam(team)
-     val chapaev = Sportsman("Василий", "Чапаев", 1887,"начальник дивизии")
-     val anka = Sportsman("Варвара", "Мясникова", 1892,"пулемётчица")
-     comp.addSportsman(CompSportsman(chapaev, team, group))
-     comp.addSportsman(CompSportsman(anka, team, group))
-     */
-
-     MainPageController() // 1.Редактирование всей информации о соревновании
-     // 2.TODO(Как-нибудь провести жеребьевку)
-     // 3.TODO(Считать сплиты)
-     // 4.TODO(Как-нибудь создать страничку результатов)
-     // 5.TODO(Вывести результаты на экран)
-
-     /*
-      Для пунктов 1,3,5 нужен графический интерфейс, для 2,4 предполагается использование класса Competitions
-      */
+     MainPageController()
 }
 
 
