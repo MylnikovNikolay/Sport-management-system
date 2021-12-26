@@ -11,8 +11,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
@@ -36,29 +38,58 @@ class GroupController(val group: MutableState<Group>, val isOpen: MutableState<B
         }
     }
 
+    val editingGroup = mutableStateOf(false)
+
     @Composable
     @Preview
     fun content() {
         val listState = rememberLazyListState()
 
-        Box {
-            LazyColumn(state = listState) {
-                items(group.value.sportsmen.toList()) {
-                    Row {
-                        Text(
-                            text = AnnotatedString(formatToRow(it)),
-                            modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+        Column {
+            Row {
+                IconButton(onClick = {
+                    editingGroup.value = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = null
+                    )
                 }
             }
+            Box {
+                LazyColumn(state = listState) {
+                    items(group.value.sportsmen.toList()) {
+                        Row {
+                            Text(
+                                text = AnnotatedString(formatToRow(it)),
+                                modifier = Modifier.weight(1F).align(Alignment.CenterVertically),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
 
-            VerticalScrollbar(
-                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                adapter = rememberScrollbarAdapter(scrollState = listState)
-            )
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(scrollState = listState)
+                )
+            }
+        }
+        if (editingGroup.value) {
+            EditGroupDialog().dialog()
+        }
+    }
+
+    inner class EditGroupDialog {
+        val name = mutableStateOf("")
+        val distance: MutableState<Distance?> = mutableStateOf(null)
+
+        @Composable
+        fun dialog() {
+            name.value = group.value.name
+
+
         }
     }
 }
