@@ -1,6 +1,6 @@
 package ru.emkn.kotlin.sms
 
-open class CompetitionsTeam(open var name: String, open val sportsmen: MutableList<out CompetitionsSportsman> = mutableListOf()){
+open class CompetitionsTeam(open var name: String, open val sportsmen: MutableList<CompetitionsSportsman> = mutableListOf()){
     init {
         UsualLogger.log(
             "Зарегистрирована команда '$name'"

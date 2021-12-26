@@ -7,7 +7,7 @@ open class Group(open val name: String, open val distance: Distance, open val co
         )
     }
 
-    open val sportsmen: MutableSet<out CompetitionsSportsman> = mutableSetOf()
+    open val sportsmen: MutableSet<CompetitionsSportsman> = mutableSetOf()
 
     //fun addSportsman(sportsman: _CompetitionsSportsman) = sportsmen.add(sportsman)
     override fun toString(): String {
