@@ -175,19 +175,19 @@ class TeamController(
                     )
 
                     Box {
+                        Button(onClick = {expanded.value = true}) {
+                            Text(text = group?.value?.name ?: "")
+                        }
                         DropdownMenu(
                             expanded = expanded.value,
                             onDismissRequest = { expanded.value = false },
-                            modifier = Modifier.fillMaxWidth().background(Color.Red),
+                            modifier = Modifier.fillMaxWidth().background(Color.LightGray),
                         ) {
-                            /*groups.value.forEach {
-                                DropdownMenuItem(onClick = { group = it }) {
+                            groups.value.forEach {
+                                DropdownMenuItem(
+                                    onClick = { group = it ; expanded.value = false
+                                }) {
                                     Text(text = it.value.name)
-                                }
-                            }*/
-                            listOf("a", "b").forEach {
-                                DropdownMenuItem(onClick = { expanded.value = false }) {
-                                    Text(text = it)
                                 }
                             }
                         }
@@ -201,11 +201,7 @@ class TeamController(
                         val sp = Sportsman(
                             name.value, surname.value, birthYear.value.trim().toIntOrNull() ?: 0, level.value
                         )
-                        val compSP = CompetitionsSportsman(sp, team.value, group!!.value) //пока что просто кидаем ошибку
-                        team.value = team.value.copy(
-                            sportsmen = (team.value.sportsmen + listOf(compSP))
-                                as MutableList<CompetitionsSportsman>
-                        )
+                        CompetitionsSportsman(sp, team.value, group!!.value) //пока что просто кидаем ошибку
                         addingSportsman.value = false
                     }) {
                         Text(text="Добавить участника")
