@@ -67,6 +67,7 @@ class GroupListController(
                         contentDescription = null
                     )
                 }
+                Text(text ="\"название группы\" --> \"название дистанции\"")
             }
             Box {
                 LazyColumn(state = listState) {
@@ -78,6 +79,15 @@ class GroupListController(
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
+
+                            IconButton(onClick = {
+                                groups.value = groups.value.filter {group.value != it.value}
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
                 }

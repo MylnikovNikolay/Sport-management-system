@@ -73,6 +73,7 @@ class MainPageController{
                             contentDescription = null
                         )
                     }
+                    Text(text="Документация есть в файле DOCS-GUI.md (присутствует важная информация)")
                 }
                 Button (
                     onClick = {fp.value = true}

@@ -90,11 +90,11 @@ class ShowResultsController(val groups: MutableState<List<MutableState<Group>>>,
                 Row {
                     sportsmenWithHeader.value.forEach {entry ->
                         Column {
-                            Text(text = entry.key + "  ")
+                            Text(text = entry.key + "   ")
                             LazyColumn(state = listState) {
                                 items(entry.value) {
                                     Text(
-                                        text = AnnotatedString(it.toString()),
+                                        text = AnnotatedString(it.toString() + "   "),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )

@@ -16,8 +16,10 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Window
@@ -39,6 +41,8 @@ class StartCompetitionController(val groups: MutableState<List<MutableState<Grou
         }
     }
 
+    private val isClicked = mutableStateOf(false)
+
     @Composable
     fun content() {
         val childWindowsState = groups.value.associateWith { mutableStateOf(false) }
@@ -51,7 +55,12 @@ class StartCompetitionController(val groups: MutableState<List<MutableState<Grou
                 }
                 comp.makeADraw()
                 groups.value = comp.getGroupsSet().toList().map { mutableStateOf(it) }
-            }) {
+                isClicked.value = true
+            },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = if (isClicked.value) Color.Green else Color.LightGray
+                )
+            ) {
                 Text(text = "Раздать номера и провести жеребьевку")
             }
 
