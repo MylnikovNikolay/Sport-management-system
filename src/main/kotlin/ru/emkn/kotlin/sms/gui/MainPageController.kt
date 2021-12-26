@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
@@ -48,13 +50,12 @@ class MainPageController{
         val sp = mutableStateOf(false)
         val cp = mutableStateOf(false)
         val pr = mutableStateOf(false)
-        val cn = mutableStateOf(false) //changingName
-        val cd = mutableStateOf(false) //changingDate
+        val cnd = mutableStateOf(false) //changingName and Date
         val fp = mutableStateOf(false) //fromProtocols - дату и время из протокола подгрузить
         Row {
             Column {
-                Button(onClick = { gr.value = true }) { Text("Список групп") }
                 Button(onClick = { ds.value = true }) { Text("Список дистанций") }
+                Button(onClick = { gr.value = true }) { Text("Список групп") }
                 Button(onClick = { tm.value = true }) { Text("Список команд") }
                 Button(onClick = { sp.value = true }) { Text("Начать соревнование") }
                 Button(onClick = { cp.value = true }) { Text("Загрузить результаты") }
@@ -63,31 +64,25 @@ class MainPageController{
             Column {
                 Row {
                     Column {
-                        Text(text = name.value)
-                        Button(onClick = {
-                            cn.value = true
-                        }) { Text("Поменять название соревнования") }
-
+                        Text(text=name.value)
+                        Text(text=date.value)
                     }
-                    Column {
-                        Text(text = date.value)
-
-                        Button(onClick = {
-                            cd.value = true
-                        }) { Text("Поменять дату соревнования") }
+                    IconButton(onClick = { cnd.value = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = null
+                        )
                     }
                 }
-                Row {
-                    Button (
-                        onClick = {fp.value = true}
-                            ) {
-                        Text("Загрузить информацию о соревновании из протокола")
-                    }
+                Button (
+                    onClick = {fp.value = true}
+                ) {
+                    Text("Загрузить информацию о соревновании из протокола")
                 }
             }
         }
 
-        createChildWindows(gr, ds, tm, sp, cp, pr, cn, cd, fp)
+        createChildWindows(gr, ds, tm, sp, cp, pr, cnd, fp)
     }
 
     /*
@@ -100,8 +95,7 @@ class MainPageController{
         sp: MSB,
         cp: MSB,
         pr: MSB,
-        cn:MSB,
-        cd:MSB,
+        cnd:MSB,
         fp:MSB
     ){
         if(gr.value)  GroupListController(groups, gr, distances).createWindow()
@@ -110,83 +104,42 @@ class MainPageController{
         if(sp.value)  StartCompetitionController(groups, sp).createWindow()
         if(cp.value)  LoadSplitsController(groups, cp).createWindow()
         if(pr.value)  ShowResultsController(groups, pr).createWindow()
-        if(cn.value)  ChangingName(cn).createWindow()
-        if(cd.value)  ChangingDate(cd).createWindow()
+        if(cnd.value) ChangingNameAndDate(cnd).createWindow()
         if(fp.value)  FromProtocols(fp).createWindow()
     }
 
-    inner class ChangingDate(cd: MSB){
-        val isOpen = cd
+
+    inner class ChangingNameAndDate(cnd: MSB){
+        val isOpen = cnd
+        val newName = mutableStateOf(name.value)
         val newDate = mutableStateOf(date.value)
 
         @Composable @Preview fun createWindow() {
-            Window(
-                onCloseRequest = {isOpen.value = false},
-                title = "Замена названия ${date.value}"
+            Dialog(
+                title = "Редактировать информацию о соревновании",
+                onCloseRequest = { isOpen.value = false }
             ) {
-                MaterialTheme {
-                    content()
+                Column {
+                    TextField(
+                        value = newName.value,
+                        onValueChange = { newName.value = it },
+                        label = { Text(text="название") }
+                    )
+                    TextField(
+                        value = newDate.value,
+                        onValueChange = { newDate.value = it },
+                        label = { Text(text="дата") }
+                    )
+                    Button(onClick = {
+                        name.value = newName.value
+                        date.value = newDate.value
+                        isOpen.value = false
+                    }) {
+                        Text(text="Сохранить и выйти")
+                    }
                 }
             }
         }
-
-
-        @Composable
-        @Preview
-        fun content() {
-            Row {
-                 Input (
-                    onTextChanged = {newDate.value = it.lines().first()},
-                    onAddClicked = {
-                        if (newDate.value.isNotBlank())
-                            date.value = newDate.value
-                        isOpen.value = false
-                    },
-                    text = newDate.value,
-                     imageVector = Icons.Default.Edit
-                )
-            }
-
-        }
-
-    }
-
-    inner class ChangingName(cn: MSB){
-        val isOpen = cn
-        val newName = mutableStateOf(name.value)
-
-        @Composable @Preview fun createWindow() {
-            Window(
-                onCloseRequest = {isOpen.value = false},
-                title = "Замена названия ${name.value}"
-            ) {
-                MaterialTheme {
-                    content()
-                }
-            }
-        }
-
-
-        @Composable
-        @Preview
-        fun content() {
-            Row {
-                Input (
-                    onTextChanged = {
-                        newName.value = it.lines().first()
-                                    },
-                    onAddClicked = {
-                        if (newName.value.isNotBlank())
-                            name.value = newName.value
-                        isOpen.value = false
-                    },
-                    text = newName.value,
-                    imageVector = Icons.Default.Edit
-                )
-            }
-
-        }
-
     }
 
     inner class FromProtocols(fp: MSB) {
