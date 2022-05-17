@@ -1,0 +1,11 @@
+Название,Режим,,,,,,,,,,
+distance_0,,cp15,cp29,cp3,cp20,cp28,cp13,cp18,cp21,cp25,cp16
+distance_1,,cp16,cp28,cp6,cp30,cp7,cp11,cp13,cp8,cp13,cp18
+distance_2,,cp7,cp22,cp11,cp1,cp1,cp22,cp26,cp1,cp23,cp14
+distance_3,,cp1,cp23,cp26,cp9,cp9,cp24,cp8,cp20,cp20,cp23
+distance_4,,cp18,cp5,cp8,cp26,cp5,cp6,cp27,cp25,cp7,cp13
+distance_5,,cp12,cp14,cp27,cp12,cp25,cp18,cp10,cp4,cp30,
+distance_6,,cp18,cp4,cp6,cp22,cp23,cp25,cp18,cp21,cp29,cp14
+distance_7,,cp27,cp16,cp3,cp13,cp8,cp2,cp24,cp7,cp5,cp7
+distance_8,,cp28,cp20,cp9,cp24,cp16,cp19,cp9,cp27,cp2,cp27
+distance_9,,cp23,cp5,cp28,cp30,cp19,cp27,cp30,cp6,cp5,cp25
